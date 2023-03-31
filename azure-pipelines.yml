@@ -1,0 +1,57 @@
+# Node.js
+# Build a general Node.js project with npm.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+variables:
+- group: "Logverz Main Environment"
+- name: S3LB
+  value: $[variables.S3LogicBucket]
+
+trigger:
+- dev
+
+pool: #'Default'
+  vmImage: ubuntu-latest
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '16.x'
+  displayName: 'Install Node.js'
+
+- task: DownloadSecureFile@1
+  name: prodawsenvironment
+  displayName: 'Download .env file'
+  inputs:
+    secureFile: 'main.env'
+
+- script: |
+    echo Installing $(prodawsenvironment.secureFilePath) to the build directory...
+    configfile=$(prodawsenvironment.secureFilePath)
+    dynamicenvfile=$(echo $(prodawsenvironment.secureFilePath) |sed "s/main.env/.env/g")
+    echo "Dynamic Env File:" $dynamicenvfile
+    sudo mv $configfile $dynamicenvfile
+    sudo chown root:root $dynamicenvfile
+    sudo chmod 777 $dynamicenvfile
+    sudo ln -s -t $(Build.Repository.LocalPath)	$dynamicenvfile
+  displayName: 'Link .env file'
+
+
+- script: |
+    npm install
+    npm run build
+  displayName: 'npm install and build'
+
+- script: |
+    sudo mkdir $(Build.Repository.LocalPath)/ui
+    sudo mv $(Build.Repository.LocalPath)/build/* $(Build.Repository.LocalPath)/ui
+  displayName: 'renaming build folder before deployment'
+
+- task: S3Upload@1
+  inputs:
+    awsCredentials: 'MainAccountAccess'
+    regionName: 'ap-southeast-2'
+    bucketName: $(S3LB)
+    sourceFolder: '$(Build.Repository.LocalPath)'
+    globExpressions: 'ui/**'

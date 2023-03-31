@@ -1,0 +1,18 @@
+@mixin scrollbar {
+  /* width */
+  &::-webkit-scrollbar {
+    height: 5px;
+    margin: 0 12px 13px 0;
+  }
+  /* Track */
+  &::-webkit-scrollbar-track {
+    height: 5px;
+    background: #e9ecf0;
+  }
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    height: 5px;
+    background: var(--accent-color);
+    border-radius: 31px;
+  }
+}
