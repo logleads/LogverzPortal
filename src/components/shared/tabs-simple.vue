@@ -25,35 +25,55 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Component, Emit, Prop, Watch } from 'vue-property-decorator';
-@Component({
+import { defineComponent, Ref, ref, watch } from '@vue/composition-api';
+
+export default defineComponent({
+  // eslint-disable-next-line vue/multi-word-component-names
   name: 'Tabs',
-})
-export default class TabsSimple extends Vue {
-  @Prop({ required: true, type: String }) readonly btnLeftText!: string;
-  @Prop({ required: true, type: String }) readonly btnRigthText!: string;
-  @Prop({ required: true, type: Boolean }) readonly stateBTN!: boolean;
-  @Prop({ required: false, type: String, default: '' }) readonly textAfterBtn!: string;
-
-  public tableContent: boolean = this.stateBTN;
-
-  public chackBtn(v: boolean): void {
-    this.tableContent = v;
-    this.changeTableContent(v);
-  }
-
-  @Watch('stateBTN')
-  hStateBTN(value: boolean): void {
-    // eslint-disable-next-line no-console
-    console.log(value, 'hStateBTN');
-    this.tableContent = value;
-  }
-  @Emit('change-table-content')
-  public changeTableContent(v: boolean): boolean {
-    return v;
-  }
-}
+  props: {
+    btnLeftText: {
+      type: String,
+      required: true,
+    },
+    btnRigthText: {
+      type: String,
+      required: true,
+    },
+    stateBTN: {
+      type: Boolean,
+      required: true,
+    },
+    textAfterBtn: {
+      type: String,
+      required: false,
+      default: '',
+    },
+  },
+  setup(props, { emit }) {
+    const tableContent: Ref<boolean> = ref(props.stateBTN);
+    watch(
+      () => props.stateBTN,
+      (value: boolean) => {
+        // eslint-disable-next-line no-console
+        console.log(value, 'hStateBTN');
+        tableContent.value = value;
+      },
+    );
+    function changeTableContent(v: boolean): boolean {
+      emit('change-table-content', v);
+      return v;
+    }
+    function chackBtn(v: boolean): void {
+      tableContent.value = v;
+      changeTableContent(v);
+    }
+    return {
+      changeTableContent,
+      chackBtn,
+      tableContent,
+    };
+  },
+});
 </script>
 
 <style module lang="scss">

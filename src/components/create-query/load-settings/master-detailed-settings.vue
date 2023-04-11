@@ -37,83 +37,92 @@
 </template>
 
 <script lang="ts">
+import { defineComponent, onMounted, Ref, ref } from '@vue/composition-api';
 import { DxDataGrid } from 'devextreme-vue/data-grid';
-import { Component, Prop, Vue } from 'vue-property-decorator';
 
-import Icon from '~/components/shared/icon.vue';
-import Loader from '~/components/shared/loader.vue';
-import ParseObject from '~/components/shared/parseObject.vue';
-
-@Component({
+// @Component({
+//   name: 'MasterDetailedSettings',
+//   components: { ParseObject, Loader, Icon, DxDataGrid },
+// })
+export default defineComponent({
+  // @Prop({ required: false, type: Object }) readonly data!: Record<string, any>;
+  // @Prop({ required: false }) readonly rawitems!: any;
+  // @Prop({ required: false }) readonly format!: any;
   name: 'MasterDetailedSettings',
-  components: { ParseObject, Loader, Icon, DxDataGrid },
-})
-export default class MasterDetailedSettings extends Vue {
-  @Prop({ required: false, type: Object }) readonly data!: Record<string, any>;
-  @Prop({ required: false }) readonly rawitems!: any;
-  @Prop({ required: false }) readonly format!: any;
-  public customizedData!: any;
-  public csvHeader: any = [];
-  public columnsData = [];
-  public resizingModes = ['nextColumn', 'widget'];
-  public currentMode = 'nextColumn';
-  created(): void {
-    // eslint-disable-next-line no-console
-    // console.log('data IS', this.rawitems);
-    if (this.rawitems) {
-      if (Object.keys(this.data.data.length > 0)) {
-        // // eslint-disable-next-line no-console
-        // console.log('ease', this.data.data);
-        this.customizedData = this.rawitems[this.data.data.rawindex];
-        
-      } else {
-        this.customizedData = {};
-      }
-    } else {
-      this.customizedData = this.data.data;
-    }
-    if(this.customizedData['TableName']){
-          this.customizedData['DatasetName'] = this.customizedData['TableName'];
-          delete this.customizedData['TableName'];
-          // const tableNameIndex = this.customizedData.indexof(this.customizedData['TableName']);
-          // if(tableNameIndex > -1){
-
-          //   this.customizedData.splice(tableNameIndex, 1);
-          // }
-    }
-    if (Object.keys(this.customizedData).length > 0) {
-      const blackList = [
-        // 'UsersQuery',
-        // 'UnixTime',
-        // 'DatasetName',
-        '0',
-        '1',
-        '2',
-        '3',
-        '4',
-        'Archive',
-        'rawindex',
-        // 'S3Folders',
-      ];
-      let csvkeys = Object.keys(this.customizedData);
-      // eslint-disable-next-line no-console
-      // console.log("CSVKEYS", csvkeys);
-      csvkeys.forEach((e1, idx, arr) => {
-        
-        if (blackList.includes(e1) || e1 === '1') {
-          arr.splice(idx, 1);
+  components: { DxDataGrid },
+  props: {
+    data: {
+      type: Object,
+      required: true,
+    },
+    rawitems: {
+      type: Array,
+      required: false,
+    },
+    format: {
+      type: String,
+      required: false,
+    },
+  },
+  setup(props) {
+    const customizedData: Ref<any> = ref({});
+    const csvHeader: Ref<any> = ref([]);
+    const columnsData = ref([]);
+    const resizingModes = ref(['nextColumn', 'widget']);
+    const currentMode = ref('nextColumn');
+    onMounted(() => {
+      if (props.rawitems) {
+        if (Object.keys(props.data.data.length > 0)) {
+          customizedData.value = props.rawitems[props.data.data.rawindex];
+        } else {
+          customizedData.value = {};
         }
-        
-      });
-      this.csvHeader = csvkeys;
-      // csvkeys.map(({ '0','1','2','Archive', 'rawindex', ...rest }) => rest)
+      } else {
+        customizedData.value = props.data.data;
+      }
+      if (customizedData.value['TableName']) {
+        customizedData.value['DatasetName'] = customizedData.value['TableName'];
+        delete customizedData.value['TableName'];
+      }
+      if (Object.keys(customizedData.value).length > 0) {
+        const blackList = [
+          // 'UsersQuery',
+          // 'UnixTime',
+          // 'DatasetName',
+          '0',
+          '1',
+          '2',
+          '3',
+          '4',
+          'Archive',
+          'rawindex',
+          // 'S3Folders',
+        ];
+        let csvkeys = Object.keys(customizedData.value);
+        // eslint-disable-next-line no-console
+        // console.log("CSVKEYS", csvkeys);
+        csvkeys.forEach((e1, idx, arr) => {
+          if (blackList.includes(e1) || e1 === '1') {
+            arr.splice(idx, 1);
+          }
+        });
+        csvHeader.value = csvkeys;
+        // csvkeys.map(({ '0','1','2','Archive', 'rawindex', ...rest }) => rest)
+        // eslint-disable-next-line no-console
+        console.log('CSV header: ', csvHeader.value);
+      }
       // eslint-disable-next-line no-console
-      console.log("CSV header: " , this.csvHeader)
-    }
-    // eslint-disable-next-line no-console
-    console.log('customizedData', this.customizedData);
-  }
-}
+      console.log('customizedData', customizedData.value);
+    });
+    return {
+      currentMode,
+      resizingModes,
+      csvHeader,
+      customizedData,
+      columnsData,
+    };
+  },
+});
 </script>
 
 <style module lang="scss">

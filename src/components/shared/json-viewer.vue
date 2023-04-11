@@ -6,19 +6,38 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { defineComponent } from '@vue/composition-api';
 
-@Component({
+export default defineComponent({
   name: 'JsonViewerCustom',
-})
-export default class JsonViewerCustom extends Vue {
-  @Prop({ required: false, type: String }) readonly title!: string;
-  @Prop({ required: false, type: Boolean }) readonly sort!: boolean;
-  @Prop({ required: false, type: Boolean }) readonly boxed!: boolean;
-  @Prop({ required: false, type: Boolean }) readonly copyable!: boolean;
-  @Prop({ required: true }) readonly value!: JSON;
-  @Prop({ required: false, default: 5, type: Number }) readonly expandDepth!: number;
-}
+  props: {
+    title: {
+      type: String,
+      required: false,
+    },
+    sort: {
+      type: Boolean,
+      required: false,
+    },
+    boxed: {
+      type: Boolean,
+      required: false,
+    },
+    copyable: {
+      type: Boolean,
+      required: false,
+    },
+    expandDepth: {
+      type: Number,
+      required: false,
+      default: 5,
+    },
+    value: {
+      type: Object,
+      required: true,
+    },
+  },
+});
 </script>
 
 <style module lang="scss">

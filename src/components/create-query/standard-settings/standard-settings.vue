@@ -38,29 +38,29 @@
         <div
           :class="[
             $style['standard__add-file'],
-            { [$style['error']]: submitted && !v$.S3Folders.required },
+            { [$style['error']]: submitted && v$.S3Folders.$invalid },
           ]"
         >
           <Input
             id="s3folder"
-            :value="S3Folders"
+            v-model="S3Folders"
             name="S3Folders"
             :class="$style['standard__add-file__input']"
             @input="handleInput({ value: $event, label: 'S3Folders' })"
           />
         </div>
-        <div v-if="submitted && !v$.S3Folders.required" :class="$style['validation-text']">
+        <div v-if="submitted && v$.S3Folders.required.$invalid" :class="$style['validation-text']">
           S3Folders is required
         </div>
         <div
-          v-if="submitted && (!v$.S3Folders.minLength || !v$.S3Folders.maxLength)"
+          v-if="submitted && (v$.S3Folders.minLength.$invalid || v$.S3Folders.maxLength.$invalid)"
           :class="$style['validation-text']"
         >
-          <template v-if="!v$.S3Folders.minLength"
-            >{{ minLengthMessage(v$.S3Folders.minLength) }}
+          <template v-if="v$.S3Folders.minLength.$invalid"
+            >{{ v$.S3Folders.minLength.$message }}
           </template>
-          <template v-if="!v$.S3Folders.maxLength"
-            >{{ maxLengthMessage(v$.S3Folders.maxLength) }}
+          <template v-if="v$.S3Folders.maxLength.$invalid"
+            >{{ v$.S3Folders.maxLength.$message }}
           </template>
         </div>
         <div v-if="isFilesBrowses">
@@ -89,18 +89,24 @@
                 slot="input"
                 v-model="input.content"
                 :name="input.label"
-                :error="submitted && !v$[input.label].required"
+                :error="submitted && v$[input.label].$invalid"
                 @input="handleInput({ value: $event, label: input.label })"
               />
             </InputContainer>
-            <div v-if="submitted && !v$[input.label].required" :class="$style['validation-text']">
+            <div
+              v-if="submitted && v$[input.label].required.$invalid"
+              :class="$style['validation-text']"
+            >
               {{ input.label }} is required
             </div>
             <div
-              v-if="submitted && v$[input.label].maxLength && !v$[input.label].maxLength"
-              :class="$style['validation-text']"
+              v-if="
+                submitted &&
+                (v$[input.label].maxLength.$invalid || v$[input.label].maxLength.$invalid)
+              "
             >
-              {{ maxLengthMessage(v$[input.label].maxLength.max) }}
+              :class="$style['validation-text']" >
+              {{ v$[input.label].maxLength.$message }}
             </div>
           </div>
           <div>
@@ -121,11 +127,14 @@
                 label="name"
                 track-by="name"
                 :preselect-first="true"
-                :class="{ invalid: submitted && !v$.DatasetOwners.required }"
               />
+              <!-- :class="{ invalid: submitted && v$.DatasetOwners.$invalid }" -->
             </div>
 
-            <div v-if="submitted && !v$.DatasetOwners.required" :class="$style['validation-text']">
+            <div
+              v-if="submitted && v$.DatasetOwners.required.$invalid"
+              :class="$style['validation-text']"
+            >
               DatasetOwners is required
             </div>
           </div>
@@ -147,12 +156,7 @@
                 label="name"
                 track-by="name"
                 :preselect-first="true"
-                :class="{ invalid: submitted && !v$.DatasetAccess.required }"
               />
-            </div>
-
-            <div v-if="submitted && !v$.DatasetAccess.required" :class="$style['validation-text']">
-              DatasetAccess is required
             </div>
           </div>
         </div>
@@ -199,6 +203,7 @@ import {
   Ref,
   ref,
   watch,
+  WritableComputedRef,
 } from '@vue/composition-api';
 import { useVuelidate } from '@vuelidate/core';
 import { maxLength, minLength, required } from '@vuelidate/validators';
@@ -236,6 +241,7 @@ export default defineComponent({
     DropDownSimple,
     SiteItem,
     InputContainer,
+    // eslint-disable-next-line vue/no-reserved-component-names
     Input,
     Multiselect,
     TreeList,
@@ -277,7 +283,6 @@ export default defineComponent({
       DatatypeSelector: { required },
       DatasetName: { required, minLength: minLength(1), maxLength: maxLength(63) },
       DatasetDescription: { required, maxLength: maxLength(500) },
-      DatasetOwners: { required, maxLength: maxLength(500) },
     };
 
     const DatasetOwners = computed({
@@ -428,7 +433,6 @@ export default defineComponent({
       DatatypeSelector,
       DatasetName,
       DatasetDescription,
-      DatasetOwners,
     });
     onMounted(() => {
       DataCollectionModule.getQueryType();
@@ -437,7 +441,7 @@ export default defineComponent({
       /**
        * TODO: this V$ thing
        */
-      emit('validate', v$.value);
+      emit('validate', v$);
     });
     watch(CurrentBucket, async (value: string) => {
       DataCollectionModule.rootFolderFetch(true);
@@ -520,7 +524,7 @@ export default defineComponent({
       ];
     });
 
-    const inputs: ComputedRef<Array<InputContent>> = computed(() => {
+    const inputs: WritableComputedRef<Array<InputContent>> = computed(() => {
       return [
         { label: 'DatasetName', content: DatasetName.value, hint: DCH_TABLE_NAME_Local.value },
         {
@@ -564,7 +568,7 @@ export default defineComponent({
       /**
        * TODO: handle this emit part later
        */
-      emit('validate', v$.value);
+      emit('validate', v$);
     }
 
     function handleBucketsSelect(payload: { item: string; content: string }): void {
@@ -575,12 +579,12 @@ export default defineComponent({
       if (payload.label == 'DatasetName') {
         DataCollectionModule.setInputValue({ label: 'DatasetWarning', value: '' });
       }
-
+      console.log('first', payload);
       DataCollectionModule.setInputValue(payload);
       /**
        * TODO: handle this part later
        */
-      emit('validate', v$.value);
+      emit('validate', v$);
     }
 
     function browseFiles(): void {

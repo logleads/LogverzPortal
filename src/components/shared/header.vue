@@ -12,19 +12,18 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { defineComponent } from '@vue/composition-api';
 
 import ConnectionsIndecator from '~/components/analytics-window/connections-indecator.vue';
 import MenuButton from '~/components/menu/menu-button.vue';
-import Icon from '~/components/shared/icon.vue';
 import UserBlock from '~/components/user-icon/user-block.vue';
 import WindowTabs from '~/components/window-tabs/tabs.vue';
-@Component({
+
+export default defineComponent({
+  // eslint-disable-next-line vue/multi-word-component-names, vue/no-reserved-component-names
   name: 'Header',
-  components: { Icon, MenuButton, WindowTabs, UserBlock, ConnectionsIndecator },
-})
-export default class Header extends Vue {}
+  components: { MenuButton, WindowTabs, UserBlock, ConnectionsIndecator },
+});
 </script>
 
 <style module lang="scss">

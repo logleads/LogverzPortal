@@ -17,84 +17,96 @@ import 'codemirror/lib/codemirror.css';
 import '@toast-ui/editor/dist/toastui-editor.css';
 
 import { Editor } from '@toast-ui/vue-editor';
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { computed, ComputedRef, defineComponent, Ref, ref } from '@vue/composition-api';
 
 import { SaveSettingModule } from '~/store/modules/save-setting';
 
-@Component({
+export default defineComponent({
   name: 'TextEditor',
   components: {
     Editor,
   },
-})
-export default class TextEditor extends Vue {
-  @Prop({ type: Number }) readonly curentKey!: number;
-  // public  viewerText: string = '# This is Viewer.\n Hello World.'
-
-  public content: string = 'sdf';
-  $refs!: {
-    editor: any;
-  };
-  public defaultOptions = {
-    language: 'en-US',
-    useCommandShortcut: true,
-    useDefaultHTMLSanitizer: true,
-    usageStatistics: true,
-    hideModeSwitch: false,
-    toolbarItems: [
-      'heading',
-      'bold',
-      'italic',
-      'strike',
-      'divider',
-      'hr',
-      'quote',
-      'divider',
-      'ul',
-      'ol',
-      'task',
-      'indent',
-      'outdent',
-      'divider',
-      'table',
-      // 'image',
-      'link',
-      'divider',
-      'code',
-      'codeblock',
-    ],
-  };
-
-  public onEditorChange(editor: InputEvent): void {
-    const text = this.$refs.editor.$refs.toastuiEditor.innerText.replace('MarkdownWYSIWYG', '');
-    const textS = text.split('\n\n');
-    textS.pop();
-
-    for (let i = 0; i < textS.length / 2; i++) {
-      textS.pop();
-    }
-    // eslint-disable-next-line no-console
-    console.log(textS.join('\n\n'), 'textS');
-    SaveSettingModule.setTextEditor({
-      data: textS.join('\n\n'),
-      key: this.curentKey,
+  props: {
+    curentKey: {
+      type: Number,
+      required: true,
+    },
+  },
+  setup(props) {
+    const content: Ref<string> = ref('sdf');
+    const editor: Ref<any> = ref('');
+    const defaultOptions = ref({
+      language: 'en-US',
+      useCommandShortcut: true,
+      useDefaultHTMLSanitizer: true,
+      usageStatistics: true,
+      hideModeSwitch: false,
+      toolbarItems: [
+        'heading',
+        'bold',
+        'italic',
+        'strike',
+        'divider',
+        'hr',
+        'quote',
+        'divider',
+        'ul',
+        'ol',
+        'task',
+        'indent',
+        'outdent',
+        'divider',
+        'table',
+        // 'image',
+        'link',
+        'divider',
+        'code',
+        'codeblock',
+      ],
     });
-  }
 
-  public onEditorFocus(editor: InputEvent): void {
-    // eslint-disable-next-line no-console
-    console.log('editor focus!', editor);
-  }
+    function onEditorChange(editor: any): void {
+      const text = editor?.innerText.replace('MarkdownWYSIWYG', '');
+      // const text = editor.$refs.toastuiEditor.innerText.replace('MarkdownWYSIWYG', '');
+      const textS = text.split('\n\n');
+      textS.pop();
 
-  public onEditorLoad(editor: InputEvent): void {
-    // eslint-disable-next-line no-console
-    console.log('editor ready!', editor);
-  }
+      for (let i = 0; i < textS.length / 2; i++) {
+        textS.pop();
+      }
+      // eslint-disable-next-line no-console
+      console.log(textS.join('\n\n'), 'textS');
+      SaveSettingModule.setTextEditor({
+        data: textS.join('\n\n'),
+        key: props.curentKey,
+      });
+    }
 
-  get editorText(): string {
-    return SaveSettingModule.dataT[this.curentKey].textEditor;
-  }
-}
+    function onEditorFocus(editor: InputEvent): void {
+      // eslint-disable-next-line no-console
+      console.log('editor focus!', editor);
+    }
+
+    function onEditorLoad(editor: InputEvent): void {
+      // eslint-disable-next-line no-console
+      console.log('editor ready!', editor);
+    }
+
+    const editorText: ComputedRef<string> = computed(() => {
+      return SaveSettingModule.dataT[props.curentKey].textEditor;
+    });
+
+    return {
+      editorText,
+      onEditorChange,
+      onEditorLoad,
+      onEditorFocus,
+      content,
+      editor,
+      defaultOptions,
+    };
+  },
+});
 </script>
 
 <style module lang="scss">

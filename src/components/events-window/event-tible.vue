@@ -22,8 +22,8 @@
     />
     <template #cellTemplate="{ data }">
       <TimeFields
-        :unix-time-nomal-format="data.data.UnixTimeNormalFormat"
-        :time-local-format="data.data.TimeLocalFormat"
+        :UnixTimeNormalFormat="data.data.UnixTimeNormalFormat"
+        :TimeLocalFormat="data.data.TimeLocalFormat"
       />
     </template>
     <DxColumn caption="Message" data-field="message" />

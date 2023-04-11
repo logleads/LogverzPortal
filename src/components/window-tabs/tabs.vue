@@ -19,31 +19,35 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Component, Watch } from 'vue-property-decorator';
+import { computed, ComputedRef, defineComponent, Ref, ref, watch } from '@vue/composition-api';
 import Draggable from 'vuedraggable';
 
 import { WindowData, WindowsModule } from '~/store/modules/windows';
 
 import TabItem from './tab-item.vue';
 
-@Component({
+export default defineComponent({
+  // eslint-disable-next-line vue/multi-word-component-names, vue/no-reserved-component-names
   name: 'Header',
   components: { Draggable, TabItem },
-})
-export default class Tabs extends Vue {
-  items: WindowData[] = [];
-  dragging: boolean = false;
+  setup() {
+    const items: Ref<WindowData[]> = ref([]);
+    const dragging: Ref<boolean> = ref(false);
 
-  get activeWindows(): Array<WindowData> {
-    return WindowsModule.activeWindows;
-  }
+    const activeWindows: ComputedRef<Array<WindowData>> = computed(() => {
+      return WindowsModule.activeWindows;
+    });
 
-  @Watch('activeWindows')
-  watchActiveWindows(): void {
-    this.items = this.activeWindows;
-  }
-}
+    watch(activeWindows, () => {
+      items.value = activeWindows.value;
+    });
+    return {
+      items,
+      dragging,
+      activeWindows,
+    };
+  },
+});
 </script>
 
 <style module lang="scss">

@@ -11,14 +11,17 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { defineComponent } from '@vue/composition-api';
 
-@Component({
+export default defineComponent({
   name: 'InputContainer',
-})
-export default class InputContainer extends Vue {
-  @Prop({ required: false, type: String }) readonly label!: string;
-}
+  props: {
+    label: {
+      type: String,
+      required: false,
+    },
+  },
+});
 </script>
 
 <style module lang="scss">

@@ -27,7 +27,7 @@
                 {{ QueryFromState }}
               </highlight-code>
               <div
-                v-if="submitted && !v$.QueryFromState.required"
+                v-if="submitted && v$.QueryFromState.required.$invalid"
                 :class="$style['validation-text']"
               >
                 Query string is required
@@ -77,6 +77,7 @@ import { parseToSequelize } from '~/utils/sequelize-query';
 // })
 export default defineComponent({
   name: 'CollectionRules',
+  // eslint-disable-next-line vue/no-reserved-component-names
   components: { Loader, CollectionRulesItem, Input, SampleDataCollection },
   // @Prop({ required: false, type: Boolean }) readonly submitted!: boolean;
   // @Prop({ required: false, type: Boolean }) readonly isFetching!: boolean;
@@ -207,7 +208,7 @@ export default defineComponent({
       QueryFromState,
     });
     onMounted(async () => {
-      emit('validate', v$.value);
+      emit('validate', v$);
       query.value = {
         logicalOperator: logicalOperatorType.OR,
         children: [],
@@ -312,7 +313,7 @@ export default defineComponent({
 .validation-text {
   color: red;
   font-size: 14px;
-  margin-top: -10px;
+  margin-top: 10px;
 }
 code {
   height: 95px !important;

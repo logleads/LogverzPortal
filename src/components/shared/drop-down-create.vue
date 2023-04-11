@@ -29,7 +29,14 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, Ref, ref, watch } from '@vue/composition-api';
+import {
+  computed,
+  defineComponent,
+  Ref,
+  ref,
+  watch,
+  WritableComputedRef,
+} from '@vue/composition-api';
 
 import Icon from '~/components/shared/icon.vue';
 import { DataCollectionModule } from '~/store/modules/data-collection';
@@ -47,7 +54,7 @@ export default defineComponent({
     function toggleExpanded(): void {
       isExpanded.value = !isExpanded.value;
     }
-    const isLoadConfigurationUpload: ComputedRef<boolean> = computed(() => {
+    const isLoadConfigurationUpload: WritableComputedRef<boolean> = computed(() => {
       return DataCollectionModule.isLoadConfigurationUpload;
     });
 

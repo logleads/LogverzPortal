@@ -1,7 +1,7 @@
 <template>
   <div>
     <div :class="$style['table__header__buttons']">
-      <b v-if="textBeforeBtn !== ''" :class="$style['before-btn-text']"> {{ textBeforeBtn }}: </b>
+      <b v-if="textBeforeBtn !== ''" :class="$style['before-btn-text']"> {{ textBeforeBtn }} </b>
       <button
         :class="[
           $style['table__header__buttons__btn'],
@@ -28,28 +28,50 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Component, Emit, Prop } from 'vue-property-decorator';
-@Component({
-  name: 'Tabs',
-})
-export default class Tabs extends Vue {
-  @Prop({ required: true, type: String }) readonly btnLeftText!: string;
-  @Prop({ required: true, type: String }) readonly btnRigthText!: string;
-  @Prop({ required: true, type: Boolean }) readonly stateBTN!: boolean;
-  @Prop({ required: false, type: String, default: '' }) readonly textAfterBtn!: string;
-  @Prop({ required: false, type: String, default: '' }) readonly textBeforeBtn!: string;
-  public tableContent: boolean = this.stateBTN;
+import { defineComponent, Ref, ref } from '@vue/composition-api';
 
-  public chackBtn(v: boolean): void {
-    this.tableContent = v;
-    this.changeTableContent(v);
-  }
-  @Emit('change-table-content')
-  public changeTableContent(v: boolean): boolean {
-    return v;
-  }
-}
+export default defineComponent({
+  // eslint-disable-next-line vue/multi-word-component-names
+  name: 'Tabs',
+  props: {
+    btnLeftText: {
+      type: String,
+      required: true,
+    },
+    btnRigthText: {
+      type: String,
+      required: true,
+    },
+    stateBTN: {
+      type: Boolean,
+      required: true,
+    },
+    textAfterBtn: {
+      type: String,
+      required: false,
+    },
+    textBeforeBtn: {
+      type: String,
+      required: false,
+    },
+  },
+  setup(props, { emit }) {
+    const tableContent: Ref<boolean> = ref(props.stateBTN);
+    function chackBtn(v: boolean): void {
+      tableContent.value = v;
+      changeTableContent(v);
+    }
+    function changeTableContent(v: boolean): boolean {
+      emit('change-table-content', v);
+      return v;
+    }
+    return {
+      tableContent,
+      chackBtn,
+      changeTableContent,
+    };
+  },
+});
 </script>
 
 <style module lang="scss">

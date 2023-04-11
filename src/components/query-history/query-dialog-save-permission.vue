@@ -58,19 +58,18 @@
         </div>
       </div>
       <div :class="[$style['container__footer']]">
-        <Button text="Cancel" @click="close" />
-        <Button text="Save" @click="save" />
+        <MyButton text="Cancel" @click="close" />
+        <MyButton text="Save" @click="save" />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-// import { maxLength, required } from 'vuelidate/lib/validators';
 import { computed, ComputedRef, defineComponent, Ref, ref, watch } from '@vue/composition-api';
 import Multiselect from 'vue-multiselect';
 
-import Button from '~/components/shared/button.vue';
+import MyButton from '~/components/shared/button.vue';
 import ToolTip from '~/components/shared/tool-tip.vue';
 import { DCH_TABLE_ACCESS, DCH_TABLE_OWNERS } from '~/constants';
 import { DataCollectionModule } from '~/store/modules/data-collection';
@@ -79,7 +78,7 @@ import { SaveSettingModule } from '~/store/modules/save-setting';
 export default defineComponent({
   name: 'QueryHistoryPermission',
   components: {
-    Button,
+    MyButton,
     Multiselect,
     ToolTip,
   },

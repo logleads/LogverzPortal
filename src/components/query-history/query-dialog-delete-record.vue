@@ -64,7 +64,6 @@
 </template>
 
 <script lang="ts">
-// import { maxLength, required } from 'vuelidate/lib/validators';
 import { computed, ComputedRef, defineComponent, Ref, ref, watch } from '@vue/composition-api';
 
 import MyButton from '~/components/shared/button.vue';

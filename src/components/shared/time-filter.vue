@@ -44,146 +44,140 @@
 <script lang="ts">
 import 'devextreme/dist/css/dx.light.css';
 
+import { defineComponent, onMounted, ref } from '@vue/composition-api';
 import { alert } from 'devextreme/ui/dialog';
-import {
-  DxButton,
-  DxColumn,
-  DxDataGrid,
-  DxEditing,
-  DxFilterRow,
-  DxLoadPanel,
-  DxMasterDetail,
-  DxScrolling,
-  DxSearchPanel,
-} from 'devextreme-vue/data-grid';
-import DxList from 'devextreme-vue/list';
-import DxSelectBox from 'devextreme-vue/select-box';
-import Vue from 'vue';
-import { Component, Emit } from 'vue-property-decorator';
 
-import MasterDetailedSettings from '~/components/create-query/load-settings/master-detailed-settings.vue';
 import DropDownSimple from '~/components/shared/drop-down-simple.vue';
 import Input from '~/components/shared/input.vue';
-import Loader from '~/components/shared/loader.vue';
 import { calcTimeRangeFromNowToNeedsTimeUTC } from '~/utils/parsTimeUTC';
 
-@Component({
+export default defineComponent({
   name: 'TimerFilter',
   components: {
-    MasterDetailedSettings,
-    Loader,
-    DxColumn,
-    DxButton,
-    DxDataGrid,
-    DxEditing,
-    DxFilterRow,
-    DxLoadPanel,
-    DxMasterDetail,
-    DxScrolling,
     DropDownSimple,
+    // eslint-disable-next-line vue/no-reserved-component-names
     Input,
-    DxSelectBox,
-    DxSearchPanel,
-    DxList,
   },
-})
-export default class TimerFilter extends Vue {
-  public activeTimeFilter = '';
-  public customTimeRange = false;
-  public timePeriod = '';
-  public timePeriods = ['minute', 'hour', 'day', 'week', 'month', 'year'];
-  public timeRange = '';
-  public unixTime = 0;
+  setup(props, { emit }) {
+    const activeTimeFilter = ref('');
+    const customTimeRange = ref(false);
+    const timePeriod = ref('');
+    const timePeriods = ref(['minute', 'hour', 'day', 'week', 'month', 'year']);
+    const timeRange = ref('');
+    const unixTime = ref(0);
 
-  mounted(): void {
-    this.giveLast1week();
-  }
+    onMounted(() => {
+      giveLast1week();
+    });
 
-  public handleInput(payload: { label: string; value: string }): void {
-    this.timeRange = payload.value;
-  }
-
-  public handleTimePeriod(data: { item: string }): void {
-    this.timePeriod = data.item;
-  }
-
-  public openCustomTimeRangeBlock(): void {
-    this.customTimeRange = true;
-  }
-
-  public cencelBtn(): void {
-    this.timePeriod = '';
-    this.customTimeRange = false;
-    this.timeRange = '';
-    this.activeTimeFilter = '';
-    this.unixTime = 0;
-  }
-
-  public applyBtn(): void {
-    if (this.timeRange === '') {
-      alert('Please select the required time value', 'Something went wrong');
-      return;
+    function handleInput(payload: { label: string; value: string }): void {
+      timeRange.value = payload.value;
     }
 
-    if (this.timePeriod === '') {
-      alert('Please select the required time interval', 'Something went wrong');
-      return;
+    function handleTimePeriod(data: { item: string }): void {
+      timePeriod.value = data.item;
     }
 
-    if (!this.timePeriods.includes(this.timePeriod)) {
-      alert('time period is not correct', 'Something went wrong');
-      return;
+    function openCustomTimeRangeBlock(): void {
+      customTimeRange.value = true;
     }
 
-    const unixTime = calcTimeRangeFromNowToNeedsTimeUTC(
-      parseInt(this.timeRange, 10),
-      this.timePeriod,
-    );
+    function cencelBtn(): void {
+      timePeriod.value = '';
+      customTimeRange.value = false;
+      timeRange.value = '';
+      activeTimeFilter.value = '';
+      unixTime.value = 0;
+    }
 
-    this.unixTimeChange(unixTime);
-    this.cencelBtn();
-    this.activeTimeFilter = '';
-  }
+    function applyBtn(): void {
+      if (timeRange.value === '') {
+        alert('Please select the required time value', 'Something went wrong');
+        return;
+      }
 
-  public giveLast4h(): void {
-    const unixTime = calcTimeRangeFromNowToNeedsTimeUTC(4, 'hour');
-    this.unixTimeChange(unixTime);
-    this.cencelBtn();
-    this.activeTimeFilter = '4h';
-  }
+      if (timePeriod.value === '') {
+        alert('Please select the required time interval', 'Something went wrong');
+        return;
+      }
 
-  public giveLast1day(): void {
-    const unixTime = calcTimeRangeFromNowToNeedsTimeUTC(1, 'day');
-    this.unixTimeChange(unixTime);
-    this.cencelBtn();
-    this.activeTimeFilter = '1day';
-  }
+      if (!timePeriods.value.includes(timePeriod.value)) {
+        alert('time period is not correct', 'Something went wrong');
+        return;
+      }
 
-  public giveLast1week(): void {
-    const unixTime = calcTimeRangeFromNowToNeedsTimeUTC(1, 'week');
-    this.unixTimeChange(unixTime);
-    this.cencelBtn();
-    this.activeTimeFilter = '1week';
-  }
+      const unixTime = calcTimeRangeFromNowToNeedsTimeUTC(
+        parseInt(timeRange.value, 10),
+        timePeriod.value,
+      );
 
-  public giveLast30day(): void {
-    const unixTime = calcTimeRangeFromNowToNeedsTimeUTC(30, 'day');
-    this.unixTimeChange(unixTime);
-    this.cencelBtn();
-    this.activeTimeFilter = '30day';
-  }
+      unixTimeChange(unixTime);
+      cencelBtn();
+      activeTimeFilter.value = '';
+    }
 
-  @Emit()
-  public clear(): void {
-    this.unixTime = 0;
-    this.activeTimeFilter = '';
-  }
+    function giveLast4h(): void {
+      const unixTime = calcTimeRangeFromNowToNeedsTimeUTC(4, 'hour');
+      unixTimeChange(unixTime);
+      cencelBtn();
+      activeTimeFilter.value = '4h';
+    }
 
-  @Emit()
-  public unixTimeChange(unixTime: number): number {
-    return unixTime;
-  }
-}
+    function giveLast1day(): void {
+      const unixTime = calcTimeRangeFromNowToNeedsTimeUTC(1, 'day');
+      unixTimeChange(unixTime);
+      cencelBtn();
+      activeTimeFilter.value = '1day';
+    }
+
+    function giveLast1week(): void {
+      const unixTime = calcTimeRangeFromNowToNeedsTimeUTC(1, 'week');
+      unixTimeChange(unixTime);
+      cencelBtn();
+      activeTimeFilter.value = '1week';
+    }
+
+    function giveLast30day(): void {
+      const unixTime = calcTimeRangeFromNowToNeedsTimeUTC(30, 'day');
+      unixTimeChange(unixTime);
+      cencelBtn();
+      activeTimeFilter.value = '30day';
+    }
+
+    // @Emit()
+    function clear(): void {
+      unixTime.value = 0;
+      activeTimeFilter.value = '';
+      emit('clear');
+    }
+
+    // @Emit()
+    function unixTimeChange(unixTime: number): number {
+      emit('unix-time-change', unixTime);
+      return unixTime;
+    }
+
+    return {
+      unixTimeChange,
+      clear,
+      giveLast30day,
+      giveLast1week,
+      giveLast1day,
+      giveLast4h,
+      applyBtn,
+      cencelBtn,
+      openCustomTimeRangeBlock,
+      handleTimePeriod,
+      handleInput,
+      activeTimeFilter,
+      customTimeRange,
+      timePeriod,
+      timePeriods,
+      timeRange,
+      unixTime,
+    };
+  },
+});
 </script>
 
 <style module lang="scss">

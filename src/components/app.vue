@@ -532,13 +532,14 @@ import 'highlight.js/styles/lightfair.css';
 // import 'highlight.js/styles/default.css';
 import 'vue-highlight.js/lib/allLanguages';
 
-import VueCompositionApi from '@vue/composition-api';
+import VueCompositionApi, { onMounted } from '@vue/composition-api';
+import { defineComponent, Ref, ref } from '@vue/composition-api';
+import Vue from 'vue';
 import VueHighlightJS from 'vue-highlight.js';
 import JsonViewer from 'vue-json-viewer';
 import Notifications from 'vue-notification';
-import { Component, Vue } from 'vue-property-decorator';
-import Vuelidate from 'vuelidate';
 
+// import Vuelidate from 'vuelidate';
 import JsonViewerCustom from '~/components/shared/json-viewer.vue';
 import { AD_HTML_TAG, AD_SCRIPT_SRC } from '~/constants';
 import HomePage from '~/pages/home-page.vue';
@@ -546,7 +547,7 @@ import { ConnectionIndecatoreModule } from '~/store/modules/connection-indecator
 
 import InfoMsgSpan from './shared/info-msg-span.vue';
 Vue.use(VueCompositionApi);
-Vue.use(Vuelidate);
+// Vue.use(Vuelidate);
 Vue.use(Notifications);
 Vue.use(JsonViewer);
 /*
@@ -557,26 +558,29 @@ Vue.component('JsonViewerCustom', JsonViewerCustom);
 Vue.component('InfoMsgSpan', InfoMsgSpan);
 // Vue.component('pdfcustom', pdf);
 
-@Component({
+export default defineComponent({
   name: 'App',
   components: { HomePage },
-})
-export default class App extends Vue {
-  html: string = '';
-  mounted(): void {
-    this.html = AD_HTML_TAG;
-    // eslint-disable-next-line no-console
-    console.log('version', Vue.version);
-    ConnectionIndecatoreModule.getDefaultParameters();
-    const script = document.createElement('script');
-    script.src = AD_SCRIPT_SRC;
-    // script.id = 'ad-id-' + Date.now();
-    script.async = false; // to ensure order
-    document.head.appendChild(script);
-    // eslint-disable-next-line no-console
-    console.log(script.id);
-  }
-}
+  setup() {
+    const html: Ref<string> = ref('');
+    onMounted(() => {
+      html.value = AD_HTML_TAG;
+      // eslint-disable-next-line no-console
+      console.log('version', Vue.version);
+      ConnectionIndecatoreModule.getDefaultParameters();
+      const script = document.createElement('script');
+      script.src = AD_SCRIPT_SRC;
+      // script.id = 'ad-id-' + Date.now();
+      script.async = false; // to ensure order
+      document.head.appendChild(script);
+      // eslint-disable-next-line no-console
+      console.log(script.id);
+    });
+    return {
+      html,
+    };
+  },
+});
 </script>
 
 <style module lang="scss">

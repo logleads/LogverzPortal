@@ -13,7 +13,7 @@
           :data-source="[{ ...customizedData }]"
           word-wrap-enabled="true"
         >
-        <DxColumn caption="Creator" data-field="UsersQuery" />
+          <DxColumn caption="Creator" data-field="UsersQuery" />
         </DxDataGrid>
       </template>
       <!-- <template v-for="item in Object.keys(customizedData)">
@@ -39,32 +39,32 @@
 </template>
 
 <script lang="ts">
-import { DxColumn,DxDataGrid } from 'devextreme-vue/data-grid';
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { defineComponent, PropType, Ref, ref } from '@vue/composition-api';
+import { DxColumn, DxDataGrid } from 'devextreme-vue/data-grid';
 
-import Icon from '~/components/shared/icon.vue';
-import Loader from '~/components/shared/loader.vue';
-import ParseObject from '~/components/shared/parseObject.vue';
-
-@Component({
+export default defineComponent({
   name: 'MasterDetailedLoadSettings',
-  components: { ParseObject, Loader, Icon, DxDataGrid,DxColumn },
-})
-export default class MasterDetailedLoadSettings extends Vue {
-  @Prop({ required: false, type: Object }) readonly data!: Record<string, any>;
-  @Prop({ required: false }) readonly format!: any;
-  public customizedData!: any;
-  public csvHeader: any = [];
-  public columnsData = [];
-  public resizingModes = ['nextColumn', 'widget'];
-  public currentMode = 'nextColumn';
-  created(): void {
-    // eslint-disable-next-line no-console
-    // console.log('data IS', this.rawitems);
-    
-      this.customizedData = this.data.data;
-    
-    if (Object.keys(this.customizedData).length > 0) {
+  components: { DxDataGrid, DxColumn },
+  props: {
+    data: {
+      type: Object as PropType<Record<string, any>>,
+      required: true,
+    },
+    format: {
+      type: String,
+      required: false,
+    },
+  },
+  setup(props, { emit }) {
+    const customizedData! = ref(props.data.data);
+    const csvHeader: Ref<any> = ref([]);
+    const columnsData = ref([]);
+    const resizingModes = ref(['nextColumn', 'widget']);
+    const currentMode = ref('nextColumn');
+
+    //  customizedData.value = props.data.data;
+
+    if (Object.keys(customizedData.value).length > 0) {
       const blackList = [
         'UsersQuery',
         'UnixTime',
@@ -74,17 +74,24 @@ export default class MasterDetailedLoadSettings extends Vue {
         'rawindex',
         'S3Folders',
       ];
-      let csvkeys = Object.keys(this.customizedData);
-      this.csvHeader = csvkeys.forEach((e1, idx, arr) => {
+      let csvkeys = Object.keys(customizedData.value);
+      csvHeader.value = csvkeys.forEach((e1, idx, arr) => {
         if (blackList.includes(e1)) {
           arr.splice(idx, 1);
         }
       });
     }
     // eslint-disable-next-line no-console
-    console.log('customizedData', this.customizedData);
-  }
-}
+    console.log('customizedData', customizedData.value);
+    return {
+      currentMode,
+      resizingModes,
+      columnsData,
+      csvHeader,
+      customizedData,
+    };
+  },
+});
 </script>
 
 <style module lang="scss">

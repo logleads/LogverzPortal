@@ -23,8 +23,7 @@
 </template>
 
 <script lang="ts">
-import { VueConstructor } from 'vue';
-import { Component, Vue } from 'vue-property-decorator';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from '@vue/composition-api';
 
 import AdminWindow from '~/components/admin-window/admin-window.vue';
 import DataCollectionWindow from '~/components/create-query/data-collection-window.vue';
@@ -44,7 +43,7 @@ import { ErrorsModule } from '~/store/modules/errors';
 // import { UserModule } from '~/store/modules/user';
 import { WindowData, WindowName, WindowsModule } from '~/store/modules/windows';
 
-const windowComponents: Record<WindowName, VueConstructor> = {
+const windowComponentsArr = {
   [WindowName.ANALYTICS]: QueryBuilderWindow,
   [WindowName.DATA_COLLECTION]: DataCollectionWindow,
   [WindowName.ADMIN_WINDOW]: AdminWindow,
@@ -55,94 +54,105 @@ const windowComponents: Record<WindowName, VueConstructor> = {
   [WindowName.PRIVACY_WINDOW]: PrivacyPolicy,
 };
 
-@Component({
+export default defineComponent({
   name: 'HomePage',
+  // eslint-disable-next-line vue/no-reserved-component-names
   components: { ErrorMessage, Window, Button, Header, Menu },
-})
-export default class HomePage extends Vue {
-  public termsWindow: WindowData = {
-    minimized: false,
-    label: 'Terms Window',
-    name: 'TermsWindow' as WindowName,
-    zIndex: 55,
-    index: 0,
-    windowName: 'terms window',
-  };
-  public userSettingsWindow: WindowData = {
-    minimized: false,
-    label: 'user Settings Window',
-    name: 'settingsWindow' as WindowName,
-    zIndex: 55,
-    index: 0,
-    windowName: 'user settings window',
-  };
-  public showTermsWindow: boolean = false;
-  public showSettingsWindow: boolean = false;
-  get activeWindows(): WindowData[] {
-    return Object.values(WindowsModule.activeWindows).filter((window): window is WindowData => {
-      return Boolean(window && !window.minimized);
+  setup() {
+    const termsWindow: Ref<WindowData> = ref({
+      minimized: false,
+      label: 'Terms Window',
+      name: 'TermsWindow' as WindowName,
+      zIndex: 55,
+      index: 0,
+      windowName: 'terms window',
     });
-  }
+    const userSettingsWindow: Ref<WindowData> = ref({
+      minimized: false,
+      label: 'user Settings Window',
+      name: 'settingsWindow' as WindowName,
+      zIndex: 55,
+      index: 0,
+      windowName: 'user settings window',
+    });
+    const showTermsWindow: Ref<boolean> = ref(false);
+    const showSettingsWindow: Ref<boolean> = ref(false);
+    const activeWindows: ComputedRef<WindowData[]> = computed(() => {
+      return Object.values(WindowsModule.activeWindows).filter((window): window is WindowData => {
+        return Boolean(window && !window.minimized);
+      });
+    });
 
-  // get customKey(){
-  //   return
-  // }
-  // @Watch('displayTermsWindow')
-  //   handleInitUsers(value: boolean): void {
-  //     this.showTermsWindow = value;
-  //   }
-  get windowComponents(): typeof windowComponents {
-    return windowComponents;
-  }
+    // get customKey(){
+    //   return
+    // }
+    // @Watch('displayTermsWindow')
+    //   handleInitUsers(value: boolean): void {
+    //     this.showTermsWindow = value;
+    //   }
+    const windowComponents: ComputedRef<typeof windowComponentsArr> = computed(() => {
+      return windowComponentsArr;
+    });
 
-  get errorMessage(): string {
-    return ErrorsModule.errorText;
-  }
+    const errorMessage: ComputedRef<string> = computed(() => {
+      return ErrorsModule.errorText;
+    });
 
-  get isReceivedPermissions(): boolean {
-    return AdminModule.isReceivedPermissions;
-  }
+    const isReceivedPermissions: ComputedRef<boolean> = computed(() => {
+      return AdminModule.isReceivedPermissions;
+    });
 
-  // get displayTermsWindow(): boolean {
-  //   return UserModule.displayTerms;
-  // }
+    // get displayTermsWindow(): boolean {
+    //   return UserModule.displayTerms;
+    // }
 
-  mounted(): void {
-    AdminModule.checkIfAdmin();
-  }
+    onMounted(() => {
+      AdminModule.checkIfAdmin();
+    });
 
-  // @Watch('errorMessage')
-  // handleError(value: string): void {
-  //   this.$notify({
-  //     // (optional)
-  //     // Name of the notification holder
-  //     group: 'foo',
+    // @Watch('errorMessage')
+    // handleError(value: string): void {
+    //   this.$notify({
+    //     // (optional)
+    //     // Name of the notification holder
+    //     group: 'foo',
 
-  //     // (optional)
-  //     // Class that will be assigned to the notification
-  //     type: 'error',
+    //     // (optional)
+    //     // Class that will be assigned to the notification
+    //     type: 'error',
 
-  //     // (optional)
-  //     // Title (will be wrapped in div.notification-title)
-  //     title: 'Error',
+    //     // (optional)
+    //     // Title (will be wrapped in div.notification-title)
+    //     title: 'Error',
 
-  //     // Content (will be wrapped in div.notification-content)
-  //     text: `<b> ${value} </b>`,
+    //     // Content (will be wrapped in div.notification-content)
+    //     text: `<b> ${value} </b>`,
 
-  //     // (optional)
-  //     // Overrides default/provided duration
-  //     duration: 10000,
+    //     // (optional)
+    //     // Overrides default/provided duration
+    //     duration: 10000,
 
-  //     // (optional)
-  //     // Overrides default/provided animation speed
-  //     speed: 4000,
+    //     // (optional)
+    //     // Overrides default/provided animation speed
+    //     speed: 4000,
 
-  //     // (optional)
-  //     // Data object that can be used in your template
-  //     data: {},
-  //   });
-  // }
-}
+    //     // (optional)
+    //     // Data object that can be used in your template
+    //     data: {},
+    //   });
+    // }
+    return {
+      isReceivedPermissions,
+      termsWindow,
+      userSettingsWindow,
+      showTermsWindow,
+      showSettingsWindow,
+      activeWindows,
+      windowComponents,
+      errorMessage,
+    };
+  },
+});
 </script>
 
 <style module lang="scss">

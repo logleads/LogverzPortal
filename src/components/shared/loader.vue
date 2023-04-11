@@ -6,15 +6,24 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { defineComponent } from '@vue/composition-api';
 
-@Component({
+export default defineComponent({
+  // eslint-disable-next-line vue/multi-word-component-names
   name: 'Loader',
-})
-export default class Loader extends Vue {
-  @Prop({ default: false, type: Boolean }) readonly accent!: boolean;
-  @Prop({ default: 40, type: Number }) readonly size!: number;
-}
+  props: {
+    accent: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    size: {
+      type: Number,
+      required: false,
+      default: 40,
+    },
+  },
+});
 </script>
 
 <style module lang="scss">

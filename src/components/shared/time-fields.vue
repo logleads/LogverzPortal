@@ -1,3 +1,5 @@
+<!-- eslint-disable vue/prop-name-casing -->
+<!-- eslint-disable vue/prop-name-casing -->
 <template>
   <p :class="$style['tooltip']">
     UTC time: {{ UnixTimeNormalFormat }}
@@ -6,16 +8,21 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { defineComponent } from '@vue/composition-api';
 
-@Component({
+export default defineComponent({
   name: 'TimeFields',
-})
-export default class TimeFilter extends Vue {
-  @Prop({ required: true, type: String }) readonly UnixTimeNormalFormat!: string;
-  @Prop({ required: true, type: String }) readonly TimeLocalFormat!: string;
-}
+  props: {
+    UnixTimeNormalFormat: {
+      type: String,
+      required: false,
+    },
+    TimeLocalFormat: {
+      type: String,
+      required: true,
+    },
+  },
+});
 </script>
 
 <style module lang="scss">

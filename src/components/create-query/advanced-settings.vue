@@ -8,17 +8,30 @@
             slot="input"
             v-model="input.content"
             :name="input.label"
-            :error="submitted && !v$[input.label].required"
+            :error="submitted && v$[input.label].$invalid"
             @input="handleInput({ value: $event, label: input.label })"
           />
         </InputContainer>
-        <div v-if="submitted && !v$[input.label].required" :class="$style['validation-text']">
+        <div
+          v-if="submitted && v$[input.label].required.$invalid"
+          :class="$style['validation-text']"
+        >
           {{ input.label }} is required
         </div>
-        <div v-if="submitted && !v$[input.label].between" :class="$style['validation-text']">
-          {{ input.label }} Must be between {{ v$[input.label].between }} -
-          {{ v$[input.label].between }}
+        <div
+          v-if="submitted && v$[input.label].between && v$[input.label].between.$invalid"
+          :class="$style['validation-text']"
+        >
+          {{ input.label }} Must be between {{ v$[input.label].between.$params.min }} -
+          {{ v$[input.label].between.$params.max }}
         </div>
+        <!-- <div
+          v-if="submitted && $v[input.label].$params.between && !$v[input.label].between"
+          :class="$style['validation-text']"
+        >
+          {{ input.label }} Must be between {{ $v[input.label].$params.between.min }} -
+          {{ $v[input.label].$params.between.max }}
+        </div> -->
       </div>
       <div :class="$style['advanced__inputs']">
         <label :class="$style['label']">
@@ -40,7 +53,14 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from '@vue/composition-api';
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  Ref,
+  ref,
+  WritableComputedRef,
+} from '@vue/composition-api';
 import { useVuelidate } from '@vuelidate/core';
 import { between, required } from '@vuelidate/validators';
 
@@ -55,18 +75,10 @@ import {
   DCH_S3_ENUMERATION_DEPTH,
 } from '~/constants';
 import { DataCollectionModule } from '~/store/modules/data-collection';
-// @Component({
-//   name: 'AdvancedSettings',
-//   components: { ToolTip, Loader, Icon, InputContainer, Input, DropDownSimple },
-//   mixins: [validationMixin],
-//   validations: {
-//     S3EnumerationDepth: { required, between: between(0, 9) },
-//     PreferedWorkerNumber: { required },
-//     AllocationStrategy: { required },
-//   },
-// })
+
 export default defineComponent({
   name: 'AdvancedSettings',
+  // eslint-disable-next-line vue/no-reserved-component-names
   components: { ToolTip, Loader, InputContainer, Input, DropDownSimple },
   props: {
     submitted: {
@@ -87,15 +99,15 @@ export default defineComponent({
       AllocationStrategy: { required },
     };
 
-    const S3EnumerationDepth: ComputedRef<string> = computed(() => {
+    const S3EnumerationDepth: WritableComputedRef<string> = computed(() => {
       return DataCollectionModule.s3EnumerationDepth;
     });
 
-    const PreferedWorkerNumber: ComputedRef<string> = computed(() => {
+    const PreferedWorkerNumber: WritableComputedRef<string> = computed(() => {
       return DataCollectionModule.preferedWorkerNumber;
     });
 
-    const AllocationStrategy: ComputedRef<string> = computed(() => {
+    const AllocationStrategy: WritableComputedRef<string> = computed(() => {
       return DataCollectionModule.allocationStrategy;
     });
 
@@ -119,17 +131,17 @@ export default defineComponent({
     });
 
     onMounted(() => {
-      emit('validate', v$.value);
+      emit('validate', v$);
     });
 
     function handleInput(payload: { value: string; label: string }): void {
       DataCollectionModule.setInputValue(payload);
-      emit('validate', v$.value);
+      emit('validate', v$);
     }
 
     function handleInputSelect(payload: { item: string; content: string }): void {
       DataCollectionModule.setSelectValue({ label: 'AllocationStrategy', value: payload.item });
-      emit('validate', v$.value);
+      emit('validate', v$);
     }
     return {
       handleInput,

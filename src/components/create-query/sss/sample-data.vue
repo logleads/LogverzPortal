@@ -38,78 +38,91 @@
 </template>
 
 <script lang="ts">
-import {
-  DxColumn,
-  DxDataGrid,
-  DxEditing,
-  DxFilterRow,
-  DxLoadPanel,
-  DxMasterDetail,
-  DxScrolling,
-} from 'devextreme-vue/data-grid';
-import Vue from 'vue';
-import { Component } from 'vue-property-decorator';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from '@vue/composition-api';
+import { DxDataGrid } from 'devextreme-vue/data-grid';
 
-import Icon from '~/components/shared/icon.vue';
 import { DataCollectionModule } from '~/store/modules/data-collection';
 
-@Component({
+export default defineComponent({
   name: 'SampleDataCollection',
-  components: {
-    DxColumn,
-    DxDataGrid,
-    DxFilterRow,
-    DxLoadPanel,
-    DxMasterDetail,
-    DxScrolling,
-    DxEditing,
-    Icon,
-  },
-})
-export default class SampleDataCollection extends Vue {
-  public triger: boolean = false;
-  onTriger(): void {
-    this.triger = !this.triger;
-  }
-
-  mounted(): void {
-    DataCollectionModule.getSampleData('ApplicationLB');
-  }
-
-  get sampleData(): any {
-    // eslint-disable-next-line no-console
-    console.log(DataCollectionModule.sampleData);
-
-    if (DataCollectionModule.sampleData === 'Non') {
-      return {
-        value: 'No Sample data available',
-      };
+  components: { DxDataGrid },
+  setup() {
+    const triger: Ref<boolean> = ref(false);
+    function onTriger(): void {
+      triger.value = !triger.value;
     }
-    const rules = DataCollectionModule.rules.map(
-      ({ label }: { id: string; label: string; type: string }): string => {
-        return label;
-      },
-    );
 
-    const s = DataCollectionModule.sampleData.replaceAll('     ', ' ');
-    const f = s.replaceAll('  ', ' ');
-    const g = f.replaceAll('\n', ' ');
-    let res: {
-      Rows: string[];
-      Info: string;
-      Records: string;
-    } | null = null;
+    onMounted(() => {
+      DataCollectionModule.getSampleData('ApplicationLB');
+    });
 
-    if (!(DataCollectionModule.sampleData === '')) {
-      res = JSON.parse(g);
-    }
-    if (res?.Rows) {
-      const b = res?.Rows.map((item: string) => {
-        const dataBuffer = item.match(/\'(.*?)\'/g);
+    const sampleData: ComputedRef<any> = computed(() => {
+      // eslint-disable-next-line no-console
+      console.log(DataCollectionModule.sampleData);
 
-        if (!dataBuffer) {
-          return item
-            .split(' ')
+      if (DataCollectionModule.sampleData === 'Non') {
+        return {
+          value: 'No Sample data available',
+        };
+      }
+      const rules = DataCollectionModule.rules.map(
+        ({ label }: { id: string; label: string; type: string }): string => {
+          return label;
+        },
+      );
+
+      const s = DataCollectionModule.sampleData.replaceAll('     ', ' ');
+      const f = s.replaceAll('  ', ' ');
+      const g = f.replaceAll('\n', ' ');
+      let res: {
+        Rows: string[];
+        Info: string;
+        Records: string;
+      } | null = null;
+
+      if (!(DataCollectionModule.sampleData === '')) {
+        res = JSON.parse(g);
+      }
+      if (res?.Rows) {
+        const b = res?.Rows.map((item: string) => {
+          const dataBuffer = item.match(/\'(.*?)\'/g);
+
+          if (!dataBuffer) {
+            return item
+              .split(' ')
+              ?.map((it, index) => {
+                return {
+                  [rules[index]]: it,
+                };
+              })
+              .reduce((acc, i) => {
+                if (Object.keys(i).includes('undefined')) {
+                  return {
+                    ...acc,
+                  };
+                } else {
+                  return {
+                    ...acc,
+                    ...i,
+                  };
+                }
+              }, {});
+          }
+
+          const str = dataBuffer?.reduce((acc, it) => {
+            return acc.replaceAll(it, '');
+          }, item);
+
+          let i = 0;
+          const buff = str?.split(' ').map(it => {
+            if (it == '') {
+              return dataBuffer ? dataBuffer[i++] : dataBuffer;
+            } else {
+              return it;
+            }
+          });
+
+          return buff
             ?.map((it, index) => {
               return {
                 [rules[index]]: it,
@@ -127,96 +140,73 @@ export default class SampleDataCollection extends Vue {
                 };
               }
             }, {});
-        }
-
-        const str = dataBuffer?.reduce((acc, it) => {
-          return acc.replaceAll(it, '');
-        }, item);
-
-        let i = 0;
-        const buff = str?.split(' ').map(it => {
-          if (it == '') {
-            return dataBuffer ? dataBuffer[i++] : dataBuffer;
-          } else {
-            return it;
-          }
         });
 
-        return buff
-          ?.map((it, index) => {
-            return {
-              [rules[index]]: it,
-            };
-          })
-          .reduce((acc, i) => {
-            if (Object.keys(i).includes('undefined')) {
-              return {
-                ...acc,
-              };
-            } else {
-              return {
-                ...acc,
-                ...i,
-              };
-            }
-          }, {});
-      });
+        return b;
+      }
 
-      return b;
-    }
+      return res;
+    });
 
-    return res;
-  }
+    const isRow: ComputedRef<boolean> = computed(() => {
+      const sampleData = DataCollectionModule.sampleData;
+      if (sampleData === 'Non') {
+        return false;
+      }
+      const s = sampleData.replaceAll('     ', ' ');
+      const f = s.replaceAll('  ', ' ');
+      const g = f.replaceAll('\n', ' ');
+      let res: {
+        Rows: string[];
+        Info: string;
+      } | null = null;
 
-  get isRow(): boolean {
-    const sampleData = DataCollectionModule.sampleData;
-    if (sampleData === 'Non') {
-      return false;
-    }
-    const s = sampleData.replaceAll('     ', ' ');
-    const f = s.replaceAll('  ', ' ');
-    const g = f.replaceAll('\n', ' ');
-    let res: {
-      Rows: string[];
-      Info: string;
-    } | null = null;
+      if (!(DataCollectionModule.sampleData === '')) {
+        res = JSON.parse(g);
+      }
 
-    if (!(DataCollectionModule.sampleData === '')) {
-      res = JSON.parse(g);
-    }
+      return Boolean(res?.Rows);
+    });
 
-    return Boolean(res?.Rows);
-  }
+    const isSample: ComputedRef<boolean> = computed(() => {
+      const sampleData = DataCollectionModule.sampleData;
+      if (sampleData === 'Non') {
+        return false;
+      }
 
-  get isSample(): boolean {
-    const sampleData = DataCollectionModule.sampleData;
-    if (sampleData === 'Non') {
-      return false;
-    }
+      return Boolean(true);
+    });
 
-    return Boolean(true);
-  }
+    const url: ComputedRef<string> = computed(() => {
+      const sampleData = DataCollectionModule.sampleData;
+      if (sampleData === 'Non') {
+        return '#';
+      }
+      const s = sampleData.replaceAll('     ', ' ');
+      const f = s.replaceAll('  ', ' ');
+      const g = f.replaceAll('\n', ' ');
+      let res: {
+        Rows: string[];
+        Info: string;
+      } = { Rows: [], Info: '' };
 
-  get url(): string {
-    const sampleData = DataCollectionModule.sampleData;
-    if (sampleData === 'Non') {
-      return '#';
-    }
-    const s = sampleData.replaceAll('     ', ' ');
-    const f = s.replaceAll('  ', ' ');
-    const g = f.replaceAll('\n', ' ');
-    let res: {
-      Rows: string[];
-      Info: string;
-    } = { Rows: [], Info: '' };
+      if (!(DataCollectionModule.sampleData === '')) {
+        res = JSON.parse(g);
+      }
 
-    if (!(DataCollectionModule.sampleData === '')) {
-      res = JSON.parse(g);
-    }
+      return res.Info;
+    });
 
-    return res.Info;
-  }
-}
+    return {
+      url,
+      isSample,
+      isRow,
+      sampleData,
+      onTriger,
+      triger,
+    };
+  },
+});
 </script>
 
 <style module lang="scss">

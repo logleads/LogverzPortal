@@ -5,14 +5,24 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { defineComponent } from '@vue/composition-api';
 
-@Component({
+export default defineComponent({
+  // eslint-disable-next-line vue/multi-word-component-names
   name: 'Icon',
-})
-export default class Icon extends Vue {
-  @Prop({ required: true, type: String }) readonly name!: string;
-  @Prop({ required: false, type: Number }) readonly width?: number;
-  @Prop({ required: false, type: Number }) readonly height?: number;
-}
+  props: {
+    name: {
+      type: String,
+      required: false,
+    },
+    width: {
+      type: Number,
+      required: false,
+    },
+    height: {
+      type: Number,
+      required: false,
+    },
+  },
+});
 </script>

@@ -6,15 +6,21 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { defineComponent } from '@vue/composition-api';
 
-@Component({
+export default defineComponent({
   name: 'JsonViewerCustom',
-})
-export default class InfoMsgSpan extends Vue {
-  @Prop({ required: true, type: String }) readonly title!: string;
-  @Prop({ required: true, type: String }) readonly value!: string;
-}
+  props: {
+    title: {
+      type: String,
+      required: true,
+    },
+    value: {
+      type: String,
+      required: true,
+    },
+  },
+});
 </script>
 
 <style module lang="scss">

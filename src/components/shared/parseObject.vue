@@ -38,28 +38,38 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
+import { defineComponent } from '@vue/composition-api';
 
 import { checkIsStringIsObj } from '~/utils/checkIsStringIsObj';
 import { labelFromKey } from '~/utils/pipes';
 
-@Component({
+export default defineComponent({
   name: 'ParseObject',
   components: {},
-})
-export default class ParseObject extends Vue {
-  @Prop({ required: false }) readonly obj!: Record<string, never> | string;
-  @Prop({ required: false }) readonly label!: string;
+  props: {
+    obj: {
+      type: Object,
+      required: false,
+    },
+    label: {
+      type: String,
+      required: false,
+    },
+  },
+  setup() {
+    function changeKey(value: string): string {
+      return labelFromKey(value);
+    }
 
-  public changeKey(value: string): string {
-    return labelFromKey(value);
-  }
-
-  public checkIfObj(value: string): boolean {
-    return checkIsStringIsObj(value);
-  }
-}
+    function checkIfObj(value: string): boolean {
+      return checkIsStringIsObj(value);
+    }
+    return {
+      checkIfObj,
+      changeKey,
+    };
+  },
+});
 </script>
 
 <style module lang="scss">

@@ -52,7 +52,7 @@
           </button>
         </div>
 
-        <Button
+        <MyButton
           text="Submit"
           :class="$style['_btn-submit']"
           :disabled="isFetching || !isDatatypeDefined || !DBinstanse"
@@ -74,14 +74,13 @@ import {
   ref,
   watch,
 } from '@vue/composition-api';
-import { validationMixin } from 'vuelidate';
 
 import AdvancedSettings from '~/components/create-query/advanced-settings.vue';
 import CollectionRules from '~/components/create-query/collection-rules/collection-rules.vue';
 import LoadSettings from '~/components/create-query/load-settings/load-settings.vue';
 import Review from '~/components/create-query/review.vue';
 import StandardSettings from '~/components/create-query/standard-settings/standard-settings.vue';
-import Button from '~/components/shared/button.vue';
+import MyButton from '~/components/shared/button.vue';
 import DropDownCreate from '~/components/shared/drop-down-create.vue';
 import { REGION } from '~/constants';
 import { ConnectionIndecatoreModule } from '~/store/modules/connection-indecatore';
@@ -98,13 +97,12 @@ export default defineComponent({
     StandardSettings,
     AdvancedSettings,
     CollectionRules,
-    Button,
+    MyButton,
   },
-  mixins: [validationMixin],
   setup() {
-    const validStandard: Ref<{ $invalid: boolean } | null> = ref(null);
-    const validAdvanced: Ref<{ $invalid: boolean } | null> = ref(null);
-    const validCollection: Ref<{ $invalid: boolean } | null> = ref(null);
+    const validStandard: Ref<any> = ref(null);
+    const validAdvanced: Ref<any> = ref(null);
+    const validCollection: Ref<any> = ref(null);
     const withRedirect = ref(false);
     const submitted = ref(false);
     const isDatatypeDefined = ref(false);
@@ -147,17 +145,17 @@ export default defineComponent({
       showLoadSettings.value = value;
     }
 
-    function handleValidate(validation: { $invalid: boolean }, setting: string): void {
-      console.log('emit roger', validation, setting);
+    function handleValidate(validation: any, setting: string): void {
+      console.log('emit roger', validation.value, setting);
       switch (setting) {
         case 'standard':
-          validStandard.value = validation;
+          validStandard.value = validation.value;
           break;
         case 'advanced':
-          validAdvanced.value = validation;
+          validAdvanced.value = validation.value;
           break;
         case 'collection':
-          validCollection.value = validation;
+          validCollection.value = validation.value;
           break;
       }
     }
@@ -185,7 +183,9 @@ export default defineComponent({
     function handleSubmit(e: Event): void {
       e.stopPropagation();
       submitted.value = true;
-
+      console.log('standard', validStandard.value);
+      console.log('advance', validAdvanced.value);
+      console.log('collection', validCollection.value);
       if (
         !validStandard.value?.$invalid &&
         !validAdvanced.value?.$invalid &&

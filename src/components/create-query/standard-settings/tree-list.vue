@@ -22,68 +22,70 @@
 </template>
 
 <script lang="ts">
+import { defineComponent, ref } from '@vue/composition-api';
 import { DxColumn, DxSelection, DxTreeList } from 'devextreme-vue/tree-list';
-import Vue from 'vue';
-import { Component, Prop } from 'vue-property-decorator';
 
 import { DataCollectionService } from '~/services/api/data-collection-service';
 import { DataCollectionModule } from '~/store/modules/data-collection';
 import { isObject } from '~/utils/checkIsItObj';
-
-@Component({
+export default defineComponent({
   name: 'TreeList',
   components: {
     DxTreeList,
     DxColumn,
     DxSelection,
   },
-})
-export default class TreeList extends Vue {
-  @Prop({ required: true, type: Array }) readonly listFolder!: unknown[];
-  public expandedRowKeys = [1, 2];
-  public selectedRowKeys = [];
-  public recursive = false;
+  props: {
+    listFolder: {
+      type: Array,
+      required: true,
+    },
+  },
+  setup(props, { emit }) {
+    const expandedRowKeys = ref([1, 2]);
+    const selectedRowKeys = ref([]);
+    const recursive = ref(false);
 
-  public onSelectionChanged(e: any): void {
-    // eslint-disable-next-line no-console
-    const currentSelectedRowKeys = e.currentSelectedRowKeys;
-    const currentDeselectedRowKeys = e.currentDeselectedRowKeys;
-    const allSelectedRowKeys = e.selectedRowKeys;
-    const allSelectedRowsData = e.selectedRowsData;
+    function onSelectionChanged(e: any): void {
+      const currentSelectedRowKeys = e.currentSelectedRowKeys;
+      const currentDeselectedRowKeys = e.currentDeselectedRowKeys;
+      const allSelectedRowKeys = e.selectedRowKeys;
+      const allSelectedRowsData = e.selectedRowsData;
 
-    const selectedData = e.component.getSelectedRowsData('all');
-    // eslint-disable-next-line no-console
-    console.log(
-      selectedData.map((item: any) => item.value),
-      'selectedData',
-    );
-    DataCollectionModule.setFoldersPathHard(selectedData.map((item: any) => item.value));
-    // eslint-disable-next-line no-console
-    // console.log(currentSelectedRowKeys);
-    // eslint-disable-next-line no-console
-    // console.log(currentDeselectedRowKeys);
-    // eslint-disable-next-line no-console
-    // console.log(allSelectedRowKeys);
-    // eslint-disable-next-line no-console
-    // console.log(allSelectedRowsData);
-  }
+      const selectedData = e.component.getSelectedRowsData('all');
+      // eslint-disable-next-line no-console
+      console.log(
+        selectedData.map((item: any) => item.value),
+        'selectedData',
+      );
+      DataCollectionModule.setFoldersPathHard(selectedData.map((item: any) => item.value));
+    }
 
-  public log({ component, key }: any): void {
-    component.byKey(key).then(async (data: any) => {
-      if (isObject(data.data)) {
-        const awaitTofolder: string[] = Object.keys(data.data)
-          .filter((item: string) => data.data[item] === '*')
-          .map((it: string) => data.value + '/' + it);
+    function log({ component, key }: any): void {
+      component.byKey(key).then(async (data: any) => {
+        if (isObject(data.data)) {
+          const awaitTofolder: string[] = Object.keys(data.data)
+            .filter((item: string) => data.data[item] === '*')
+            .map((it: string) => data.value + '/' + it);
 
-        const response = (await DataCollectionService.getListFolders(awaitTofolder))
-          .filter(it => it.status === 'fulfilled')
-          .map((item: any) => item.value.data);
+          const response = (await DataCollectionService.getListFolders(awaitTofolder))
+            .filter(it => it.status === 'fulfilled')
+            .map((item: any) => item.value.data);
 
-        DataCollectionModule.updateListFolders({ newRow: response, oldRow: data });
-      }
-    });
-  }
-}
+          DataCollectionModule.updateListFolders({ newRow: response, oldRow: data });
+        }
+      });
+    }
+
+    return {
+      log,
+      onSelectionChanged,
+      recursive,
+      selectedRowKeys,
+      expandedRowKeys,
+    };
+  },
+});
 </script>
 
 <style module lang="scss"></style>

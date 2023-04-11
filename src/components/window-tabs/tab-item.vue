@@ -28,39 +28,58 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { computed, ComputedRef, defineComponent, getCurrentInstance } from '@vue/composition-api';
 
 import Icon from '~/components/shared/icon.vue';
-import { WindowData, WindowName, WindowsModule } from '~/store/modules/windows';
+import { WindowName, WindowsModule } from '~/store/modules/windows';
 
-@Component({
+export default defineComponent({
   name: 'TabItem',
   components: { Icon },
-})
-export default class TabItem extends Vue {
-  @Prop({ required: true }) readonly item!: WindowData;
-  @Prop({ required: true }) readonly dragging!: boolean;
-  @Prop({ required: true }) readonly keyC!: number;
+  props: {
+    item: {
+      type: Object,
+      required: true,
+    },
+    dragging: {
+      type: Boolean,
+      required: true,
+    },
+    keyC: {
+      type: Number,
+      required: true,
+    },
+  },
+  setup() {
+    const instance = getCurrentInstance();
+    const key = instance?.vnode.key;
 
-  public key = this.$vnode.key;
+    const focusedWindow: ComputedRef<Nullable<WindowName>> = computed(() => {
+      return WindowsModule.focusedWindow;
+    });
 
-  get focusedWindow(): Nullable<WindowName> {
-    return WindowsModule.focusedWindow;
-  }
+    const activeWindowsIndex: ComputedRef<Nullable<number>> = computed(() => {
+      return WindowsModule.activeWindowsIndex;
+    });
 
-  get activeWindowsIndex(): Nullable<number> {
-    return WindowsModule.activeWindowsIndex;
-  }
+    function openWindow(name: WindowName, index: number): void {
+      WindowsModule.openWindow({ name, index });
+    }
 
-  openWindow(name: WindowName, index: number): void {
-    WindowsModule.openWindow({ name, index });
-  }
+    function closeWindow(event: Event, index: number): void {
+      event.stopPropagation();
+      WindowsModule.closeWindow(index);
+    }
 
-  closeWindow(event: Event, index: number): void {
-    event.stopPropagation();
-    WindowsModule.closeWindow(index);
-  }
-}
+    return {
+      closeWindow,
+      openWindow,
+      activeWindowsIndex,
+      focusedWindow,
+      key,
+    };
+  },
+});
 </script>
 
 <style module lang="scss">
