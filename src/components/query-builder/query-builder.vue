@@ -60,7 +60,7 @@
           :class="$style['query-header__btn']"
           @click="run"
         />
-        <Loader v-if="isServerSending" accent />
+        <Loader v-if="isSending" accent />
       </div>
     </div>
   </div>
@@ -171,8 +171,11 @@ export default defineComponent({
     }
     function run(): void {
       if (cmd.value) {
+        console.log('is it if');
         sendCmd();
       } else {
+        console.log('is it else ');
+        QueryBuilderModule.setKeyForWIndow(props.curentKey);
         ServerConnectionModule.sendQuery(props.curentKey);
       }
     }

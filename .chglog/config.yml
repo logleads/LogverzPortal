@@ -21,6 +21,7 @@ options:
       - refactor
       - build
       - chore
+      - polish
     title_maps:
       feat: ✨ Features
       fix: 🐛 Bug Fixes
@@ -29,6 +30,7 @@ options:
       update: 🔄 Updates
       build: 👷 Building scripts changes
       chore: 🧹 Other changes
+      polish: 💅 UI changes
       # other images https://gitmoji.dev/
   header:
     pattern: "^(\\w*)(?:\\(([\\w\\$\\.\\-\\*\\s]*)\\))?\\:\\s(.*)$"

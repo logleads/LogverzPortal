@@ -74,13 +74,17 @@ class Windows extends VuexModule {
 
   @Mutation
   private REMOVE_ACTIVE_WINDOW(index: number) {
+    console.log('this.activeWindows', this.activeWindows);
+    console.log('remove index', index);
     const windows = [...this.activeWindows].filter((item: any) => item.index != index); //
-    this.activeWindows = windows.map((item: any) => {
-      return {
-        ...item,
-        index: item.index < index ? item.index : item.index - 1,
-      };
-    });
+    setTimeout(() => {
+      this.activeWindows = windows.map((item: any) => {
+        return {
+          ...item,
+          index: item.index < index ? item.index : item.index - 1,
+        };
+      });
+    }, 0);
   }
 
   @Mutation

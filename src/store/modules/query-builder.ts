@@ -165,12 +165,13 @@ class QueryBuilder extends VuexModule {
 
   @Mutation
   private SET_DATA(value: any) {
-    // console.log('162 Data for', value);
+    console.log('162 Data for', value);
+    console.log('this.key', this.key);
     this.dataForAllWindows = {
       ...this.dataForAllWindows,
       [this.key as number]: { ...this.dataForAllWindows[this.key as number], data: value },
     };
-    this.data = value;
+    // this.data = value;
   }
 
   @Mutation
@@ -377,7 +378,7 @@ class QueryBuilder extends VuexModule {
   @Action
   public async setAvailableDB({ value, key }: { value: string; key: number }) {
     this.SET_KEY_FOR_WINDOW(key);
-    // console.log('*****', value, this.dataForAllWindows[key as number]);
+    console.log('*****', value, this.dataForAllWindows[key as number]);
     if (value !== this.dataForAllWindows[key as number].dataBaseCurrentAlias) {
       this.SET_DATA_BASE_CURRENT_ALIAS(value);
       this.SET_DATA(null);

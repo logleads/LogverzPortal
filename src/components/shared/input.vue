@@ -5,7 +5,11 @@
     </div>
     <input
       :type="type"
-      :class="[$style['input'], { [$style['input__error']]: error }]"
+      :class="[
+        $style['input'],
+        { [$style['input__error']]: error },
+        { [$style['height-44']]: fromQueryBuilder },
+      ]"
       :value="value"
       :min="min"
       :name="name"
@@ -28,17 +32,6 @@ export default defineComponent({
   // eslint-disable-next-line vue/no-reserved-component-names, vue/multi-word-component-names
   name: 'Input',
   components: { Icon },
-  // @Prop({ required: false, type: String }) readonly value!: string;
-  // @Prop({ required: false, type: String, default: 'text' }) readonly type!:
-  //   | 'text'
-  //   | 'password'
-  //   | 'search';
-
-  // @Prop({ required: false, type: String }) readonly name!: string;
-  // @Prop({ required: false, type: Number }) readonly min!: number;
-  // @Prop({ required: false, type: Boolean }) readonly error!: boolean;
-  // @Prop({ required: false, type: Boolean }) readonly disabled!: boolean;
-  // @Prop({ required: false, type: String }) readonly placeholder!: string;
   props: {
     value: {
       type: String,
@@ -68,6 +61,11 @@ export default defineComponent({
     placeholder: {
       type: String,
       required: false,
+    },
+    fromQueryBuilder: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
   setup(props, { emit }) {
@@ -100,6 +98,9 @@ $iconSize: 16px;
   height: $iconSize;
 }
 
+.height-44 {
+  height: 44px !important;
+}
 .input {
   background: #ffffff;
   border: 1px solid var(--border-color);

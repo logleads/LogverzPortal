@@ -31,6 +31,7 @@
         :class="$style['query-bilder__input']"
         :value="query[index].value"
         :disabled="disabledValue(index)"
+        :from-query-builder="true"
         @input="e => handleInput(e, index)"
       />
       <div v-if="index == 0" :class="$style['hover']" @click="add">
@@ -493,7 +494,7 @@ export default defineComponent({
 .query-bilder {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  // align-items: center;
   align-content: center;
   flex-direction: row;
 }

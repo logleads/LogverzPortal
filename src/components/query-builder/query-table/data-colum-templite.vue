@@ -13,6 +13,7 @@
     <DxFilterRow :visible="true" />
     <DxPaging :page-size="10" />
     // eslint-disable-next-line vue/no-v-for-template-key
+
     <template v-for="(v, k) in headers">
       <DxColumn
         :key="genereteRandomKey(k)"
@@ -27,7 +28,7 @@
       <MasterDetailedSettings :data="data" :rawitems="rawitems" :format="getRolesForAllWindows" />
     </template>
     <DxExport :enabled="true" />
-    <DxLoadPanel :enabled="true" />
+    <DxLoadPanel v-if="getCurrentKey === curentKey" :enabled="true" />
     <DxScrolling mode="virtual" />
   </DxDataGrid>
 </template>
@@ -130,6 +131,9 @@ export default defineComponent({
         ? QueryBuilderModule.dataForAllWindows[props.curentKey as number].togglingExport
         : false;
     });
+    const getCurrentKey: ComputedRef<Nullable<number>> = computed(() => {
+      return QueryBuilderModule.key;
+    });
 
     const dataBaseCurrentAlias: ComputedRef<string> = computed(() => {
       return QueryBuilderModule.dataForAllWindows[props.curentKey as number]
@@ -194,6 +198,7 @@ export default defineComponent({
       selectDateType,
       selectWidth,
       grid,
+      getCurrentKey,
     };
   },
 });

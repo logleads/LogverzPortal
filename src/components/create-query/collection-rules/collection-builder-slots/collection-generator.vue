@@ -27,6 +27,7 @@
         <Input
           :class="[$style['query-bilder__item__input'], $style['input-margin']]"
           :value="query[index].value"
+          :from-query-builder="true"
           :disabled="disabledValue(index)"
           @input="e => handleInput(e, index)"
         />
@@ -76,6 +77,7 @@ import {
 // })
 export default defineComponent({
   name: 'CollectionGenerator',
+  // eslint-disable-next-line vue/no-reserved-component-names
   components: { DropDownSimple, Input, Icon, Tabs },
   props: {
     fields: {

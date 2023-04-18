@@ -254,7 +254,7 @@ class ServerConnection extends VuexModule {
         DBTableName: QueryBuilderModule.dataForAllWindows[key].currentAvailableTable,
         dataBaseEngineItems: QueryBuilderModule.dataForAllWindows[key].dataBaseEngineItems,
       });
-      // this.setSendingStatus(false);
+      this.setSendingStatus(false);
     } catch (e: any) {
       console.log('ERROR:', e);
       ErrorsModule.showErrorMessage(e.message);
