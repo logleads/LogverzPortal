@@ -146,7 +146,7 @@ export default defineComponent({
     }
 
     function handleValidate(validation: any, setting: string): void {
-      console.log('emit roger', validation.value, setting);
+      // console.log('emit roger', validation.value, setting);
       switch (setting) {
         case 'standard':
           validStandard.value = validation.value;

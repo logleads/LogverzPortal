@@ -41,11 +41,12 @@
 import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from '@vue/composition-api';
 import { DxDataGrid } from 'devextreme-vue/data-grid';
 
+import Icon from '~/components/shared/icon.vue';
 import { DataCollectionModule } from '~/store/modules/data-collection';
 
 export default defineComponent({
   name: 'SampleDataCollection',
-  components: { DxDataGrid },
+  components: { DxDataGrid, Icon },
   setup() {
     const triger: Ref<boolean> = ref(false);
     function onTriger(): void {

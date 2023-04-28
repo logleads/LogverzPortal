@@ -32,7 +32,11 @@
         <button type="button" :class="$style['top-panel__control-btn']" @click="toggleFullScreen">
           <Icon name="window-fullscreen" :width="15" :height="15" />
         </button>
-        <button type="button" :class="$style['top-panel__control-btn']" @click="closeWindow">
+        <button
+          type="button"
+          :class="$style['top-panel__control-btn']"
+          @click="closeWindow($event, index)"
+        >
           <Icon name="window-close" :width="12" :height="12" />
         </button>
       </div>
@@ -66,7 +70,7 @@ import {
 
 import Icon from '~/components/shared/icon.vue';
 import { UserModule } from '~/store/modules/user';
-import { WindowsModule } from '~/store/modules/windows';
+import { WindowData, WindowsModule } from '~/store/modules/windows';
 
 enum ResizeSide {
   TOP = 'top',
@@ -111,6 +115,10 @@ export default defineComponent({
     window: {
       type: Object,
       required: true,
+    },
+    index: {
+      type: Number,
+      required: false,
     },
   },
   // @Prop({ required: true, type: Object }) readonly window!: WindowData;
@@ -361,7 +369,7 @@ export default defineComponent({
       }
     }
 
-    function closeWindow(e: Event): void {
+    function closeWindow(e: Event, index: any): void {
       e.stopPropagation();
       if (props.window.name === 'terms-window') {
         UserModule.toggleDisplayTerms(false);
@@ -372,7 +380,7 @@ export default defineComponent({
       if (props.window.name === 'settings-window') {
         UserModule.toggleDisplayUserSettings(false);
       }
-      WindowsModule.closeWindow(props.window.index);
+      WindowsModule.closeWindow(index);
     }
 
     function openWindow(): void {
@@ -392,7 +400,16 @@ export default defineComponent({
         WindowsModule.editWindowName(title.value);
       }
     }
+    const activeWindows: ComputedRef<WindowData[]> = computed(() => {
+      return WindowsModule.activeWindows;
+    });
+
+    watch(activeWindows, () => {
+      title.value = props.window.windowName;
+    });
+
     watch(props.window, () => {
+      // console.log('inside watch', props.window);
       title.value = props.window.windowName;
     });
     return {

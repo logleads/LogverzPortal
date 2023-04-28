@@ -40,6 +40,8 @@ export default defineComponent({
 
     watch(activeWindows, () => {
       items.value = activeWindows.value;
+      // console.table(items.value);
+      // });
     });
     return {
       items,

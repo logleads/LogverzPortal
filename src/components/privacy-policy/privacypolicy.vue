@@ -21,6 +21,7 @@ export default defineComponent({
       zIndex: 9999,
       index: 2,
       windowName: 'privacy-policy-window',
+      dataNumber: Math.floor(Math.random() * 1000),
     });
     const url: Ref<string> = ref('https://docs.logverz.io/assets/docs/LogLeads_Privacy_Policy.pdf');
     function handleDownload(): void {

@@ -331,6 +331,7 @@ class QueryBuilder extends VuexModule {
 
   @Mutation
   private SET_DATA_BASE_CURRENT_ALIAS(value: string) {
+    console.log('db-2', value, this.key);
     this.dataForAllWindows = {
       ...this.dataForAllWindows,
       [this.key as number]: {
@@ -378,7 +379,13 @@ class QueryBuilder extends VuexModule {
   @Action
   public async setAvailableDB({ value, key }: { value: string; key: number }) {
     this.SET_KEY_FOR_WINDOW(key);
-    console.log('*****', value, this.dataForAllWindows[key as number]);
+    console.log(
+      '**looking***',
+      value,
+      this.dataForAllWindows[key as number].dataBaseCurrentAlias,
+      key,
+    );
+    console.log('db-3');
     if (value !== this.dataForAllWindows[key as number].dataBaseCurrentAlias) {
       this.SET_DATA_BASE_CURRENT_ALIAS(value);
       this.SET_DATA(null);
@@ -472,9 +479,13 @@ class QueryBuilder extends VuexModule {
     this.COMMON_SET_FETCHING({ label: 'isDBAliasFetching', value: true });
     try {
       const response = await RTCServiceObj.uploadDBAlias();
+      console.log('db-1', response);
+      console.log('db-key', key);
       this.SET_DB_ALIAS_ITEMS(response.DBAlias);
       this.SET_DB_ENGINE_ITEMS(response.DBEngine);
-      this.SET_DATA_BASE_CURRENT_ALIAS(this.dataBaseAliasItems[0]);
+      // if (response.DBAlias && response.DBAlias.length > 0) {
+      //   this.SET_DATA_BASE_CURRENT_ALIAS(response.DBAlias[0]);
+      // }
     } catch (e: any) {
       ErrorsModule.showErrorMessage(e.message);
     } finally {

@@ -2,10 +2,10 @@
   <div :class="$style['container']">
     <Header />
     <div :class="$style['workspace']">
-      <Window v-for="(window, index) in activeWindows" :key="index" :window="window">
+      <Window v-for="(window, index) in activeWindows" :key="index" :index="index" :window="window">
         <component
           :is="windowComponents[window.name]"
-          v-bind="{ curentKey: window.index }"
+          v-bind="{ curentKey: window.index, dataNumber: window.dataNumber }"
           :key="index"
           >{{ index }}</component
         >
@@ -23,7 +23,15 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from '@vue/composition-api';
+import {
+  computed,
+  ComputedRef,
+  defineComponent,
+  onMounted,
+  Ref,
+  ref,
+  watch,
+} from '@vue/composition-api';
 
 import AdminWindow from '~/components/admin-window/admin-window.vue';
 import DataCollectionWindow from '~/components/create-query/data-collection-window.vue';
@@ -66,6 +74,7 @@ export default defineComponent({
       zIndex: 55,
       index: 0,
       windowName: 'terms window',
+      dataNumber: Math.floor(Math.random() * 1000),
     });
     const userSettingsWindow: Ref<WindowData> = ref({
       minimized: false,
@@ -74,7 +83,9 @@ export default defineComponent({
       zIndex: 55,
       index: 0,
       windowName: 'user settings window',
+      dataNumber: Math.floor(Math.random() * 1000),
     });
+    const activeWindowsLocal: Ref<any> = ref([]);
     const showTermsWindow: Ref<boolean> = ref(false);
     const showSettingsWindow: Ref<boolean> = ref(false);
     const activeWindows: ComputedRef<WindowData[]> = computed(() => {
@@ -82,7 +93,11 @@ export default defineComponent({
         return Boolean(window && !window.minimized);
       });
     });
-
+    watch(activeWindows, () => {
+      // console.log('home-page', toRefs(activeWindows));
+      console.log(1);
+      activeWindowsLocal.value = activeWindows.value;
+    });
     // get customKey(){
     //   return
     // }
@@ -150,6 +165,7 @@ export default defineComponent({
       activeWindows,
       windowComponents,
       errorMessage,
+      activeWindowsLocal,
     };
   },
 });

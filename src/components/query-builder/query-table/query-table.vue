@@ -37,6 +37,7 @@
             v-if="showSettings"
             :class="$style['big-alert']"
             :curent-key="curentKey"
+            :data-number="dataNumber"
             :default-type="defaultType"
           />
         </div>
@@ -48,8 +49,8 @@
       </template>
       <template v-else>
         <template v-if="items !== null">
-          <DataGridComponent v-if="tableMode" :curent-key="curentKey" />
-          <PivotGridComponent v-else :curent-key="curentKey" />
+          <DataGridComponent v-if="tableMode" :curent-key="curentKey" :data-number="dataNumber" />
+          <PivotGridComponent v-else :curent-key="curentKey" :data-number="dataNumber" />
         </template>
         <template v-else>
           <div :class="$style['no-data']">Select DB server and table in the left sidebar</div>
@@ -85,6 +86,10 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+    dataNumber: {
+      type: Number,
+      required: true,
+    },
   },
   setup(props) {
     const tableMode: Ref<boolean> = ref(true);
@@ -95,7 +100,7 @@ export default defineComponent({
       tableMode.value = !tableMode.value;
       SaveSettingModule.setAnalysisType({
         val: tableMode.value ? 'Data table' : 'Pivot table',
-        key: props.curentKey,
+        key: props.dataNumber,
       });
     }
 
@@ -106,7 +111,7 @@ export default defineComponent({
     }
 
     function toggleSettings(): void {
-      QueryBuilderModule.setKeyForWIndow(props.curentKey);
+      QueryBuilderModule.setKeyForWIndow(props.dataNumber);
       showSettings.value = !showSettings.value;
     }
     function saveConfig(): void {
@@ -119,7 +124,7 @@ export default defineComponent({
     }
 
     const getDataByKay: ComputedRef<any> = computed(() => {
-      return QueryBuilderModule.dataForAllWindows[props.curentKey as number];
+      return QueryBuilderModule.dataForAllWindows[props.dataNumber as number];
     });
 
     const forbiddenObj: ComputedRef<{ status: boolean; reason: string }> = computed(() => {
@@ -135,12 +140,12 @@ export default defineComponent({
     });
     // TODO think about it
     function exportDataBase(): void {
-      QueryBuilderModule.toggleForExport(props.curentKey);
+      QueryBuilderModule.toggleForExport(props.dataNumber);
     }
 
     watch(exportc, (value: boolean) => {
       if (value) {
-        const data = SaveSettingModule.dataT[props.curentKey];
+        const data = SaveSettingModule.dataT[props.dataNumber];
         tableMode.value = data.AnalysisType == 'Data table';
         defaultType.value = data.Views;
       }

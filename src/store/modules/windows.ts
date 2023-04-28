@@ -22,6 +22,7 @@ export interface WindowData {
   zIndex: number;
   index: number;
   windowName: string;
+  dataNumber: number | null;
 }
 
 const labels: Record<WindowName, string> = {
@@ -42,6 +43,7 @@ class Windows extends VuexModule {
   activeWindows: Array<WindowData> = [];
   lastZIndex: number = 50;
   activeWindowsIndex: number = 0;
+  static alotments = 0;
 
   @Mutation
   private SET_FOCUSED_WINDOW(name: Nullable<WindowName>) {
@@ -62,6 +64,7 @@ class Windows extends VuexModule {
       zIndex: this.lastZIndex++,
       index: this.activeWindows.length,
       windowName: labels[name],
+      dataNumber: ++Windows.alotments,
     });
 
     this.activeWindowsIndex = this.activeWindows.length - 1;
@@ -76,15 +79,27 @@ class Windows extends VuexModule {
   private REMOVE_ACTIVE_WINDOW(index: number) {
     console.log('this.activeWindows', this.activeWindows);
     console.log('remove index', index);
-    const windows = [...this.activeWindows].filter((item: any) => item.index != index); //
-    setTimeout(() => {
-      this.activeWindows = windows.map((item: any) => {
+    new Promise(resolve => {
+      const windows = [...this.activeWindows].filter((item: any) => item.index != index); //
+      resolve(windows);
+    }).then((data: any) => {
+      const updatedActiveWindows = data.map((item: any) => {
         return {
           ...item,
           index: item.index < index ? item.index : item.index - 1,
         };
       });
-    }, 0);
+
+      this.activeWindows = updatedActiveWindows;
+
+      // console.log('after this.activeWindows', this.activeWindows);
+      // this.activeWindows.splice(index, 1);
+      // this.activeWindowsIndex = index;
+    });
+
+    // this.activeWindowsIndex = index;
+
+    // this.SET_FOCUSED_WINDOW(this.activeWindows[index].name);
   }
 
   @Mutation

@@ -123,7 +123,7 @@ export default defineComponent({
       //   DataCollectionModule.setInputValue({ label: 'QueryString', value: customQuery.value });
       // } else {
       // eslint-disable-next-line no-console
-      console.log('116 trsting query', customQuery.value);
+      // console.log('116 trsting query', customQuery.value);
       DataCollectionModule.setInputValue({
         label: 'QueryString',
         value: parserQuery(

@@ -30,10 +30,6 @@ import { ServerConnectionModule } from '~/store/modules/server-connection';
 import { UserModule } from '~/store/modules/user';
 import { WindowData, WindowName } from '~/store/modules/windows';
 
-// @Component({
-//   name: 'UserSettings',
-//   components: { Window, ToolTip },
-// })
 export default defineComponent({
   name: 'UserSettings',
   components: { ToolTip },
@@ -45,6 +41,7 @@ export default defineComponent({
       zIndex: 9999,
       index: 1,
       windowName: 'user-settings',
+      dataNumber: Math.floor(Math.random() * 1000),
     });
     const localTurnServer: Ref<boolean> = ref(true);
     const rtcDescription = ref(USR_RTC_DESCRIPTION);

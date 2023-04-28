@@ -55,7 +55,7 @@ export default defineComponent({
       () => props.stateBTN,
       (value: boolean) => {
         // eslint-disable-next-line no-console
-        console.log(value, 'hStateBTN');
+        // console.log(value, 'hStateBTN');
         tableContent.value = value;
       },
     );

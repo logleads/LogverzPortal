@@ -7,6 +7,7 @@
         :items-remastered="itemsRemastered"
         :rawitems="rawItems"
         :curent-key="curentKey"
+        :data-number="dataNumber"
       />
     </template>
   </div>
@@ -35,6 +36,10 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+    dataNumber: {
+      type: Number,
+      required: true,
+    },
   },
   setup(props) {
     const grid: any = ref(null);
@@ -43,20 +48,20 @@ export default defineComponent({
     const rawItems: Ref<any> = ref([]);
 
     function filterBySelectCollums(key: string) {
-      return QueryBuilderModule.dataForAllWindows[props.curentKey as number].showCollums
-        ? QueryBuilderModule.dataForAllWindows[props.curentKey as number].showCollums.includes(key)
+      return QueryBuilderModule.dataForAllWindows[props.dataNumber as number].showCollums
+        ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].showCollums.includes(key)
         : false;
     }
 
     const isShowTable: ComputedRef<boolean> = computed(() => {
-      return QueryBuilderModule.dataForAllWindows[props.curentKey as number]
-        ? QueryBuilderModule.dataForAllWindows[props.curentKey as number].isShowTable
+      return QueryBuilderModule.dataForAllWindows[props.dataNumber as number]
+        ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].isShowTable
         : false;
     });
 
     const items: ComputedRef<CloudTrailDataResponse[] | null> = computed(() => {
-      const data = QueryBuilderModule.dataForAllWindows[props.curentKey as number]
-        ? QueryBuilderModule.dataForAllWindows[props.curentKey as number].data.map(
+      const data = QueryBuilderModule.dataForAllWindows[props.dataNumber as number]
+        ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].data.map(
             (i: Record<string, unknown>) => i,
           )
         : [];

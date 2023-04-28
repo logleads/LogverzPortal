@@ -120,6 +120,10 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+    dataNumber: {
+      type: Number,
+      required: true,
+    },
   },
   setup(props) {
     const isChartT: Ref<boolean> = ref(true);
@@ -189,8 +193,8 @@ export default defineComponent({
     }
 
     const items: ComputedRef<CloudTrailDataResponse[] | null> = computed(() => {
-      const data = QueryBuilderModule.dataForAllWindows[props.curentKey as number]
-        ? QueryBuilderModule.dataForAllWindows[props.curentKey as number].data.map(
+      const data = QueryBuilderModule.dataForAllWindows[props.dataNumber as number]
+        ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].data.map(
             (i: Record<string, unknown>) => i,
           )
         : [];

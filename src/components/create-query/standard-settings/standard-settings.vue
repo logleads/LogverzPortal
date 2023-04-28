@@ -335,7 +335,7 @@ export default defineComponent({
 
     const DatatypeSelector: ComputedRef<string> = computed(() => {
       // eslint-disable-next-line no-console
-      console.log('DatatypeSelector', DataCollectionModule.DataType);
+      // console.log('DatatypeSelector', DataCollectionModule.DataType);
       return DataCollectionModule.DataType;
     });
 
@@ -349,7 +349,7 @@ export default defineComponent({
 
     const QueryTypeItems: ComputedRef<Array<string>> = computed(() => {
       // eslint-disable-next-line no-console
-      console.log('QueryTypeItems', DataCollectionModule.queryTypesItems);
+      // console.log('QueryTypeItems', DataCollectionModule.queryTypesItems);
       let resp = DataCollectionModule.queryTypesItems
         .filter(item => !notShowDatatypeSelector.includes(item))
         .reduce((acc: string[], i: string) => {
@@ -382,7 +382,7 @@ export default defineComponent({
 
     const LogVolume: ComputedRef<string> = computed(() => {
       // eslint-disable-next-line no-console
-      console.log('LOG VOLUME', DataCollectionModule.logVolume);
+      // console.log('LOG VOLUME', DataCollectionModule.logVolume);
 
       return DataCollectionModule.logVolume;
     });
@@ -450,8 +450,8 @@ export default defineComponent({
     });
     watch(DatatypeSelector, value => {
       DataCollectionModule.getTableParametersList(value);
-      console.log('first', DatatypeSelector.value);
-      console.log('second', value);
+      // console.log('first', DatatypeSelector.value);
+      // console.log('second', value);
       selects.value = [
         {
           label: 'LogVolume',
@@ -579,7 +579,7 @@ export default defineComponent({
       if (payload.label == 'DatasetName') {
         DataCollectionModule.setInputValue({ label: 'DatasetWarning', value: '' });
       }
-      console.log('first', payload);
+      // console.log('first', payload);
       DataCollectionModule.setInputValue(payload);
       /**
        * TODO: handle this part later

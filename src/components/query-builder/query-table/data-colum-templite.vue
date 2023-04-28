@@ -28,7 +28,7 @@
       <MasterDetailedSettings :data="data" :rawitems="rawitems" :format="getRolesForAllWindows" />
     </template>
     <DxExport :enabled="true" />
-    <DxLoadPanel v-if="getCurrentKey === curentKey" :enabled="true" />
+    <DxLoadPanel v-if="getCurrentKey === dataNumber" :enabled="true" />
     <DxScrolling mode="virtual" />
   </DxDataGrid>
 </template>
@@ -93,6 +93,10 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+    dataNumber: {
+      type: Number,
+      required: true,
+    },
   },
   // @Prop() readonly headers!: Array<unknown>;
   // @Prop() readonly itemsRemastered!: Array<unknown>;
@@ -127,8 +131,8 @@ export default defineComponent({
     }
 
     const togglingExport: ComputedRef<boolean> = computed(() => {
-      return QueryBuilderModule.dataForAllWindows[props.curentKey as number]
-        ? QueryBuilderModule.dataForAllWindows[props.curentKey as number].togglingExport
+      return QueryBuilderModule.dataForAllWindows[props.dataNumber as number]
+        ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].togglingExport
         : false;
     });
     const getCurrentKey: ComputedRef<Nullable<number>> = computed(() => {
@@ -136,26 +140,26 @@ export default defineComponent({
     });
 
     const dataBaseCurrentAlias: ComputedRef<string> = computed(() => {
-      return QueryBuilderModule.dataForAllWindows[props.curentKey as number]
-        ? QueryBuilderModule.dataForAllWindows[props.curentKey as number].dataBaseCurrentAlias
+      return QueryBuilderModule.dataForAllWindows[props.dataNumber as number]
+        ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].dataBaseCurrentAlias
         : '';
     });
 
     const currentAvailableTable: ComputedRef<string> = computed(() => {
-      return QueryBuilderModule.dataForAllWindows[props.curentKey as number]
-        ? QueryBuilderModule.dataForAllWindows[props.curentKey as number].currentAvailableTable
+      return QueryBuilderModule.dataForAllWindows[props.dataNumber as number]
+        ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].currentAvailableTable
         : '';
     });
 
     const getRolesForAllWindows: ComputedRef<string> = computed(() => {
-      return QueryBuilderModule.dataForAllWindows[props.curentKey as number]
-        ? QueryBuilderModule.dataForAllWindows[props.curentKey as number].tableDataFormat
+      return QueryBuilderModule.dataForAllWindows[props.dataNumber as number]
+        ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].tableDataFormat
         : null;
     });
 
     watch(togglingExport, () => {
       // eslint-disable-next-line no-console
-      console.log('handleExporting1');
+      // console.log('handleExporting1');
       exportData();
     });
 

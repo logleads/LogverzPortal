@@ -5,6 +5,7 @@
         <QueryGenerator
           :fields="rules"
           :curent-key="curentKey"
+          :data-number="dataNumber"
           :class="$style['query-item__container__el']"
           :curent-table="currentAvailableTable"
           :type-data-base="dataBaseEngineItems"
@@ -50,6 +51,10 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+    dataNumber: {
+      type: Number,
+      required: true,
+    },
   },
   setup(props, { emit }) {
     const query: Ref<MainQuery> = ref({
@@ -61,36 +66,36 @@ export default defineComponent({
     const cmd = ref('');
 
     watch(query, (val: MainQuery) => {
-      QueryBuilderModule.setQuery({ value: val, key: props.curentKey });
+      QueryBuilderModule.setQuery({ value: val, key: props.dataNumber });
     });
 
     const noDataType: ComputedRef<boolean> = computed(() => {
-      return QueryBuilderModule.dataForAllWindows[props.curentKey as number]
-        ? QueryBuilderModule.dataForAllWindows[props.curentKey as number].noDataType
+      return QueryBuilderModule.dataForAllWindows[props.dataNumber as number]
+        ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].noDataType
         : '';
     });
 
     const rules: ComputedRef<Array<QueryBuilderRule> | null> = computed(() => {
-      return QueryBuilderModule.dataForAllWindows[props.curentKey as number]
-        ? QueryBuilderModule.dataForAllWindows[props.curentKey as number].rules || []
+      return QueryBuilderModule.dataForAllWindows[props.dataNumber as number]
+        ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].rules || []
         : [];
     });
 
     const currentAvailableTable: ComputedRef<string> = computed(() => {
-      return QueryBuilderModule.dataForAllWindows[props.curentKey as number]
-        ? QueryBuilderModule.dataForAllWindows[props.curentKey as number].currentAvailableTable
+      return QueryBuilderModule.dataForAllWindows[props.dataNumber as number]
+        ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].currentAvailableTable
         : '';
     });
 
     const dataBaseCurrentAlias: ComputedRef<string> = computed(() => {
       // console.log("line 91")
-      return QueryBuilderModule.dataForAllWindows[props.curentKey as number]
-        ? QueryBuilderModule.dataForAllWindows[props.curentKey as number].dataBaseCurrentAlias
+      return QueryBuilderModule.dataForAllWindows[props.dataNumber as number]
+        ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].dataBaseCurrentAlias
         : '';
     });
     const dataBaseEngineItems: ComputedRef<string> = computed(() => {
-      let engineData = QueryBuilderModule.dataForAllWindows[props.curentKey as number]
-        ? QueryBuilderModule.dataForAllWindows[props.curentKey as number].dataBaseEngineItems
+      let engineData = QueryBuilderModule.dataForAllWindows[props.dataNumber as number]
+        ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].dataBaseEngineItems
         : '';
       const data = engineData.find((engine: any) => engine.name == dataBaseCurrentAlias.value);
       // console.log("engineData",data)

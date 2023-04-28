@@ -35,6 +35,7 @@
           <QueryBuilder
             v-if="!isShowBackground"
             :curent-key="curentKey"
+            :data-number="dataNumber"
             :alias-d-b="aliasDB"
             @toggle="toggleBody"
             @close-side-bar="closeSideBar"
@@ -48,7 +49,11 @@
         :style="{ width: rightWidth + '%' }"
       >
         <div :class="$style['container-big']" :style="{ height: topHeigth + '%' }">
-          <QueryTable :curent-key="curentKey" :class="$style['w_h-full']" />
+          <QueryTable
+            :curent-key="curentKey"
+            :data-number="dataNumber"
+            :class="$style['w_h-full']"
+          />
         </div>
         <div
           :class="[$style['text-editor'], isOpenTextEditor ? '' : $style['bg-color']]"
@@ -65,12 +70,13 @@
               v-if="isOpenTextEditor"
               :class="$style['w_h-full']"
               :curent-key="curentKey"
+              :data-number="dataNumber"
             />
           </div>
         </div>
       </div>
     </template>
-    <QueryDialogSaveSetting :curent-key="curentKey" />
+    <QueryDialogSaveSetting :curent-key="curentKey" :data-number="dataNumber" />
   </div>
 </template>
 
@@ -116,6 +122,10 @@ export default defineComponent({
   },
   props: {
     curentKey: {
+      type: Number,
+      required: true,
+    },
+    dataNumber: {
       type: Number,
       required: true,
     },
@@ -187,20 +197,22 @@ export default defineComponent({
     });
 
     onMounted(async () => {
-      const dataWithKey = QueryBuilderModule.dataForAllWindows[props.curentKey as number];
+      const dataWithKey = await QueryBuilderModule.dataForAllWindows[props.dataNumber as number];
       const data = dataWithKey
         ? dataWithKey.data
           ? dataWithKey.data.map((i: Record<string, unknown>) => i)
           : []
         : [];
+      console.log('querybuilder window mount function', props.dataNumber);
 
       if (data?.length === 0) {
-        QueryBuilderModule.initStateForWindow(props.curentKey as number);
+        console.log('is it the first');
+        QueryBuilderModule.initStateForWindow(props.dataNumber as number);
         !RTCServiceObj.isConected && (await RTCServiceObj.init(handleConenction));
         await RTCServiceObj.uploadDBAlias();
         closeTextEditor();
       }
-      SaveSettingModule.init(props.curentKey as number);
+      SaveSettingModule.init(props.dataNumber as number);
     });
 
     onUnmounted(async () => {

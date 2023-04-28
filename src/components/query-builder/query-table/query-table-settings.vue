@@ -55,6 +55,10 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+    dataNumber: {
+      type: Number,
+      required: true,
+    },
     defaultType: {
       type: String,
       required: true,
@@ -67,7 +71,7 @@ export default defineComponent({
     const deftype = ref(props.defaultType);
     onMounted(() => {
       type.value =
-        QueryBuilderModule.dataForAllWindows[props.curentKey as number].selectedViewsName;
+        QueryBuilderModule.dataForAllWindows[props.dataNumber as number].selectedViewsName;
     });
 
     function changeCustomColumn(): void {
@@ -77,14 +81,14 @@ export default defineComponent({
     }
 
     function checkSelectedColums(key: string): boolean {
-      return QueryBuilderModule.dataForAllWindows[props.curentKey as number].showCollums
-        ? QueryBuilderModule.dataForAllWindows[props.curentKey as number].showCollums.includes(key)
+      return QueryBuilderModule.dataForAllWindows[props.dataNumber as number].showCollums
+        ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].showCollums.includes(key)
         : false;
     }
 
     const fields: ComputedRef<any> = computed(() => {
-      const fields = QueryBuilderModule.dataForAllWindows[props.curentKey as number]
-        ? QueryBuilderModule.dataForAllWindows[props.curentKey as number].rules
+      const fields = QueryBuilderModule.dataForAllWindows[props.dataNumber as number]
+        ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].rules
         : null;
 
       fields.map((item: any) => {
@@ -94,9 +98,9 @@ export default defineComponent({
     });
 
     const views: ComputedRef<any> = computed(() => {
-      const data = QueryBuilderModule.dataForAllWindows[props.curentKey as number]
+      const data = QueryBuilderModule.dataForAllWindows[props.dataNumber as number]
         ? {
-            ...QueryBuilderModule.dataForAllWindows[props.curentKey as number].views,
+            ...QueryBuilderModule.dataForAllWindows[props.dataNumber as number].views,
             'All colums': 'All colums',
             Custom: 'Custom',
           } || {}
@@ -109,7 +113,7 @@ export default defineComponent({
       const oldType = type.value;
       types.value[data] = data;
       type.value = data;
-      SaveSettingModule.setViews({ val: type.value, key: props.curentKey });
+      SaveSettingModule.setViews({ val: type.value, key: props.dataNumber });
 
       if (type.value == 'All colums') {
         const collums = fields.value.map((item: any) => item.label) as [string];

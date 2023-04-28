@@ -48,7 +48,7 @@ export default defineComponent({
      */
     // @Emit('update-query')
     function updateQuery(query: any): unknown {
-      console.log('coming here 1', query);
+      // console.log('coming here 1', query);
       emit('update-query', query);
       return query;
     }

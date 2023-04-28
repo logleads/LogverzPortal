@@ -42,7 +42,11 @@
         <p :class="$style['query-header__title']">Query Builder</p>
       </div>
       <div :class="$style['query-container']">
-        <QueryItem :curent-key="curentKey" @update-command="e => (cmd = e)" />
+        <QueryItem
+          :curent-key="curentKey"
+          :data-number="dataNumber"
+          @update-command="e => (cmd = e)"
+        />
       </div>
       <div :class="$style['query-footer']">
         <!-- <Button
@@ -95,6 +99,10 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+    dataNumber: {
+      type: Number,
+      required: true,
+    },
     aliasDB: {
       type: Array,
     },
@@ -105,10 +113,13 @@ export default defineComponent({
     const cmd = ref('');
 
     const dataByKey = computed(() => {
-      return QueryBuilderModule.dataForAllWindows[props.curentKey as number];
+      return QueryBuilderModule.dataForAllWindows[props.dataNumber as number];
     });
 
     const dataBaseAlias: ComputedRef<Array<string>> = computed(() => {
+      // console.log('db-4');
+      // console.log('dataByKey.value|>');
+      // console.log(dataByKey.value);
       return dataByKey.value ? dataByKey.value.dataBaseAliasItems : [];
     });
 
@@ -157,17 +168,17 @@ export default defineComponent({
     });
     // TODO think about it
     function exportDataBase(): void {
-      QueryBuilderModule.toggleForExport(props.curentKey);
+      QueryBuilderModule.toggleForExport(props.dataNumber);
     }
 
     function handleDBSelect(payload: { item: string; content: string }): void {
-      QueryBuilderModule.setAvailableDB({ value: payload.item, key: props.curentKey });
-      SaveSettingModule.saveDataBaseName({ key: props.curentKey, name: payload.item });
+      QueryBuilderModule.setAvailableDB({ value: payload.item, key: props.dataNumber });
+      SaveSettingModule.saveDataBaseName({ key: props.dataNumber, name: payload.item });
     }
 
     function handleTableSelect(payload: { item: string; content: string }): void {
-      QueryBuilderModule.setCurrentTable({ value: payload.item, key: props.curentKey });
-      SaveSettingModule.saveTableName({ key: props.curentKey, name: payload.item });
+      QueryBuilderModule.setCurrentTable({ value: payload.item, key: props.dataNumber });
+      SaveSettingModule.saveTableName({ key: props.dataNumber, name: payload.item });
     }
     function run(): void {
       if (cmd.value) {
@@ -175,13 +186,13 @@ export default defineComponent({
         sendCmd();
       } else {
         console.log('is it else ');
-        QueryBuilderModule.setKeyForWIndow(props.curentKey);
-        ServerConnectionModule.sendQuery(props.curentKey);
+        QueryBuilderModule.setKeyForWIndow(props.dataNumber);
+        ServerConnectionModule.sendQuery(props.dataNumber);
       }
     }
 
     function sendCmd(): void {
-      QueryBuilderModule.setKeyForWIndow(props.curentKey);
+      QueryBuilderModule.setKeyForWIndow(props.dataNumber);
       RTCServiceObj.sendQuery(
         `{"LogverzDBFriendlyName":"${dataBaseCurrentAlias.value}","Mode":"Native","QueryParams":"${cmd.value}"}`,
       );
@@ -191,23 +202,27 @@ export default defineComponent({
     }
     watch(isServerSending, (value: boolean) => {
       // eslint-disable-next-line no-console
-      // console.log('is server sending', SaveSettingModule.dataT[props.curentKey].);
+      // console.log('is server sending', SaveSettingModule.dataT[props.dataNumber].);
       if (QueryBuilderModule) {
         QueryBuilderModule.setIsSending(value);
       }
     });
     onMounted(() => {
-      QueryBuilderModule.getDBAlias(props.curentKey);
-      ServerConnectionModule.setWaitedStatus();
+      console.log('spot on', props.dataNumber, QueryBuilderModule.key);
+      setTimeout(() => {
+        console.log('spot off', props.dataNumber, QueryBuilderModule.key);
+        QueryBuilderModule.getDBAlias(props.dataNumber);
+        ServerConnectionModule.setWaitedStatus();
+      }, 100);
     });
     const exportc: ComputedRef<boolean> = computed(() => {
       return SaveSettingModule.export;
     });
     watch(exportc, (value: boolean) => {
-      if (value && SaveSettingModule.key == props.curentKey) {
-        const DataBaseName = SaveSettingModule.dataT[props.curentKey].DataBaseName;
+      if (value && SaveSettingModule.key == props.dataNumber) {
+        const DataBaseName = SaveSettingModule.dataT[props.dataNumber].DataBaseName;
 
-        const DatasetName = SaveSettingModule.dataT[props.curentKey].TableName;
+        const DatasetName = SaveSettingModule.dataT[props.dataNumber].TableName;
         handleDBSelect({ item: DataBaseName, content: DataBaseName });
         setTimeout(() => {
           handleTableSelect({ item: DatasetName, content: DatasetName });

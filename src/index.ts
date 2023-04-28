@@ -1,5 +1,6 @@
-import Vue from 'vue';
+import { createApp } from '@vue/composition-api';
 
 import App from '~/components/app.vue';
-
-new Vue(App).$mount('#root');
+const app = createApp(App);
+app.mount('#root');
+// new Vue(App).$mount('#root');

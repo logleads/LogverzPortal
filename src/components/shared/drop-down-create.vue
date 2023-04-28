@@ -60,7 +60,7 @@ export default defineComponent({
 
     watch(isLoadConfigurationUpload, (value: boolean) => {
       // eslint-disable-next-line no-console
-      console.log('checkLoadConfigurationFlag', value);
+      // console.log('checkLoadConfigurationFlag', value);
       if (props.label === 'Review') isExpanded.value = value;
       // return '';
     });

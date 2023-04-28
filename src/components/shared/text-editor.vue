@@ -31,6 +31,10 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+    dataNumber: {
+      type: Number,
+      required: true,
+    },
   },
   setup(props) {
     const content: Ref<string> = ref('sdf');
@@ -78,7 +82,7 @@ export default defineComponent({
       console.log(textS.join('\n\n'), 'textS');
       SaveSettingModule.setTextEditor({
         data: textS.join('\n\n'),
-        key: props.curentKey,
+        key: props.dataNumber,
       });
     }
 
@@ -93,7 +97,7 @@ export default defineComponent({
     }
 
     const editorText: ComputedRef<string> = computed(() => {
-      return SaveSettingModule.dataT[props.curentKey].textEditor;
+      return SaveSettingModule.dataT[props.dataNumber].textEditor;
     });
 
     return {

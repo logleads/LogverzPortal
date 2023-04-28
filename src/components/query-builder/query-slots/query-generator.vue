@@ -135,6 +135,10 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+    dataNumber: {
+      type: Number,
+      required: true,
+    },
     fields: {
       type: null as any,
       required: true,
@@ -176,7 +180,7 @@ export default defineComponent({
 
     onMounted(() => {
       if (SaveSettingModule.export) {
-        const data = SaveSettingModule.dataT[props.curentKey];
+        const data = SaveSettingModule.dataT[props.dataNumber];
         isAnd.value = data.CombinationQfQueries == 'AND';
         lineWithRules.value = data.QuerySettings.map((item, index) => index + 1);
         query.value = data.QuerySettings.map(item => ({
@@ -283,7 +287,7 @@ export default defineComponent({
     const dataWithKey: ComputedRef<DataI> = computed(() => {
       // eslint-disable-next-line no-console
       console.log(SaveSettingModule.dataT);
-      return SaveSettingModule.dataT[props.curentKey];
+      return SaveSettingModule.dataT[props.dataNumber];
     });
 
     const placeholder: ComputedRef<string> = computed(() => {
@@ -311,7 +315,7 @@ export default defineComponent({
 
     watch(exportc, value => {
       if (value) {
-        const data = SaveSettingModule.dataT[props.curentKey];
+        const data = SaveSettingModule.dataT[props.dataNumber];
         isAnd.value = data.CombinationQfQueries == 'AND';
         lineWithRules.value = data.QuerySettings.map((item, index) => index + 1);
         query.value = data.QuerySettings.map(item => ({
@@ -326,7 +330,7 @@ export default defineComponent({
     });
 
     watch(isCustomRules, () => {
-      SaveSettingModule.setIsCustomQuery({ key: props.curentKey, val: isCustomRules.value });
+      SaveSettingModule.setIsCustomQuery({ key: props.dataNumber, val: isCustomRules.value });
       // this.genereteQuery();
     });
 
@@ -334,7 +338,7 @@ export default defineComponent({
       const newQuery = query.value;
       newQuery[index].role = role;
       query.value = [...newQuery];
-      SaveSettingModule.setQuerySettingsOperation({ key: props.curentKey, id: index, val: role });
+      SaveSettingModule.setQuerySettingsOperation({ key: props.dataNumber, id: index, val: role });
     }
 
     function disabledValue(index: number): boolean {
@@ -360,7 +364,7 @@ export default defineComponent({
       isAnd.value = !isAnd.value;
       genereteQuery();
       SaveSettingModule.setCombinationQfQueries({
-        key: props.curentKey,
+        key: props.dataNumber,
         val: isAnd.value ? 'AND' : 'OR',
       });
     }
@@ -372,7 +376,7 @@ export default defineComponent({
       // eslint-disable-next-line no-console
       console.log('handleCustomQuery', temp);
       customQuery.value = e.target.value;
-      SaveSettingModule.setCustomQuery({ key: props.curentKey, val: temp });
+      SaveSettingModule.setCustomQuery({ key: props.dataNumber, val: temp });
       updateQuery(temp);
     }
 
@@ -381,7 +385,7 @@ export default defineComponent({
       newQuery[index].field = field;
       newQuery[index].typeField = props.fields.filter((item: any) => item.label === field)[0].type;
       query.value = [...newQuery];
-      SaveSettingModule.setQuerySettingsField({ key: props.curentKey, id: index, val: field });
+      SaveSettingModule.setQuerySettingsField({ key: props.dataNumber, id: index, val: field });
       // this.$forceUpdate()
     }
 
@@ -389,14 +393,14 @@ export default defineComponent({
       const newQuery = query.value;
       newQuery[index].value = value;
       query.value = [...newQuery];
-      SaveSettingModule.setQuerySettingsVal({ key: props.curentKey, id: index, val: value });
+      SaveSettingModule.setQuerySettingsVal({ key: props.dataNumber, id: index, val: value });
     }
 
     function handlebatchSize(value: string): void {
       batchSize.value = value;
       genereteQuery();
       SaveSettingModule.setBatch({
-        key: props.curentKey,
+        key: props.dataNumber,
         data: {
           Start: batchStart.value,
           End: batchSize.value,
@@ -408,7 +412,7 @@ export default defineComponent({
       batchStart.value = value;
       genereteQuery();
       SaveSettingModule.setBatch({
-        key: props.curentKey,
+        key: props.dataNumber,
         data: {
           Start: batchStart.value,
           End: batchSize.value,
@@ -419,13 +423,13 @@ export default defineComponent({
     function close(id: number): void {
       lineWithRules.value.splice(id, 1);
       query.value.splice(id, 1);
-      SaveSettingModule.deleteQuerySettings({ key: props.curentKey, id });
+      SaveSettingModule.deleteQuerySettings({ key: props.dataNumber, id });
     }
 
     function add(): void {
       lineWithRules.value.push(lineWithRules.value[lineWithRules.value.length - 1] + 1);
       query.value.push({} as Query);
-      SaveSettingModule.addNewFilterLine({ key: props.curentKey });
+      SaveSettingModule.addNewFilterLine({ key: props.dataNumber });
     }
 
     function updateQuery(query: string): string {

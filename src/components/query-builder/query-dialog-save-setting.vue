@@ -29,11 +29,17 @@ import { SaveSettingModule } from '~/store/modules/save-setting';
 export default defineComponent({
   name: 'QueryItem',
   components: {
+    // eslint-disable-next-line vue/no-reserved-component-names
     Button,
+    // eslint-disable-next-line vue/no-reserved-component-names
     Input,
   },
   props: {
     curentKey: {
+      type: Number,
+      required: true,
+    },
+    dataNumber: {
       type: Number,
       required: true,
     },
@@ -48,9 +54,9 @@ export default defineComponent({
 
     const dataT = computed(() => {
       return {
-        DataBaseName: SaveSettingModule.dataT[props.curentKey].DataBaseName,
-        DatasetName: SaveSettingModule.dataT[props.curentKey].TableName,
-        DataType: SaveSettingModule.dataT[props.curentKey].DataType,
+        DataBaseName: SaveSettingModule.dataT[props.dataNumber].DataBaseName,
+        DatasetName: SaveSettingModule.dataT[props.dataNumber].TableName,
+        DataType: SaveSettingModule.dataT[props.dataNumber].DataType,
       };
     });
 
@@ -59,7 +65,7 @@ export default defineComponent({
     }
 
     function save(): void {
-      SaveSettingModule.saveSetting({ key: props.curentKey, name: Name.value });
+      SaveSettingModule.saveSetting({ key: props.dataNumber, name: Name.value });
       close();
     }
 

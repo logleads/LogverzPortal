@@ -107,7 +107,7 @@ export default defineComponent({
       },
     ]);
     onMounted(() => {
-      console.log('fields', props.fields);
+      // console.log('fields', props.fields);
     });
 
     function transformQuery() {
@@ -205,7 +205,7 @@ export default defineComponent({
     }
 
     function handleInput(value: string, index: number): void {
-      console.log('query value', value, index);
+      // console.log('query value', value, index);
       const newQuery = query.value;
       newQuery[index].value = value;
       query.value = [...newQuery];
@@ -233,7 +233,7 @@ export default defineComponent({
      */
     // @Emit('update-query')
     function updateQuery(query: any): any {
-      console.log('handle emit', query);
+      // console.log('handle emit', query);
       emit('update-query', query);
       return query;
     }

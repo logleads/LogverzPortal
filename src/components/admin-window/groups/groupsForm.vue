@@ -74,7 +74,7 @@ export default defineComponent({
       );
     });
     watch(usersOfGroup, (value: userResponse[]) => {
-      console.log('watch called with');
+      // console.log('watch called with');
       chosenUsers.value = value.map(i => ({ name: i.Name }));
     });
     //TODO: remove watch innotations

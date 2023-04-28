@@ -40,6 +40,7 @@ import { DataCollectionModule } from '~/store/modules/data-collection';
 //   name: 'Review',
 // })
 export default defineComponent({
+  // eslint-disable-next-line vue/multi-word-component-names
   name: 'Review',
   setup() {
     const instance = getCurrentInstance();
@@ -47,7 +48,7 @@ export default defineComponent({
     const DBStatus: Ref<string | null> = ref(null);
     // console.log(vis)
     onMounted(() => {
-      console.log('instance', instance);
+      // console.log('instance', instance);
     });
     function dataDisplay(param: any) {
       return param.value;
@@ -99,7 +100,7 @@ export default defineComponent({
     });
 
     const DatabaseParameters: ComputedRef<string> = computed(() => {
-      console.log(vis, this);
+      // console.log(vis, this);
       return DataCollectionModule.databaseParameters;
     });
     const DatasetDescription: ComputedRef<string> = computed(() => {
@@ -147,7 +148,7 @@ export default defineComponent({
     ]);
     watch(DBinstance, (value: any) => {
       // eslint-disable-next-line no-console
-      console.log('**watchConnectionIndicator**: ', value);
+      // console.log('**watchConnectionIndicator**: ', value);
       if (value.length > 0 === value[0].DBInstanceStatus) {
         DBStatus.value = value[0].DBInstanceStatus;
       }
