@@ -119,11 +119,6 @@ export default defineComponent({
     const items: Ref<Array<{ id: number }>> = ref([{ id: 1 }, { id: 2 }]);
 
     watch(isCustomRules, (value: boolean) => {
-      // if (value) {
-      //   DataCollectionModule.setInputValue({ label: 'QueryString', value: customQuery.value });
-      // } else {
-      // eslint-disable-next-line no-console
-      // console.log('116 trsting query', customQuery.value);
       DataCollectionModule.setInputValue({
         label: 'QueryString',
         value: parserQuery(
@@ -177,7 +172,6 @@ export default defineComponent({
     });
 
     function handleUpdate(queryParam: MainQuery): void {
-      console.log('parent emiter', queryParam);
       query.value = queryParam;
       DataCollectionModule.setInputValue({
         label: 'QueryString',
@@ -196,6 +190,7 @@ export default defineComponent({
       rootJSON: string,
       csvHeader: string,
     ): string {
+      // console.log('query =', query);
       return parseQueryObject(query, format, rootJSON, csvHeader);
     }
     function sqlToSequelize(query: MainQuery): string {
@@ -216,7 +211,6 @@ export default defineComponent({
     });
     return {
       sqlToSequelize,
-      parseQueryObject,
       parserQuery,
       handleUpdate,
       DataType,

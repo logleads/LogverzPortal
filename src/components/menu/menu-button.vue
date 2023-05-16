@@ -82,7 +82,7 @@ export default defineComponent({
           MenuModule.openMenu();
         }
       }, 5000);
-      // test();
+      test();
       setTimeout(() => {
         isLoad.value = false;
         MenuModule.openMenu();

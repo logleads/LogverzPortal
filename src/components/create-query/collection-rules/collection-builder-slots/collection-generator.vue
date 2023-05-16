@@ -60,6 +60,7 @@ interface Query {
   typeField: string;
   value: string;
   index: string;
+  castType: string | object;
 }
 import {
   computed,
@@ -84,6 +85,10 @@ export default defineComponent({
       type: Array as PropType<Array<Field>>,
       required: true,
     },
+    casts: {
+      type: Object,
+      required: true,
+    },
   },
   // @Prop({ type: Array }) readonly fields!: Array<Field>;
   setup(props, { emit }) {
@@ -104,6 +109,7 @@ export default defineComponent({
         typeField: '',
         value: '',
         index: '',
+        castType: '',
       },
     ]);
     onMounted(() => {
@@ -187,16 +193,21 @@ export default defineComponent({
           typeField: '',
           value: '',
           index: '',
+          castType: '',
         },
       ];
       transformQuery();
     });
 
     function handleFields(field: string, index: number): void {
+      console.log('FIELD: ' + field);
+      console.log('cast param: ', props.casts);
       const newQuery = query.value;
       newQuery[index].field = field;
       newQuery[index].typeField = props.fields.filter((item: any) => item.label === field)[0].type;
-
+      if (props.casts) {
+        newQuery[index].castType = props.casts[field];
+      }
       let indexValue = props.fields.findIndex((item: any) => item.label === field);
       if (indexValue != -1) {
         newQuery[index].index = (indexValue + 1).toString();

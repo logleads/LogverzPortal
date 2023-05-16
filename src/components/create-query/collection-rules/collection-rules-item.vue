@@ -1,6 +1,10 @@
 <template>
   <div>
-    <CollectionGenerator :fields="rules" @update-query="updateQueryWatch" />
+    <CollectionGenerator
+      :fields="rules"
+      :casts="castForParameters"
+      @update-query="updateQueryWatch"
+    />
   </div>
 </template>
 
@@ -12,17 +16,6 @@ import CollectionGenerator from '~/components/create-query/collection-rules/coll
 import { DataCollectionModule } from '~/store/modules/data-collection';
 import { QueryBuilderLabels, QueryBuilderRule } from '~/types/models/query-builder-types';
 
-// @Component({
-//   name: 'CollectionRulesItem',
-//   components: {
-//     DropDownInput,
-//     Icon,
-//     Input,
-//     QueryBuilderGroup,
-//     //VueQueryBuilder,
-//     CollectionGenerator,
-//   },
-// })
 export default defineComponent({
   name: 'CollectionRulesItem',
   components: {
@@ -42,11 +35,7 @@ export default defineComponent({
       DataCollectionModule.setQuery(val);
       updateQuery(val);
     });
-    /**
-     * TODO: handle this part later
-     * handled but for reminder comment added
-     */
-    // @Emit('update-query')
+
     function updateQuery(query: any): unknown {
       // console.log('coming here 1', query);
       emit('update-query', query);
@@ -54,6 +43,9 @@ export default defineComponent({
     }
     const rules: ComputedRef<Array<QueryBuilderRule>> = computed(() => {
       return DataCollectionModule.rules;
+    });
+    const castForParameters: ComputedRef<{ [key: string]: string }> = computed(() => {
+      return DataCollectionModule.castForParameters;
     });
     watch(rules, () => {
       query.value = {
@@ -71,6 +63,7 @@ export default defineComponent({
       updateQueryWatch,
       query,
       clearQuery,
+      castForParameters,
     };
   },
 });

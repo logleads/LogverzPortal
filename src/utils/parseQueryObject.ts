@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import { reservedKeywordsList } from '~/reservedKeywordsList';
 import { MainQuery, QueryBuilderGroup, QueryBuilderRule } from '~/types/common';
 
 // const getOperator = (operator: string, value: string | null): string | boolean => {
@@ -24,40 +25,54 @@ import { MainQuery, QueryBuilderGroup, QueryBuilderRule } from '~/types/common';
 //   }
 // };
 
-const parseRule = (
-  item: QueryBuilderGroup & QueryBuilderRule,
-  index: number,
-  logicalOperator: string | undefined,
-  query: string,
-  ifThereGroupBefore: boolean,
-) => {
-  let moderatedQuery = query;
-  if (getOperator(item.query.operator, item.query.value)) {
-    let operator = '';
-    if (index !== 0 && !ifThereGroupBefore) {
-      operator = ' ' + logicalOperator;
-    }
+// const parseRule = (
+//   item: QueryBuilderGroup & QueryBuilderRule,
+//   index: number,
+//   logicalOperator: string | undefined,
+//   query: string,
+//   ifThereGroupBefore: boolean,
+// ) => {
+//   let moderatedQuery = query;
+//   if (getOperator(item.query.operator, item.query.value)) {
+//     let operator = '';
+//     if (index !== 0 && !ifThereGroupBefore) {
+//       operator = ' ' + logicalOperator;
+//     }
 
-    moderatedQuery =
-      moderatedQuery +
-      operator +
-      ' s.' +
-      item.query.rule +
-      getOperator(item.query.operator, item.query.value);
+//     moderatedQuery =
+//       moderatedQuery +
+//       operator +
+//       ' s.' +
+//       item.query.rule +
+//       getOperator(item.query.operator, item.query.value);
+//   }
+//   return moderatedQuery;
+// };
+
+const convertType = (castType: string | object | null, value: string) => {
+  if (castType === 'int') {
+    return parseInt(value);
   }
-  return moderatedQuery;
+  if (castType === 'float') {
+    return parseFloat(value);
+  }
+  return `'${value}'`;
 };
 
-const getOperator = (operator: string, value: string | null): string | boolean => {
+const getOperator = (
+  operator: string,
+  value: string | null,
+  castType: string | object | null,
+): string | boolean => {
   switch (operator) {
     case 'equals':
-      return !value ? false : ` = '${value}'`;
+      return !value ? false : ` = ${convertType(castType, value)}`;
     case 'does not equal':
-      return !value ? false : ` != '${value}'`;
+      return !value ? false : ` != ${convertType(castType, value)}`;
     case 'contains':
-      return !value ? false : ` CONTAINS '${value}'`;
+      return !value ? false : ` CONTAINS ${convertType(castType, value)}`;
     case 'does not contain':
-      return !value ? false : ` NOT CONTAINS '${value}'`;
+      return !value ? false : ` NOT CONTAINS ${convertType(castType, value)}`;
     case 'is empty':
       return ` IS NULL`;
     case 'is not empty':
@@ -67,9 +82,9 @@ const getOperator = (operator: string, value: string | null): string | boolean =
     case 'not like':
       return !value ? false : ` NOT LIKE '%${value}%'`;
     case 'smaller':
-      return !value ? false : ` < '${value}'`;
+      return !value ? false : ` < ${convertType(castType, value)}`;
     case 'bigger':
-      return !value ? false : ` > '${value}'`;
+      return !value ? false : ` > ${convertType(castType, value)}`;
     default:
       return false;
   }
@@ -82,13 +97,31 @@ const generateOneRawFromWhereQuery = (
   index: string,
   format: string,
   header: string,
+  castType: string | object,
 ): string => {
   const selectedField = field;
-  // console.log('children Index', index);
+  console.log('children Index', typeof castType);
   if (format === 'CSV' && header === 'NONE') {
-    return `s._${index} ${getOperator(role, value)}`;
+    if (castType && typeof castType !== 'object') {
+      return `CAST(s._${index} as ${castType}) ${getOperator(role, value, castType)}`;
+    }
+    return `s._${index} ${getOperator(role, value, castType)}`;
+  } else if (castType && typeof castType !== 'object') {
+    return `CAST(s.${checkForReservedKeyWord(selectedField)} as ${castType}) ${getOperator(
+      role,
+      value,
+      castType,
+    )}`;
   }
-  return `s.${selectedField} ${getOperator(role, value)}`;
+  return `s.${checkForReservedKeyWord(selectedField)} ${getOperator(role, value, castType)}`;
+};
+
+const checkForReservedKeyWord = (selectedField: string) => {
+  if (reservedKeywordsList.includes(selectedField)) {
+    return `"${selectedField}"`;
+  } else {
+    return selectedField;
+  }
 };
 
 const parseChildren = (
@@ -113,6 +146,7 @@ const parseChildren = (
           item.index,
           format,
           header,
+          item.castType,
         );
       });
 
@@ -133,7 +167,6 @@ export const parseQueryObject = (
   if (!obj.children.length) {
     return '';
   }
-
   const elements = '*';
   let additionalQuery = '';
   let query = '';

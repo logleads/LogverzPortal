@@ -37,6 +37,7 @@ class DataCollection extends VuexModule {
   pathObj: unknown = {};
   isLoadConfigurationUpload: boolean = false;
   rootsForJSON: any = '';
+  castForParameters: any = [];
 
   databaseParamItems: Array<string> = [];
 
@@ -110,6 +111,11 @@ class DataCollection extends VuexModule {
   @Mutation
   private SET_BUCKET_FETCH_STATUS(value: boolean) {
     this.isBucketsFetching = value;
+  }
+  @Mutation
+  private SET_CAST_FOR_PARAMETERS(value: any) {
+    // console.log('SET_ROOTS_FOR_JSON', value);
+    this.castForParameters = value;
   }
   @Mutation
   private SET_ROOTS_FOR_JSON(value: any) {
@@ -504,6 +510,9 @@ class DataCollection extends VuexModule {
               : `Select * FROM S3Object[*].${rootsForJSON[schema] ? rootsForJSON[schema] : ''} s`,
           label: 'QueryString',
         });
+        if (S3SelectParameters.Cast) {
+          this.SET_CAST_FOR_PARAMETERS(S3SelectParameters.Cast);
+        }
         this.SET_ROOTS_FOR_JSON(rootsForJSON);
         this.SET_TABLE_TYPE(tableTypes);
         this.SET_CSV_HEADER_INFO(CSVFileHeader);
