@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    :class="$style['button']"
+    :class="[$style['button'], classAssign]"
     :disabled="disabled"
     @click="$emit('click', $event)"
   >
@@ -24,8 +24,8 @@ export default defineComponent({
     text: {
       type: String,
     },
-    className: {
-      type: String,
+    classAssign: {
+      type: undefined,
     },
     disabled: {
       type: Boolean,

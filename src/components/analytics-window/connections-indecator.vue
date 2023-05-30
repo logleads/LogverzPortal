@@ -35,7 +35,10 @@
                   :class="$style['drop-down__ind']"
                   :style="{ backgroundColor: instanse.status }"
                 ></span>
-                <p @click="() => openDbInstance(instanse.DBInstanceIdentifier)">
+                <p
+                  :class="$style['desc']"
+                  @click="() => openDbInstance(instanse.DBInstanceIdentifier)"
+                >
                   {{ instanse.name }}
                 </p>
               </span>
@@ -78,7 +81,7 @@
                 :class="$style['drop-down__ind']"
                 :style="selectStatuseForAutoGroups(i.LifecycleState ? i.LifecycleState : '')"
               ></span>
-              <p @click="() => open(i.InstanceId)">
+              <p :class="$style['desc']" @click="() => open(i.InstanceId)">
                 {{ i.InstanceId ? i.InstanceId : 'Turn instance' }}
               </p>
             </div>
@@ -108,12 +111,19 @@
                 :class="$style['drop-down__ind']"
                 :style="selectStatuseForAutoGroups(i.LifecycleState ? i.LifecycleState : '')"
               ></span>
-              <p @click="() => open(i.InstanceId)">
+              <p :class="$style['desc']" @click="() => open(i.InstanceId)">
                 {{ i.InstanceId ? i.InstanceId : 'Proxy instanse' }}
               </p>
             </div>
           </div>
         </template>
+        <MyButton
+          v-if="!isConnectedToWebRTC"
+          text="WebRTC Connect"
+          :disabled="isConnection || !LifecycleState"
+          @click="connectToDB"
+          :classAssign="$style['btn-classes']"
+        />
       </div>
     </div>
   </div>
@@ -122,8 +132,10 @@
 <script lang="ts">
 import { computed, ComputedRef, defineComponent, Ref, ref } from '@vue/composition-api';
 
+import MyButton from '~/components/shared/button.vue';
 import Loader from '~/components/shared/loader.vue';
 import { REGION } from '~/constants';
+import RTCServiceObj from '~/services/api/rtc-service';
 import { ConnectionIndecatoreModule } from '~/store/modules/connection-indecatore';
 import { ServerConnectionModule } from '~/store/modules/server-connection';
 import { AutoscalingGroupsName } from '~/types/models/autoscaling-group-name';
@@ -134,12 +146,21 @@ import { AutoscalingGroupsName } from '~/types/models/autoscaling-group-name';
 // })
 export default defineComponent({
   name: 'ConnectionsIndecator',
-  components: { Loader },
+  components: { Loader, MyButton },
   setup() {
     const isOpenDropDown = ref(false);
     const countProxy: Ref<number> = ref(1);
     const countTurnService: Ref<number> = ref(1);
     const timerId: Ref<number> = ref(0);
+    const isConnection: Ref<boolean> = ref(false);
+
+    function handleConenction(Connected: boolean, IsConnection: boolean): void {
+      // connected.value = Connected;
+      isConnection.value = IsConnection;
+    }
+    async function connectToDB(): Promise<void> {
+      !RTCServiceObj.isConected && (await RTCServiceObj.init(handleConenction));
+    }
 
     const isConnected: ComputedRef<boolean> = computed(() => {
       return ServerConnectionModule.isConnectedToWebRTC;
@@ -147,6 +168,13 @@ export default defineComponent({
 
     const isLoaderForIndicatore: ComputedRef<boolean> = computed(() => {
       return ConnectionIndecatoreModule.loaderForIndicator;
+    });
+
+    const isConnectedToWebRTC: ComputedRef<boolean> = computed(() => {
+      return ServerConnectionModule.isConnectedToWebRTC;
+    });
+    const LifecycleState: ComputedRef<boolean> = computed(() => {
+      return proxyInstances.value.some((item: any) => item.LifecycleState === 'InService');
     });
 
     const proxy: ComputedRef<any> = computed(() => {
@@ -274,6 +302,10 @@ export default defineComponent({
       countTurnService,
       countProxy,
       isOpenDropDown,
+      connectToDB,
+      isConnection,
+      LifecycleState,
+      isConnectedToWebRTC,
     };
   },
 });
@@ -285,6 +317,10 @@ export default defineComponent({
   width: 50px;
   border-radius: 50px;
   display: flex;
+}
+.btn-classes {
+  width: 15rem;
+  height: 35px;
 }
 
 .drop-down {
@@ -401,7 +437,9 @@ export default defineComponent({
     }
   }
 }
-
+.desc {
+  cursor: pointer;
+}
 .box {
   position: relative;
 }
