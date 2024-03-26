@@ -76,7 +76,7 @@ export default defineComponent({
         }
       });
     }
-
+    console.log('listFolder ==', props.listFolder);
     return {
       log,
       onSelectionChanged,

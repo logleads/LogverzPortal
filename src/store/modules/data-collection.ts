@@ -633,11 +633,16 @@ class DataCollection extends VuexModule {
         await DataCollectionService.getListFolders(listFolder.map((item: any) => item.BucketName))
       )
         .filter(it => it.status === 'fulfilled')
-        .map((item: any) => item.value.data);
+        .map((item: any) => {
+          return item.value.data;
+        });
+      console.log('DATA', data);
       const newListFolder = data.map((item: any) => {
         return listFolder.filter((it: any) => it.BucketName === Object.keys(item)[0])[0];
       });
+      console.log('new Folder List', newListFolder);
       dataArray = createS3Folders(data, newListFolder, 0);
+      console.log('data array', dataArray);
       this.SET_LIST_FOLDER(dataArray);
     } catch (e: any) {
       ErrorsModule.showErrorMessage(e.message);
