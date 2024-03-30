@@ -629,8 +629,15 @@ class DataCollection extends VuexModule {
     let dataArray = null;
     try {
       const listFolder = (await DataCollectionService.getBuckets()).data;
+      // const filteredListFolder = listFolder.filter(obj => Object.keys(obj).length !== 0);
+      const filteredListFolder = listFolder
+        ? listFolder.filter(obj => Object.keys(obj).length > 0)
+        : [];
+
       const data = (
-        await DataCollectionService.getListFolders(listFolder.map((item: any) => item.BucketName))
+        await DataCollectionService.getListFolders(
+          filteredListFolder.map((item: any) => item.BucketName),
+        )
       )
         .filter(it => it.status === 'fulfilled')
         .map((item: any) => {
@@ -638,7 +645,7 @@ class DataCollection extends VuexModule {
         });
       console.log('DATA', data);
       const newListFolder = data.map((item: any) => {
-        return listFolder.filter((it: any) => it.BucketName === Object.keys(item)[0])[0];
+        return filteredListFolder.filter((it: any) => it.BucketName === Object.keys(item)[0])[0];
       });
       console.log('new Folder List', newListFolder);
       dataArray = createS3Folders(data, newListFolder, 0);
