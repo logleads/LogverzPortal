@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { STAGE_NAME } from '~/constants';
+import { NOTIFICATION_GLOBAL_NEWS_URL, STAGE_NAME } from '~/constants';
 import { BaseRequest } from '~/services/api/base-request';
 import { DataBaseSettings } from '~/types/DB-smm-type';
 import { AutoscalingGroupsName } from '~/types/models/autoscaling-group-name';
@@ -111,6 +111,16 @@ export class ConnectionIndicator {
         `${STAGE_NAME}/Info?service=ssm&apicall=GetParameter&Parameters=%7B%22Name%22%3A%20%22%2FLogverz%2FDatabase%2FRegistry%22%2C%22WithDecryption%22%3A%20false%7D`,
       );
       return parseAllDB(data.Parameter.Value);
+    } catch ({ message }) {
+      throw new Error(message as string);
+    }
+  }
+
+  static async getGlobalNotifications(): Promise<any> {
+    try {
+      const response = await fetch(NOTIFICATION_GLOBAL_NEWS_URL);
+      const notifications = await response.json();
+      return notifications;
     } catch ({ message }) {
       throw new Error(message as string);
     }

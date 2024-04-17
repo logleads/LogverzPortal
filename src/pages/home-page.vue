@@ -49,6 +49,7 @@ import Window from '~/components/window.vue';
 import { AdminModule } from '~/store/modules/admin';
 import { ErrorsModule } from '~/store/modules/errors';
 // import { UserModule } from '~/store/modules/user';
+// import { UserModule } from '~/store/modules/user';
 import { WindowData, WindowName, WindowsModule } from '~/store/modules/windows';
 
 const windowComponentsArr = {

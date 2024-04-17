@@ -1,5 +1,6 @@
 import { Action, getModule, Module, Mutation, VuexModule } from 'vuex-module-decorators';
 
+import { ConnectionIndicator } from '~/services/api/connection-indecatore';
 import { InfoGroupIAM } from '~/services/api/info-iam-get-group';
 import { store } from '~/store';
 
@@ -19,6 +20,8 @@ class User extends VuexModule {
   displayUsersSettings = false;
   pdfURL = '';
   useTurnServer: any = localStorage.getItem('useTurnServer') ?? true;
+  globalNotificationsList: any = [];
+  DisplayDropDownNotification = false;
   // useTurnServer: any =
   // localStorage.getItem('useTurnServer') !== null &&
   // localStorage.getItem('useTurnServer') !== undefined
@@ -28,9 +31,17 @@ class User extends VuexModule {
 
   @Mutation
   private SET_USE_TURN_SERVER(value: any) {
-    console.log(';;;', value);
     localStorage.setItem('useTurnServer', value);
     this.useTurnServer = value;
+  }
+  @Mutation
+  private SET_GLOBAL_NOTIFICATIONS_LIST(value: any) {
+    this.globalNotificationsList = value;
+    console.log('mutation', this.globalNotificationsList);
+  }
+  @Mutation
+  private SET_DISPLAY_DROPDOWN_NOTIFICATION(v: boolean) {
+    this.DisplayDropDownNotification = v;
   }
   @Mutation
   private SET_IS_ADMIN(value: boolean) {
@@ -114,6 +125,26 @@ class User extends VuexModule {
     } catch (e: any) {
       ErrorsModule.showErrorMessage(e.message);
     }
+  }
+
+  @Action
+  public async getGlobalNotifications() {
+    // this.SET_LIST_LOADER(true);
+    try {
+      const listFolder = await ConnectionIndicator.getGlobalNotifications();
+
+      console.log(listFolder);
+      await this.SET_GLOBAL_NOTIFICATIONS_LIST(listFolder);
+    } catch (e: any) {
+      ErrorsModule.showErrorMessage(e.message);
+    } finally {
+      // this.SET_LIST_LOADER(false);
+    }
+  }
+
+  @Action
+  public setDisplayDropdownNotification(v: boolean) {
+    this.SET_DISPLAY_DROPDOWN_NOTIFICATION(v);
   }
 }
 

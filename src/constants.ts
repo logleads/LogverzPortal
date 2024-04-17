@@ -36,3 +36,5 @@ export const MSSQL_PREFIX = 'Logverz.dbo';
 
 export const RTC_PORT = process.env.RTC_PORT as string;
 export const USR_RTC_DESCRIPTION = process.env.USR_RTC_DESCRIPTION as string;
+
+export const NOTIFICATION_GLOBAL_NEWS_URL = process.env.NOTIFICATION_GLOBAL_NEWS_URL as string;

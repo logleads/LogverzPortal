@@ -30,6 +30,7 @@ function selectStatuse(vl: string): string {
 })
 class ConnectionIndecatore extends VuexModule {
   public DBinstanse: DataBaseShow[] = [];
+  public DisplayDropDown: boolean = false;
   public proxy: Array<any> = [];
   public turnServ: Array<any> = [];
   public turnServInstances: any = [];
@@ -38,10 +39,19 @@ class ConnectionIndecatore extends VuexModule {
   public dataBaseRegistry: DataBaseSettings[] = [];
   public loader: boolean = false;
   public loaderForIndicator: boolean = false;
+  public timerID: number | null = null;
 
   @Mutation
   private SET_LOADER_FOR_INDICATOR(v: boolean) {
     this.loaderForIndicator = v;
+  }
+  @Mutation
+  private SET_DISPLAY_DROPDOWN(v: boolean) {
+    this.DisplayDropDown = v;
+  }
+  @Mutation
+  private SET_CONNECTION_INDICATOR_INTERVEL(v: number) {
+    this.timerID = v;
   }
   @Mutation
   private SET_LOADER(v: boolean) {
@@ -123,6 +133,15 @@ class ConnectionIndecatore extends VuexModule {
   @Action
   public setLoaderForIndicator(v: boolean) {
     this.SET_LOADER_FOR_INDICATOR(v);
+  }
+  @Action
+  public setDisplayDropdown(v: boolean) {
+    this.SET_DISPLAY_DROPDOWN(v);
+  }
+
+  @Action
+  public setConnectionIndicatorIntervel(v: number) {
+    this.SET_CONNECTION_INDICATOR_INTERVEL(v);
   }
 
   @Action

@@ -5,6 +5,7 @@
       <WindowTabs />
     </div>
     <div :class="$style['header']">
+      <global-notifications />
       <ConnectionsIndecator />
       <UserBlock />
     </div>
@@ -16,13 +17,13 @@ import { defineComponent } from '@vue/composition-api';
 
 import ConnectionsIndecator from '~/components/analytics-window/connections-indecator.vue';
 import MenuButton from '~/components/menu/menu-button.vue';
+import GlobalNotifications from '~/components/notifications/global-notifications.vue';
 import UserBlock from '~/components/user-icon/user-block.vue';
 import WindowTabs from '~/components/window-tabs/tabs.vue';
-
 export default defineComponent({
   // eslint-disable-next-line vue/multi-word-component-names, vue/no-reserved-component-names
   name: 'Header',
-  components: { MenuButton, WindowTabs, UserBlock, ConnectionsIndecator },
+  components: { MenuButton, WindowTabs, UserBlock, ConnectionsIndecator, GlobalNotifications },
 });
 </script>
 
