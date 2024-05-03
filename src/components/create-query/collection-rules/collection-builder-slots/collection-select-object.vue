@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref, watch } from '@vue/composition-api';
+import { defineComponent, Ref, ref, watch } from 'vue';
 
 // @Component({
 //   name: 'CollectionSelectObject',

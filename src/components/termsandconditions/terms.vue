@@ -1,15 +1,18 @@
 <template>
-  <vue-pdf-app :pdf="urlData"></vue-pdf-app>
+  <!-- <vue-pdf-app :pdf="urlData"></vue-pdf-app> -->
+  <h1>VUE PDF</h1>
 </template>
 <script lang="ts">
-import { computed, ComputedRef, defineComponent } from '@vue/composition-api';
-import VuePdfApp from 'vue-pdf-app';
+import { computed, ComputedRef, defineComponent } from 'vue';
 
+// import VuePdfApp from 'vue-pdf-app';
 import { UserModule } from '~/store/modules/user';
 
 export default defineComponent({
   name: 'TermsWindow',
-  components: { VuePdfApp },
+  components: {
+    //  VuePdfApp
+  },
   setup() {
     // const url: Ref<string> = ref(
     //   'https://docs.logverz.io/assets/docs/Logverz_Software_Public_Licence_Agreement.pdf',

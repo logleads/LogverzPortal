@@ -44,7 +44,7 @@
 <script lang="ts">
 import 'devextreme/dist/css/dx.light.css';
 
-import { defineComponent, onMounted, ref } from '@vue/composition-api';
+import { defineComponent, onMounted, ref } from 'vue';
 import { alert } from 'devextreme/ui/dialog';
 
 import DropDownSimple from '~/components/shared/drop-down-simple.vue';

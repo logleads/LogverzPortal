@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, Ref, ref } from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, Ref, ref } from 'vue';
 
 import { AdminModule } from '~/store/modules/admin';
 import { UserModule } from '~/store/modules/user';

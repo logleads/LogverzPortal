@@ -10,7 +10,7 @@ module.exports = merge(common, {
     // publicPath: '/',
     hot: true,
     // contentBase: DIST_PATH,
-    compress: false,
+    compress: true,
     historyApiFallback: true,
     // disableHostCheck: true,
     client: {
@@ -18,7 +18,7 @@ module.exports = merge(common, {
         errors: true,
         warnings: false,
       },
-    }
+    },
   },
   devtool: 'eval-cheap-module-source-map',
 });

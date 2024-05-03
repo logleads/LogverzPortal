@@ -22,7 +22,7 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, Ref, ref, watch } from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, Ref, ref, watch } from 'vue';
 
 import ToolTip from '~/components/shared/tool-tip.vue';
 import { USR_RTC_DESCRIPTION } from '~/constants';

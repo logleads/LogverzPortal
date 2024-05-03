@@ -21,10 +21,16 @@
             v-model="Name1"
             name="name"
             :placeholder="'Specify username'"
-            :error="submitted && !v$.Name1.$invalid && v$.Name1.$dirty"
+            :error="
+              submitted
+              // && !v$.Name1.$invalid && v$.Name1.$dirty
+            "
           />
           <div
-            v-if="submitted && !v$.Name1.$invalid && v$.Name1.$dirty"
+            v-if="
+              submitted
+              // && !v$.Name1.$invalid && v$.Name1.$dirty
+            "
             :class="$style['validation-text']"
           >
             Name is required
@@ -44,7 +50,10 @@
             @select-value="handleTypeSelect"
           />
           <div
-            v-if="submitted && !v$.Type.$invalid && v$.Type.$dirty"
+            v-if="
+              submitted
+              // && !v$.Type.$invalid && v$.Type.$dirty
+            "
             :class="$style['validation-text']"
           >
             Type is required
@@ -67,12 +76,16 @@
             label="name"
             track-by="name"
             :class="{
-              invalid: submitted && !v$.chosenGroup.$invalid && v$.chosenPolicies.$dirty,
+              invalid: submitted,
+              // && !v$.chosenGroup.$invalid && v$.chosenPolicies.$dirty,
             }"
           />
         </div>
         <div
-          v-if="submitted && !v$.chosenGroup.$invalid && v$.chosenPolicies.$dirty"
+          v-if="
+            submitted
+            // && !v$.chosenGroup.$invalid && v$.chosenPolicies.$dirty
+          "
           :class="$style['validation-text']"
         >
           Policies and Groups are required
@@ -94,11 +107,15 @@
             label="name"
             track-by="name"
             :class="{
-              invalid: submitted && !v$.chosenGroup.$invalid && v$.chosenPolicies.$dirty,
+              invalid: submitted,
+              // && !v$.chosenGroup.$invalid && v$.chosenPolicies.$dirty,
             }"
           />
           <div
-            v-if="submitted && !v$.chosenGroup.$invalid && v$.chosenPolicies.$dirty"
+            v-if="
+              submitted
+              // && !v$.chosenGroup.$invalid && v$.chosenPolicies.$dirty
+            "
             :class="$style['validation-text']"
           >
             Policies and Groups are required
@@ -108,10 +125,11 @@
           <Button
             text="Save"
             :disabled="
-              submitted ||
-              (v$.chosenGroup.$invalid && v$.chosenPolicies.$invalid) ||
-              v$.Type.$invalid ||
-              v$.Name1.$invalid
+              submitted
+              // ||
+              // (v$.chosenGroup.$invalid && v$.chosenPolicies.$invalid) ||
+              // v$.Type.$invalid ||
+              // v$.Name1.$invalid
             "
             no-load
             @click="handleSubmit"
@@ -174,9 +192,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from '@vue/composition-api';
-import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+// import { useVuelidate } from '@vuelidate/core';
 // import { required } from '@vuelidate/validators';
 import {
   DxColumn,
@@ -185,6 +201,7 @@ import {
   DxFilterRow,
   DxMasterDetail,
 } from 'devextreme-vue/data-grid';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from 'vue';
 import Multiselect from 'vue-multiselect';
 
 import MasterDetailedUsers from '~/components/admin-window/users/master-detailed-users.vue';
@@ -236,16 +253,16 @@ export default defineComponent({
     const AW_GROUPS_LOCAL = ref(AW_GROUPS);
     const AW_POLICIES_LOCAL = ref(AW_POLICIES);
     const rules = {
-      Name1: { required },
-      Type: { required },
-      chosenGroup: { required },
-      chosenPolicies: { required },
+      // Name1: { required },
+      // Type: { required },
+      // chosenGroup: { required },
+      // chosenPolicies: { required },
     };
     const Type: ComputedRef<string> = computed(() => {
       return AdminModule.currentType;
     });
 
-    const v$ = useVuelidate(rules, { Name1, Type, chosenGroup, chosenPolicies });
+    // const v$ = useVuelidate(rules, { Name1, Type, chosenGroup, chosenPolicies });
     onMounted(async () => {
       await AdminModule.getUsers();
       await AdminModule.getGroups();
@@ -359,10 +376,11 @@ export default defineComponent({
     function handleSubmit(): void {
       submitted.value = true;
       if (
-        submitted.value ||
-        (!v$.value.chosenGroup.$invalid && !v$.value.chosenPolicies.$invalid) ||
-        !v$.value.Type.$invalid ||
-        !v$.value.Name1.$invalid
+        submitted.value
+        // ||
+        // (!v$.value.chosenGroup.$invalid && !v$.value.chosenPolicies.$invalid) ||
+        // !v$.value.Type.$invalid ||
+        // !v$.value.Name1.$invalid
       ) {
         const IAMGroups = chosenGroup.value.map(i => i.name);
         const IAMPolicies = chosenPolicies.value.map(i => i.name);
@@ -443,7 +461,7 @@ export default defineComponent({
       availableTypes,
       groups,
       Type,
-      v$,
+      // v$,
       AW_GROUPS_LOCAL,
       AW_NAME_LOCAL,
       AW_POLICIES_LOCAL,

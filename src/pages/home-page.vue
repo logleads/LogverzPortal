@@ -23,15 +23,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  ComputedRef,
-  defineComponent,
-  onMounted,
-  Ref,
-  ref,
-  watch,
-} from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref, watch } from 'vue';
 
 import AdminWindow from '~/components/admin-window/admin-window.vue';
 import DataCollectionWindow from '~/components/create-query/data-collection-window.vue';

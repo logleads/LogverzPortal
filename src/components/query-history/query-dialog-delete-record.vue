@@ -64,7 +64,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, Ref, ref, watch } from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, Ref, ref, watch } from 'vue';
 
 import MyButton from '~/components/shared/button.vue';
 import { DCH_TABLE_ACCESS, DCH_TABLE_OWNERS } from '~/constants';

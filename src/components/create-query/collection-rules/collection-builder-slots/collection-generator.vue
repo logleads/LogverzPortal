@@ -62,16 +62,7 @@ interface Query {
   index: string;
   castType: string | object;
 }
-import {
-  computed,
-  ComputedRef,
-  defineComponent,
-  onMounted,
-  PropType,
-  Ref,
-  ref,
-  watch,
-} from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, onMounted, PropType, Ref, ref, watch } from 'vue';
 // @Component({
 //   name: 'CollectionGenerator',
 //   components: { DropDownSimple, Input, Icon, Tabs },

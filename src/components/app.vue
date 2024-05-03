@@ -529,16 +529,16 @@
 import '~/assets/scss/main.scss';
 // import 'highlight.js/styles/dracula.css';
 import 'highlight.js/styles/lightfair.css';
+
 // import 'highlight.js/styles/default.css';
-import 'vue-highlight.js/lib/allLanguages';
-
-import VueCompositionApi, { onMounted } from '@vue/composition-api';
-import { defineComponent, Ref, ref } from '@vue/composition-api';
+// import 'vue-highlight.js/lib/allLanguages';
+import { onMounted } from 'vue';
+import { defineComponent, Ref, ref } from 'vue';
 import Vue from 'vue';
-import VueHighlightJS from 'vue-highlight.js';
-import JsonViewer from 'vue-json-viewer';
-import Notifications from 'vue-notification';
 
+// import VueHighlightJS from 'vue-highlight.js';
+// import JsonViewer from 'vue-json-viewer';
+// import Notifications from 'vue-notification';
 // import Vuelidate from 'vuelidate';
 import JsonViewerCustom from '~/components/shared/json-viewer.vue';
 import { AD_HTML_TAG, AD_SCRIPT_SRC } from '~/constants';
@@ -546,16 +546,16 @@ import HomePage from '~/pages/home-page.vue';
 import { ConnectionIndecatoreModule } from '~/store/modules/connection-indecatore';
 
 import InfoMsgSpan from './shared/info-msg-span.vue';
-Vue.use(VueCompositionApi);
+// Vue.use(VueCompositionApi);
 // Vue.use(Vuelidate);
-Vue.use(Notifications);
-Vue.use(JsonViewer);
+// Vue.use(Notifications);
+// Vue.use(JsonViewer);
 /*
  * Use Vue Highlight.js
  */
-Vue.use(VueHighlightJS);
-Vue.component('JsonViewerCustom', JsonViewerCustom);
-Vue.component('InfoMsgSpan', InfoMsgSpan);
+// Vue.use(VueHighlightJS);
+// Vue.component('JsonViewerCustom', JsonViewerCustom);
+// Vue.component('InfoMsgSpan', InfoMsgSpan);
 // Vue.component('pdfcustom', pdf);
 
 export default defineComponent({
@@ -566,7 +566,7 @@ export default defineComponent({
     onMounted(() => {
       html.value = AD_HTML_TAG;
       // eslint-disable-next-line no-console
-      console.log('version', Vue.version);
+      // console.log('version', Vue.version);
       ConnectionIndecatoreModule.getDefaultParameters();
       const script = document.createElement('script');
       script.src = AD_SCRIPT_SRC;

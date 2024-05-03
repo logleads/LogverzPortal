@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, Ref, ref, watch } from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, Ref, ref, watch } from 'vue';
 
 //import VueQueryBuilder from 'vue-query-builder';
 import CollectionGenerator from '~/components/create-query/collection-rules/collection-builder-slots/collection-generator.vue';

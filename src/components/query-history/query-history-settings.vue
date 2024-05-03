@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, Ref, ref } from '@vue/composition-api';
+import { defineComponent, onMounted, Ref, ref } from 'vue';
 
 export default defineComponent({
   name: 'QueryHistorySettings',

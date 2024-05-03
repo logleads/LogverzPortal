@@ -3,7 +3,7 @@ import { isObject } from './checkIsItObj';
 
 export function createS3Folders(data: any, listFolder: any, IDH: number | string): any {
   return data.reduce((acc: any, item: any, index: any) => {
-    if (item[listFolder[index].BucketName][''] === '/') {
+    if (listFolder[index] && item[listFolder[index].BucketName][''] === '/') {
       return [
         ...acc,
         generateHeadObj(

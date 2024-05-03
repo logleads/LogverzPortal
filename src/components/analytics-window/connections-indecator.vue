@@ -130,7 +130,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, Ref, ref } from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, Ref, ref } from 'vue';
 
 import MyButton from '~/components/shared/button.vue';
 import Loader from '~/components/shared/loader.vue';

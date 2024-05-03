@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, Ref, ref } from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, Ref, ref } from 'vue';
 
 import Button from '~/components/shared/button.vue';
 import Input from '~/components/shared/input.vue';

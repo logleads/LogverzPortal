@@ -29,14 +29,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  Ref,
-  ref,
-  watch,
-  WritableComputedRef,
-} from '@vue/composition-api';
+import { computed, defineComponent, Ref, ref, watch, WritableComputedRef } from 'vue';
 
 import Icon from '~/components/shared/icon.vue';
 import { DataCollectionModule } from '~/store/modules/data-collection';

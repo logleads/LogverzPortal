@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from 'vue';
 import {
   DxColumn,
   DxDataGrid,

@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, Ref, ref, watch } from '@vue/composition-api';
+import { defineComponent, PropType, Ref, ref, watch } from 'vue';
 
 import Icon from '~/components/shared/icon.vue';
 

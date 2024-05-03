@@ -27,7 +27,10 @@
                 {{ QueryFromState }}
               </highlight-code>
               <div
-                v-if="submitted && v$.QueryFromState.required.$invalid"
+                v-if="
+                  submitted
+                  //  && v$.QueryFromState.required.$invalid
+                "
                 :class="$style['validation-text']"
               >
                 Query string is required
@@ -45,17 +48,9 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  ComputedRef,
-  defineComponent,
-  onMounted,
-  Ref,
-  ref,
-  watch,
-} from '@vue/composition-api';
-import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+// import { useVuelidate } from '@vuelidate/core';
+// import { required } from '@vuelidate/validators';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref, watch } from 'vue';
 
 import CollectionRulesItem from '~/components/create-query/collection-rules/collection-rules-item.vue';
 import SampleDataCollection from '~/components/create-query/sss/sample-data.vue';
@@ -67,20 +62,10 @@ import { QueryBuilderRule } from '~/types/models/query-builder-types';
 import { parseQueryObject } from '~/utils/parseQueryObject';
 import { parseToSequelize } from '~/utils/sequelize-query';
 
-// @Component({
-//   name: 'CollectionRules',
-//   components: { Loader, CollectionRulesItem, InputContainer, Input, SampleDataCollection },
-//   mixins: [validationMixin],
-//   validations: {
-//     QueryFromState: { required },
-//   },
-// })
 export default defineComponent({
   name: 'CollectionRules',
   // eslint-disable-next-line vue/no-reserved-component-names
   components: { Loader, CollectionRulesItem, Input, SampleDataCollection },
-  // @Prop({ required: false, type: Boolean }) readonly submitted!: boolean;
-  // @Prop({ required: false, type: Boolean }) readonly isFetching!: boolean;
   props: {
     submitted: {
       type: Boolean,
@@ -196,14 +181,14 @@ export default defineComponent({
     function sqlToSequelize(query: MainQuery): string {
       return parseToSequelize(query);
     }
-    const validationRules = {
-      QueryFromState: { required },
-    };
-    const v$ = useVuelidate(validationRules, {
-      QueryFromState,
-    });
+    // const validationRules = {
+    //   QueryFromState: { required },
+    // };
+    // const v$ = useVuelidate(validationRules, {
+    //   QueryFromState,
+    // });
     onMounted(async () => {
-      emit('validate', v$);
+      // emit('validate', v$);
       query.value = {
         logicalOperator: logicalOperatorType.OR,
         children: [],
@@ -225,7 +210,7 @@ export default defineComponent({
       textarea,
       query,
       isCustomRules,
-      v$,
+      // v$,
     };
   },
 });

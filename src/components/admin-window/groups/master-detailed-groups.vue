@@ -75,7 +75,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, onMounted, PropType } from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, onMounted, PropType } from 'vue';
 import { DxColumn, DxDataGrid } from 'devextreme-vue/data-grid';
 
 import Loader from '~/components/shared/loader.vue';

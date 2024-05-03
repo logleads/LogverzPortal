@@ -14,9 +14,8 @@
     <DxPaging :page-size="10" />
     // eslint-disable-next-line vue/no-v-for-template-key
 
-    <template v-for="(v, k) in headers">
+    <template v-for="(v, k) in headers" :key="genereteRandomKey(k)">
       <DxColumn
-        :key="genereteRandomKey(k)"
         width="200px"
         :data-type="selectDateType(v)"
         :format="selectFormat(v)"
@@ -37,15 +36,7 @@
 import 'devextreme/dist/css/dx.common.css';
 import 'devextreme/dist/css/dx.greenmist.css';
 
-import {
-  computed,
-  ComputedRef,
-  defineComponent,
-  PropType,
-  Ref,
-  ref,
-  watch,
-} from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, PropType, Ref, ref, watch } from 'vue';
 import { exportDataGrid } from 'devextreme/excel_exporter';
 import {
   DxColumn,

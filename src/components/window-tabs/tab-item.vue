@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, getCurrentInstance } from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, getCurrentInstance } from 'vue';
 
 import Icon from '~/components/shared/icon.vue';
 import { WindowName, WindowsModule } from '~/store/modules/windows';
