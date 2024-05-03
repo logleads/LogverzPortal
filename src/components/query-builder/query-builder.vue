@@ -71,14 +71,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  ComputedRef,
-  defineComponent,
-  onMounted,
-  ref,
-  watch,
-} from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, onMounted, ref, watch } from 'vue';
 
 import QueryItem from '~/components/query-builder/query-item.vue';
 import MyButton from '~/components/shared/button.vue';

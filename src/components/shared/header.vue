@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent } from 'vue';
 
 import ConnectionsIndecator from '~/components/analytics-window/connections-indecator.vue';
 import MenuButton from '~/components/menu/menu-button.vue';

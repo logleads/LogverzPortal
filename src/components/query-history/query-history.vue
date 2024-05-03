@@ -133,7 +133,7 @@
 <script lang="ts">
 import 'devextreme/dist/css/dx.light.css';
 
-import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from 'vue';
 import {
   DxButton,
   DxColumn,

@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, onMounted } from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, onMounted } from 'vue';
 
 import Button from '~/components/shared/button.vue';
 import { AdminModule } from '~/store/modules/admin';

@@ -1,5 +1,5 @@
 <template>
-  <editor
+  <!-- <editor
     ref="editor"
     initial-edit-type="markdown"
     :initial-value="editorText"
@@ -9,22 +9,23 @@
     @load="onEditorLoad"
     @focus="onEditorFocus"
     @change="onEditorChange"
-  />
+  /> -->
+  <h1>Hello</h1>
 </template>
 
 <script lang="ts">
-import 'codemirror/lib/codemirror.css';
-import '@toast-ui/editor/dist/toastui-editor.css';
+// import 'codemirror/lib/codemirror.css';
 
-import { Editor } from '@toast-ui/vue-editor';
-import { computed, ComputedRef, defineComponent, Ref, ref } from '@vue/composition-api';
+// import '@toast-ui/editor/dist/toastui-editor.css';
+// import { Editor } from '@toast-ui/vue-editor';
+import { computed, ComputedRef, defineComponent, Ref, ref } from 'vue';
 
 import { SaveSettingModule } from '~/store/modules/save-setting';
 
 export default defineComponent({
   name: 'TextEditor',
   components: {
-    Editor,
+    // Editor,
   },
   props: {
     curentKey: {

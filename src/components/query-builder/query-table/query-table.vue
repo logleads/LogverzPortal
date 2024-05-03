@@ -61,7 +61,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, Ref, ref, watch } from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, Ref, ref, watch } from 'vue';
 
 import DataGridComponent from '~/components/query-builder/query-table/data-grid-component.vue';
 import PivotGridComponent from '~/components/query-builder/query-table/pivot-grid-component.vue';

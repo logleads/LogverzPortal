@@ -17,7 +17,7 @@
 import 'devextreme/dist/css/dx.common.css';
 import 'devextreme/dist/css/dx.greenmist.css';
 
-import { computed, ComputedRef, defineComponent, Ref, ref } from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, Ref, ref } from 'vue';
 import { json2csv } from 'json-2-csv';
 
 import { QueryBuilderModule } from '~/store/modules/query-builder';

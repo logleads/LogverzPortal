@@ -87,15 +87,7 @@
 <script lang="ts">
 import 'devextreme/dist/css/dx.light.css';
 
-import {
-  computed,
-  ComputedRef,
-  defineComponent,
-  onMounted,
-  Ref,
-  ref,
-  watch,
-} from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref, watch } from 'vue';
 import DxDataGrid, {
   DxButton,
   DxColumn,

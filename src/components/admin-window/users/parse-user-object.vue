@@ -1,8 +1,8 @@
 <template>
   <div>
     <div v-if="typeof obj === 'object' && !Array.isArray(obj)">
-      <template v-for="s in Object.keys(obj)">
-        <parse-user-object :key="s + Math.random() * 10000" :obj="obj[s]" :label="s" />
+      <template v-for="s in Object.keys(obj)" :key="s + Math.random() * 10000">
+        <parse-user-object :obj="obj[s]" :label="s" />
       </template>
     </div>
     <div v-if="Array.isArray(obj)" :class="$style['container']">
@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent } from 'vue';
 
 import { checkIsStringIsObj } from '~/utils/checkIsStringIsObj';
 import { labelFromKey } from '~/utils/pipes';

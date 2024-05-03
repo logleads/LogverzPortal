@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@vue/composition-api';
+import { defineComponent, ref } from 'vue';
 import { DxColumn, DxSelection, DxTreeList } from 'devextreme-vue/tree-list';
 
 import { DataCollectionService } from '~/services/api/data-collection-service';

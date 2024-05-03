@@ -8,30 +8,38 @@
             slot="input"
             v-model="input.content"
             :name="input.label"
-            :error="submitted && v$[input.label].$invalid"
+            :error="
+              submitted
+              // && v$[input.label].$invalid
+            "
             @input="handleInput({ value: $event, label: input.label })"
           />
         </InputContainer>
         <div
-          v-if="submitted && v$[input.label].required.$invalid"
+          v-if="
+            submitted
+            // && v$[input.label].required.$invalid
+          "
           :class="$style['validation-text']"
         >
           {{ input.label }} is required
         </div>
         <div
-          v-if="submitted && v$[input.label].between && v$[input.label].between.$invalid"
+          v-if="
+            submitted
+            // && v$[input.label].between && v$[input.label].between.$invalid
+          "
           :class="$style['validation-text']"
         >
-          {{ input.label }} Must be between {{ v$[input.label].between.$params.min }} -
-          {{ v$[input.label].between.$params.max }}
+          {{ input.label }} Must be between
+          <!-- {{ 
+           v$[input.label].between.$params.min
+          }} -->
+          -
+          <!-- {{ 
+          v$[input.label].between.$params.max
+          }} -->
         </div>
-        <!-- <div
-          v-if="submitted && $v[input.label].$params.between && !$v[input.label].between"
-          :class="$style['validation-text']"
-        >
-          {{ input.label }} Must be between {{ $v[input.label].$params.between.min }} -
-          {{ $v[input.label].$params.between.max }}
-        </div> -->
       </div>
       <div :class="$style['advanced__inputs']">
         <label :class="$style['label']">
@@ -53,16 +61,9 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  onMounted,
-  Ref,
-  ref,
-  WritableComputedRef,
-} from '@vue/composition-api';
-import { useVuelidate } from '@vuelidate/core';
-import { between, required } from '@vuelidate/validators';
+// import { useVuelidate } from '@vuelidate/core';
+// import { between, required } from '@vuelidate/validators';
+import { computed, defineComponent, onMounted, Ref, ref, WritableComputedRef } from 'vue';
 
 import DropDownSimple from '~/components/shared/drop-down-simple.vue';
 import Input from '~/components/shared/input.vue';
@@ -94,9 +95,9 @@ export default defineComponent({
     const items: string[] = ['cost-sensitive', 'balanced', 'time-sensitive'];
     const DCH_ALLOCATION_STRATEGY_LOCAL = DCH_ALLOCATION_STRATEGY;
     const rules = {
-      S3EnumerationDepth: { required, between: between(0, 9) },
-      PreferedWorkerNumber: { required },
-      AllocationStrategy: { required },
+      // S3EnumerationDepth: { required, between: between(0, 9) },
+      // PreferedWorkerNumber: { required },
+      // AllocationStrategy: { required },
     };
 
     const S3EnumerationDepth: WritableComputedRef<string> = computed(() => {
@@ -124,24 +125,24 @@ export default defineComponent({
       },
     ]);
 
-    const v$ = useVuelidate(rules, {
-      S3EnumerationDepth,
-      PreferedWorkerNumber,
-      AllocationStrategy,
-    });
+    // const v$ = useVuelidate(rules, {
+    //   S3EnumerationDepth,
+    //   PreferedWorkerNumber,
+    //   AllocationStrategy,
+    // });
 
     onMounted(() => {
-      emit('validate', v$);
+      // emit('validate', v$);
     });
 
     function handleInput(payload: { value: string; label: string }): void {
       DataCollectionModule.setInputValue(payload);
-      emit('validate', v$);
+      // emit('validate', v$);
     }
 
     function handleInputSelect(payload: { item: string; content: string }): void {
       DataCollectionModule.setSelectValue({ label: 'AllocationStrategy', value: payload.item });
-      emit('validate', v$);
+      // emit('validate', v$);
     }
     return {
       handleInput,
@@ -152,7 +153,7 @@ export default defineComponent({
       S3EnumerationDepth,
       DCH_ALLOCATION_STRATEGY_LOCAL,
       items,
-      v$,
+      // v$,
     };
   },
 });

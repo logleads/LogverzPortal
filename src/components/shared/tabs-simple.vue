@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref, watch } from '@vue/composition-api';
+import { defineComponent, Ref, ref, watch } from 'vue';
 
 export default defineComponent({
   // eslint-disable-next-line vue/multi-word-component-names

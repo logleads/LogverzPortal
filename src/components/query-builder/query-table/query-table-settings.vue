@@ -34,15 +34,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  ComputedRef,
-  defineComponent,
-  onMounted,
-  Ref,
-  ref,
-  watch,
-} from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref, watch } from 'vue';
 
 import { QueryBuilderModule } from '~/store/modules/query-builder';
 import { SaveSettingModule } from '~/store/modules/save-setting';

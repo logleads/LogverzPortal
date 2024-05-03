@@ -90,16 +90,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  ComputedRef,
-  defineComponent,
-  onMounted,
-  PropType,
-  Ref,
-  ref,
-  watch,
-} from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, onMounted, PropType, Ref, ref, watch } from 'vue';
 
 import DropDownSimple from '~/components/shared/drop-down-simple.vue';
 import Icon from '~/components/shared/icon.vue';

@@ -13,8 +13,7 @@
 </template>
 
 <script lang="ts">
-// import { maxLength, required } from 'vuelidate/lib/validators';
-import { defineComponent, Ref, ref } from '@vue/composition-api';
+import { defineComponent, Ref, ref } from 'vue';
 
 import Button from '~/components/shared/button.vue';
 

@@ -28,7 +28,7 @@
 import 'devextreme/dist/css/dx.common.css';
 import 'devextreme/dist/css/dx.greenmist.css';
 
-import { computed, ComputedRef, defineComponent, Ref, ref } from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, Ref, ref } from 'vue';
 
 import GroupsTable from './groups/groups-table.vue';
 import PlatformTable from './platform/platform-table.vue';

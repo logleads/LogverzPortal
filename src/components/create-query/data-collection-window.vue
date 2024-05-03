@@ -65,15 +65,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  ComputedRef,
-  defineComponent,
-  onMounted,
-  Ref,
-  ref,
-  watch,
-} from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref, watch } from 'vue';
 
 import AdvancedSettings from '~/components/create-query/advanced-settings.vue';
 import CollectionRules from '~/components/create-query/collection-rules/collection-rules.vue';

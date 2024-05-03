@@ -90,7 +90,7 @@ import {
   Ref,
   ref,
   watch,
-} from '@vue/composition-api';
+} from 'vue';
 
 import QueryBuilder from '~/components/query-builder/query-builder.vue';
 import QueryDialogSaveSetting from '~/components/query-builder/query-dialog-save-setting.vue';

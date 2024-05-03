@@ -30,7 +30,7 @@ import {
   Ref,
   ref,
   watch,
-} from '@vue/composition-api';
+} from 'vue';
 
 import { ConnectionIndecatoreModule } from '~/store/modules/connection-indecatore';
 import { DataCollectionModule } from '~/store/modules/data-collection';

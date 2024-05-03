@@ -110,7 +110,7 @@
 <script lang="ts">
 import 'devextreme/dist/css/dx.light.css';
 
-import { defineComponent, Ref, ref, watch } from '@vue/composition-api';
+import { defineComponent, Ref, ref, watch } from 'vue';
 
 import EventTable from '~/components/events-window/event-tible.vue';
 import Input from '~/components/shared/input.vue';

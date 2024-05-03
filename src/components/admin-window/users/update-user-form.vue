@@ -55,21 +55,13 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, Ref, ref } from '@vue/composition-api';
-import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+// import { useVuelidate } from '@vuelidate/core';
+// import { required } from '@vuelidate/validators';
+import { computed, ComputedRef, defineComponent, Ref, ref } from 'vue';
 import Multiselect from 'vue-multiselect';
 
 import Button from '~/components/shared/button.vue';
 import { AdminModule } from '~/store/modules/admin';
-
-// @Component({
-//   name: 'UpdateUserForm',
-//   components: {
-//     Button,
-//     Multiselect,
-//   },
-// })
 
 export default defineComponent({
   name: 'UpdateUserForm',
@@ -104,10 +96,9 @@ export default defineComponent({
     const chosenGroup = ref(props.prevGroups);
     const chosenPolicies = ref(props.prevPolicies);
     const rules = {
-      chosenGroup: { required },
-      // chosenPolicies: { required },
+      // chosenGroup: { required },
     };
-    const v$ = useVuelidate(rules, { chosenGroup });
+    // const v$ = useVuelidate(rules, { chosenGroup });
 
     const groups: ComputedRef<Array<{ name: string }>> = computed(() => {
       return AdminModule.groups.map(i => ({ name: i.Name }));
@@ -144,7 +135,7 @@ export default defineComponent({
       chosenGroup,
       submitted,
       rules,
-      v$,
+      // v$,
       emit,
     };
   },
