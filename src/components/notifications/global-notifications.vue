@@ -98,7 +98,7 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, onMounted, ref } from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, onMounted, ref } from 'vue';
 
 // import DxAccordion from 'devextreme-vue/accordion';
 import { ConnectionIndecatoreModule } from '~/store/modules/connection-indecatore';

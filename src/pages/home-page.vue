@@ -18,7 +18,7 @@
       </Window>
     </div>
     <Menu v-if="isReceivedPermissions" />
-    <notifications group="foo" />
+    <!--- <notifications group="foo" /> -->
   </div>
 </template>
 
