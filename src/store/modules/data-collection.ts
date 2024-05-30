@@ -735,18 +735,20 @@ class DataCollection extends VuexModule {
 
     //data.UsersQuery was using here before changes [{ name: data.UsersQuery }]
     const dataOwners = data.Owners.split(' ').map(i => {
+      // if (i) {
       return { name: i };
+      // }
     });
     this.SET_MULTI_SELECT({
       label: 'DatasetOwners',
-      value: dataOwners,
+      value: dataOwners.filter(owners => owners.name),
     });
     const DatasetAccess = data.Access.split(' ').map(i => {
       return { name: i };
     });
     this.SET_MULTI_SELECT({
       label: 'DatasetAccess',
-      value: DatasetAccess,
+      value: DatasetAccess.filter(dbAccess => dbAccess.name),
     });
 
     this.SET_LOAD_CONFIGURATION(true);

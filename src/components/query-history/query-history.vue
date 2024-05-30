@@ -6,7 +6,9 @@
     <div :class="$style['table']">
       <label :class="$style['range-label']"><b> Range</b>:</label>
       <TimerFilter @clear="clear" @unix-time-change="timeFilter" />
-      <div :class="$style['tab-padding']">
+      <label :class="$style['range-label']"><b> Collection</b>:</label>
+      <collectionTypes @collection-filter-change="changeTableContent" />
+      <!-- <div :class="$style['tab-padding']">
         <Tabs
           btn-rigth-text="Collection"
           btn-left-text="Analysis"
@@ -14,7 +16,7 @@
           :state-b-t-n="tableContent"
           @change-table-content="changeTableContent"
         />
-      </div>
+      </div> -->
       <div :class="$style['tab-padding']">
         <Tabs
           btn-rigth-text="Shared"
@@ -55,7 +57,7 @@
         <DxFilterRow :visible="true" />
 
         <DxColumn type="buttons" caption="Actions" data-field="id">
-          <DxButton v-if="tableContent">
+          <DxButton v-if="tableContent === 'A'">
             <template #default="{ data }">
               <div v-if="data.data.Active === false" width="150">
                 <div :class="$style['text-1']">Underlying data was deleted</div>
@@ -123,7 +125,7 @@
     </template>
     <QueryHistoryPermission
       v-if="isOpenPermissionDialog"
-      :is-analysis="tableContent"
+      :is-analysis="tableContent === 'A'"
       @closePermissionPopup="handleClosePermissionPopup"
     />
     <QueryHistoryDeleteRecord @closePermissionPopup="handleClosePermissionPopup" />
@@ -146,6 +148,7 @@ import QueryHistoryDeleteRecord from '~/components/query-history/query-dialog-de
 import QueryHistoryPermission from '~/components/query-history/query-dialog-save-permission.vue';
 import QueryHistorySettings from '~/components/query-history/query-history-settings.vue';
 import SimpleBtn from '~/components/shared/btn-simple.vue';
+import collectionTypes from '~/components/shared/collection-types.vue';
 import Loader from '~/components/shared/loader.vue';
 import Tabs from '~/components/shared/tabs.vue';
 import TimerFilter from '~/components/shared/time-filter.vue';
@@ -173,7 +176,7 @@ export default defineComponent({
     DxDataGrid,
 
     DxFilterRow,
-
+    collectionTypes,
     DxMasterDetail,
     Tabs,
     TimerFilter,
@@ -183,7 +186,7 @@ export default defineComponent({
   setup() {
     const reuseTableName: Ref<boolean> = ref(false);
     const tableMode: Ref<boolean> = ref(true);
-    const tableContent: Ref<boolean> = ref(false);
+    const tableContent: Ref<string> = ref('C');
     const filterContent: Ref<boolean> = ref(true);
     const isSettingsFetch: Ref<boolean> = ref(false);
     const savedSettingsQH: Ref<Array<any>> = ref([]);
@@ -250,7 +253,7 @@ export default defineComponent({
         const data = await QueryHistoryService.getSettingsSortByTime(
           AdminModule.permissions.UserName,
           unix.value,
-          tableContent.value ? 'A' : 'C',
+          tableContent.value,
           !tableMode.value,
         );
         console.log('Tab', transformSettings(data));
@@ -291,7 +294,8 @@ export default defineComponent({
         return list;
       }
     }
-    async function changeTableContent(value: boolean): Promise<void> {
+    async function changeTableContent(value: string): Promise<void> {
+      console.log('change table content', value);
       tableContent.value = value;
       isSettingsFetch.value = true;
 
@@ -299,7 +303,7 @@ export default defineComponent({
         const data = await QueryHistoryService.getSettingsSortByTime(
           AdminModule.permissions.UserName,
           unix.value,
-          tableContent.value ? 'A' : 'C',
+          tableContent.value,
           !tableMode.value,
         );
 
@@ -321,7 +325,7 @@ export default defineComponent({
         const data = await QueryHistoryService.getSettings(
           AdminModule.permissions.UserName,
           unix.value,
-          tableContent.value ? 'A' : 'C',
+          tableContent.value,
           !tableMode.value,
         );
         // this.savedSettingOrigin = this.transformSettings(data);
@@ -335,13 +339,15 @@ export default defineComponent({
       }
       isSettingsFetch.value = false;
     }
-
+    async function collectionFilter(data: any) {
+      console.log(data);
+    }
     async function timeFilter(unixTime: number): Promise<void> {
       unix.value = unixTime;
       const data = await QueryHistoryService.getSettingsSortByTime(
         AdminModule.permissions.UserName,
         unixTime,
-        tableContent.value ? 'A' : 'C',
+        tableContent.value,
         !tableMode.value,
       );
       // this.savedSettingOrigin = this.transformSettings(data);
@@ -386,7 +392,7 @@ export default defineComponent({
           const data = await QueryHistoryService.getSettingsSortByTime(
             AdminModule.permissions.UserName,
             unix.value,
-            tableContent.value ? 'A' : 'C',
+            tableContent.value,
             !tableMode.value,
           );
           backupSavedSettingOrigin.value = transformSettings(data);
@@ -430,6 +436,7 @@ export default defineComponent({
       unix,
       local_DCH_QUERY_HISTORY,
       usersPermission,
+      collectionFilter,
     };
   },
 });
