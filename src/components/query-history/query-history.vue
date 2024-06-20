@@ -52,6 +52,7 @@
         :column-auto-width="true"
         :word-wrap-enabled="true"
       >
+        <DxHeaderFilter :visible="true" />
         <DxFilterRow :visible="true" />
 
         <DxColumn type="buttons" caption="Actions" data-field="id">
@@ -138,6 +139,7 @@ import {
   DxColumn,
   DxDataGrid,
   DxFilterRow,
+  DxHeaderFilter,
   DxMasterDetail,
 } from 'devextreme-vue/data-grid';
 import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from 'vue';
@@ -171,7 +173,7 @@ export default defineComponent({
     DxColumn,
     DxButton,
     DxDataGrid,
-
+    DxHeaderFilter,
     DxFilterRow,
 
     DxMasterDetail,

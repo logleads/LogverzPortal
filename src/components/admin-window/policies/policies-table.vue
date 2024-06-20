@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-useless-template-attributes -->
 <template>
   <div :class="$style['main-container']">
     <template v-if="showPolicyForm">
@@ -7,6 +8,7 @@
       <Loader accent :size="50" />
     </div>
     <div v-if="isSuccess" :class="$style['table-wrapper']">
+      // eslint-disable-next-line vue/no-useless-template-attributes
       <template v-if="items.length > 0" :class="$style['table']">
         <DxDataGrid
           id="gridContainer3"
@@ -18,6 +20,7 @@
           :column-auto-width="true"
           @editing-start="handleStartEdit($event)"
         >
+          <DxHeaderFilter :visible="true" />
           <DxEditing :allow-updating="true" mode="form" />
           <DxFilterRow :visible="true" />
           <DxColumn data-field="Name" />
@@ -40,6 +43,7 @@ import {
   DxDataGrid,
   DxEditing,
   DxFilterRow,
+  DxHeaderFilter,
   DxMasterDetail,
 } from 'devextreme-vue/data-grid';
 
@@ -61,6 +65,7 @@ export default defineComponent({
     DxFilterRow,
     DxMasterDetail,
     DxEditing,
+    DxHeaderFilter,
   },
   setup() {
     const showPolicyForm: Ref<boolean> = ref(false);

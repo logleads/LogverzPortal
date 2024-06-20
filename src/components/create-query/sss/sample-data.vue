@@ -24,6 +24,7 @@
           :allow-column-reordering="true"
           :column-auto-width="true"
         >
+          <DxHeaderFilter :visible="true" />
         </DxDataGrid>
         <p>
           <br />
@@ -38,15 +39,15 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from 'vue';
-import { DxDataGrid } from 'devextreme-vue/data-grid';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from '@vue/composition-api';
+import { DxDataGrid, DxHeaderFilter } from 'devextreme-vue/data-grid';
 
 import Icon from '~/components/shared/icon.vue';
 import { DataCollectionModule } from '~/store/modules/data-collection';
 
 export default defineComponent({
   name: 'SampleDataCollection',
-  components: { DxDataGrid, Icon },
+  components: { DxDataGrid, Icon, DxHeaderFilter },
   setup() {
     const triger: Ref<boolean> = ref(false);
     function onTriger(): void {

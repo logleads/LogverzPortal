@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="rawitems && Object.keys(rawitems).length > 0 && format === 'json'">
-      <json-viewer :value="customizedData" />
+      <json-viewer-custom :value="customizedData" />
     </div>
     <div v-else>
       <template>
@@ -13,6 +13,7 @@
           :data-source="[{ ...customizedData }]"
           word-wrap-enabled="true"
         >
+          <DxHeaderFilter :visible="true" />
           <DxColumn caption="Creator" data-field="UsersQuery" />
         </DxDataGrid>
       </template>
@@ -39,12 +40,12 @@
 </template>
 
 <script lang="ts">
-import { DxColumn, DxDataGrid } from 'devextreme-vue/data-grid';
-import { defineComponent, PropType, Ref, ref } from 'vue';
+import { defineComponent, PropType, Ref, ref } from '@vue/composition-api';
+import { DxColumn, DxDataGrid, DxHeaderFilter } from 'devextreme-vue/data-grid';
 
 export default defineComponent({
   name: 'MasterDetailedLoadSettings',
-  components: { DxDataGrid, DxColumn },
+  components: { DxDataGrid, DxColumn, DxHeaderFilter },
   props: {
     data: {
       type: Object as PropType<Record<string, any>>,
@@ -55,7 +56,7 @@ export default defineComponent({
       required: false,
     },
   },
-  setup(props, { emit }) {
+  setup(props) {
     const customizedData! = ref(props.data.data);
     const csvHeader: Ref<any> = ref([]);
     const columnsData = ref([]);

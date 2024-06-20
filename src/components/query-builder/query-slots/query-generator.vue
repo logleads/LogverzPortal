@@ -184,6 +184,7 @@ export default defineComponent({
         batchStart.value = data.Batch.Start;
         batchSize.value = data.Batch.End;
       }
+      emit('query-loaded', true);
     });
 
     function highlighter(code: any) {

@@ -4,6 +4,7 @@
       <json-viewer-custom :value="customizedData" />
     </div>
     <div v-else>
+      // eslint-disable-next-line vue/no-lone-template
       <template>
         <DxDataGrid
           :columns="csvHeader"
@@ -12,21 +13,46 @@
           :column-resizing-mode="currentMode"
           :data-source="[{ ...customizedData }]"
           word-wrap-enabled="true"
-        />
+        >
+          <DxHeaderFilter :visible="true" />
+        </DxDataGrid>
       </template>
+      <!-- <template v-for="item in Object.keys(customizedData)">
+        <div
+          v-if="
+            (item !== 'UsersQuery') &
+            (item !== 'UnixTime') &
+            (item !== 'DatasetName') &
+            (item !== '0') &
+            (item !== '1') &
+            (item !== 'rawindex') &
+            (item !== 'S3Folders')
+          "
+          :key="item + Math.random() * 100000"
+          :class="$style['container']"
+        >
+          <span :class="$style['container__key']">{{ item }}: </span>
+          <div :class="$style['container__value']">{{ customizedData[item] }}</div>
+        </div>
+      </template> -->
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { DxDataGrid } from 'devextreme-vue/data-grid';
-import { defineComponent, onMounted, Ref, ref } from 'vue';
+import { defineComponent, onMounted, Ref, ref } from '@vue/composition-api';
+import { DxDataGrid, DxHeaderFilter } from 'devextreme-vue/data-grid';
 
-import JsonViewerCustom from '~/components/shared/json-viewer.vue';
-
+// @Component({
+//   name: 'MasterDetailedSettings',
+//   components: { ParseObject, Loader, Icon, DxDataGrid },
+// })
 export default defineComponent({
+  // @Prop({ required: false, type: Object }) readonly data!: Record<string, any>;
+  // @Prop({ required: false }) readonly rawitems!: any;
+  // @Prop({ required: false }) readonly format!: any;
   name: 'MasterDetailedSettings',
-  components: { DxDataGrid, JsonViewerCustom },
+  components: { DxDataGrid, DxHeaderFilter },
   props: {
     data: {
       type: Object,

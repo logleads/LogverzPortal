@@ -35,6 +35,7 @@
           :allow-column-reordering="true"
           :column-auto-width="true"
         >
+          <DxHeaderFilter :visible="true" />
           <DxFilterRow :visible="true" />
           <DxColumn type="buttons" :width="150" caption="Action" data-field="id">
             <DxButton>
@@ -92,6 +93,7 @@ import DxDataGrid, {
   DxButton,
   DxColumn,
   DxFilterRow,
+  DxHeaderFilter,
   DxMasterDetail,
 } from 'devextreme-vue/data-grid';
 
@@ -117,6 +119,7 @@ export default defineComponent({
     DxButton,
     DxDataGrid,
     DxFilterRow,
+    DxHeaderFilter,
     DxMasterDetail,
     TimerFilter,
     Tabs,

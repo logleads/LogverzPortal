@@ -13,6 +13,7 @@
         :allow-column-reordering="true"
         :column-auto-width="true"
       >
+        <DxHeaderFilter :visible="true" />
         <DxColumn data-field="Name" />
         <DxColumn data-field="Type" />
         <DxColumn data-field="IAMPolicies" />
@@ -75,14 +76,14 @@
 </template>
 
 <script lang="ts">
-import { DxColumn, DxDataGrid } from 'devextreme-vue/data-grid';
-import { computed, ComputedRef, defineComponent, onMounted, PropType } from 'vue';
+import { computed, ComputedRef, defineComponent, onMounted, PropType } from '@vue/composition-api';
+import { DxColumn, DxDataGrid, DxHeaderFilter } from 'devextreme-vue/data-grid';
 
-import JsonViewerCustom from '~/components/shared/json-viewer.vue';
 import Loader from '~/components/shared/loader.vue';
 import { AdminModule } from '~/store/modules/admin';
 import { groupResponse, IPoliciesGroup } from '~/types/models/admin-window-types';
 import { parseGroupPolicy as parseGroupPolicyFn } from '~/utils/parseGroup';
+
 // @Component({
 
 // })
@@ -90,7 +91,7 @@ export default defineComponent({
   // @Prop({ required: false, type: Object }) readonly data!: { data: groupResponse };
   // @Prop({ required: false }) readonly userOfGroup!: any;
   name: 'MasterDetailedGroups',
-  components: { Loader, DxColumn, DxDataGrid, JsonViewerCustom },
+  components: { Loader, DxColumn, DxDataGrid, DxHeaderFilter },
   props: {
     data: {
       type: Object as PropType<{ data: groupResponse }>,

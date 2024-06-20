@@ -10,6 +10,7 @@
     :column-auto-width="true"
     @toolbar-preparing="onToolbarPreparing"
   >
+    <DxHeaderFilter :visible="true" />
     <DxFilterRow :visible="true" />
     <DxPaging :page-size="10" />
     // eslint-disable-next-line vue/no-v-for-template-key
@@ -43,6 +44,7 @@ import {
   DxDataGrid,
   DxExport,
   DxFilterRow,
+  DxHeaderFilter,
   DxLoadPanel,
   DxMasterDetail,
   DxPaging,
@@ -66,6 +68,7 @@ export default defineComponent({
     MasterDetailedSettings,
     DxPaging,
     DxScrolling,
+    DxHeaderFilter,
   },
   props: {
     headers: {

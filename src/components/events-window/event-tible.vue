@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/attribute-hyphenation -->
 <template>
   <DxDataGrid
     ref="DataGrid"
@@ -9,6 +10,7 @@
     :column-auto-width="true"
     :on-editor-prepared="onEditorPrepared"
   >
+    <DxHeaderFilter :visible="true" />
     <DxFilterRow :visible="true" />
     <DxColumn caption="Action" data-field="Action" />
     <DxColumn caption="Category" data-field="Category" :width="100" />
@@ -36,8 +38,14 @@
 </template>
 
 <script lang="ts">
-import { DxColumn, DxDataGrid, DxFilterRow, DxMasterDetail } from 'devextreme-vue/data-grid';
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref } from '@vue/composition-api';
+import {
+  DxColumn,
+  DxDataGrid,
+  DxFilterRow,
+  DxHeaderFilter,
+  DxMasterDetail,
+} from 'devextreme-vue/data-grid';
 
 import MasterDetailedSettings from '~/components/create-query/load-settings/master-detailed-settings.vue';
 import TimeFields from '~/components/shared/time-fields.vue';
@@ -49,6 +57,7 @@ export default defineComponent({
 
     DxColumn,
     DxDataGrid,
+    DxHeaderFilter,
     DxFilterRow,
     DxMasterDetail,
     TimeFields,
@@ -59,9 +68,9 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
+  setup() {
     const DataGrid: any = ref<HTMLElement | null>(null);
-    function onEditorPrepared(e: any) {
+    function onEditorPrepared() {
       // eslint-disable-next-line no-console
       // console.log(e,'ff')
       // if (e.dataField == 'tm' && e.parentType == 'filterRow') {
