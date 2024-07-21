@@ -12,6 +12,7 @@
         :allow-column-reordering="true"
         :column-auto-width="true"
       >
+        <DxHeaderFilter :visible="true" />
         <DxColumn data-field="Name" />
         <DxColumn data-field="Type" />
         <DxColumn data-field="IAMGroups" />
@@ -76,14 +77,14 @@
 
 <script lang="ts">
 import { computed, ComputedRef, defineComponent, onMounted } from '@vue/composition-api';
-import { DxColumn, DxDataGrid } from 'devextreme-vue/data-grid';
+import { DxColumn, DxDataGrid, DxHeaderFilter } from 'devextreme-vue/data-grid';
 
 import Loader from '~/components/shared/loader.vue';
 import { AdminModule } from '~/store/modules/admin';
 
 export default defineComponent({
   name: 'MasterDetailedPolicy',
-  components: { Loader, DxColumn, DxDataGrid },
+  components: { Loader, DxColumn, DxDataGrid, DxHeaderFilter },
 
   // @Prop({ required: false, type: Object }) readonly data!: Record<string, any>;
   // @Prop({ required: false }) readonly usersOfPolicies!: any;
@@ -94,7 +95,7 @@ export default defineComponent({
     },
     usersOfPolicies: {
       type: Array,
-      required: false,
+      required: true,
     },
   },
   setup(props) {

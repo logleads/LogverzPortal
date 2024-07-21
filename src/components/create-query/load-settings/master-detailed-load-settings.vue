@@ -13,6 +13,7 @@
           :data-source="[{ ...customizedData }]"
           word-wrap-enabled="true"
         >
+          <DxHeaderFilter :visible="true" />
           <DxColumn caption="Creator" data-field="UsersQuery" />
         </DxDataGrid>
       </template>
@@ -40,11 +41,11 @@
 
 <script lang="ts">
 import { defineComponent, PropType, Ref, ref } from '@vue/composition-api';
-import { DxColumn, DxDataGrid } from 'devextreme-vue/data-grid';
+import { DxColumn, DxDataGrid, DxHeaderFilter } from 'devextreme-vue/data-grid';
 
 export default defineComponent({
   name: 'MasterDetailedLoadSettings',
-  components: { DxDataGrid, DxColumn },
+  components: { DxDataGrid, DxColumn, DxHeaderFilter },
   props: {
     data: {
       type: Object as PropType<Record<string, any>>,
@@ -55,7 +56,7 @@ export default defineComponent({
       required: false,
     },
   },
-  setup(props, { emit }) {
+  setup(props) {
     const customizedData! = ref(props.data.data);
     const csvHeader: Ref<any> = ref([]);
     const columnsData = ref([]);

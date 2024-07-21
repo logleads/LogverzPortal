@@ -46,6 +46,7 @@
           :curent-key="curentKey"
           :data-number="dataNumber"
           @update-command="e => (cmd = e)"
+          @query-loaded="queryLoaded"
         />
       </div>
       <div :class="$style['query-footer']">
@@ -59,7 +60,7 @@
         /> -->
         <MyButton
           text="Run"
-          :disabled="!currentAvailableTable"
+          :disabled="!currentAvailableTable || disableButton"
           :no-load="!isSending"
           :class="$style['query-header__btn']"
           @click="run"
@@ -109,6 +110,7 @@ export default defineComponent({
   },
   setup(props) {
     const isShown = ref(true);
+    const disableButton = ref(true);
     const query = ref('');
     const cmd = ref('');
 
@@ -230,6 +232,10 @@ export default defineComponent({
         }, 1000);
       }
     });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    function queryLoaded(e: boolean): void {
+      disableButton.value = false;
+    }
     return {
       sendCmd,
       run,
@@ -252,6 +258,8 @@ export default defineComponent({
       query,
       cmd,
       isServerSending,
+      queryLoaded,
+      disableButton,
     };
   },
 });

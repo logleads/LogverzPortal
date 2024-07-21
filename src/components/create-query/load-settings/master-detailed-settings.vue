@@ -4,6 +4,7 @@
       <json-viewer-custom :value="customizedData" />
     </div>
     <div v-else>
+      // eslint-disable-next-line vue/no-lone-template
       <template>
         <DxDataGrid
           :columns="csvHeader"
@@ -12,7 +13,9 @@
           :column-resizing-mode="currentMode"
           :data-source="[{ ...customizedData }]"
           word-wrap-enabled="true"
-        />
+        >
+          <DxHeaderFilter :visible="true" />
+        </DxDataGrid>
       </template>
       <!-- <template v-for="item in Object.keys(customizedData)">
         <div
@@ -38,7 +41,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, Ref, ref } from '@vue/composition-api';
-import { DxDataGrid } from 'devextreme-vue/data-grid';
+import { DxDataGrid, DxHeaderFilter } from 'devextreme-vue/data-grid';
 
 // @Component({
 //   name: 'MasterDetailedSettings',
@@ -49,7 +52,7 @@ export default defineComponent({
   // @Prop({ required: false }) readonly rawitems!: any;
   // @Prop({ required: false }) readonly format!: any;
   name: 'MasterDetailedSettings',
-  components: { DxDataGrid },
+  components: { DxDataGrid, DxHeaderFilter },
   props: {
     data: {
       type: Object,

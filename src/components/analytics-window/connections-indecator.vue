@@ -118,7 +118,7 @@
           </div>
         </template>
         <MyButton
-          v-if="!isConnectedToWebRTC"
+          v-if="!isConnectedToWebRTC && proxyInstances.length > 0"
           text="WebRTC Connect"
           :disabled="isConnection || !LifecycleState"
           @click="connectToDB"
@@ -236,8 +236,6 @@ export default defineComponent({
     }
 
     function setProperty(state: string, DBname: string, cluster: string): void {
-      console.log('set property cluster', cluster);
-      console.log('set property DB', DBname);
       if (state !== '#fd6c35') {
         ConnectionIndecatoreModule.setProperty({
           DBname,

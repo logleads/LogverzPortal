@@ -9,7 +9,7 @@ export const parseParametersList = (value: string): Array<QueryBuilderRule> => {
     .map(i => {
       return i
         .split(/\r?\n/)
-        .join('')
+        .join(' ')
         .replace(/['"]+/g, '')
         .replace(' ', '')
         .replace(/{/g, '')

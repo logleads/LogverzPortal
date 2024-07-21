@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-useless-template-attributes -->
 <template>
   <div :class="$style['main-container']">
     <template v-if="showForm">
@@ -18,6 +19,7 @@
           :column-auto-width="true"
           @editing-start="handleStartEdit($event)"
         >
+          <DxHeaderFilter :visible="true" />
           <DxEditing :allow-updating="true" mode="form" />
           <DxFilterRow :visible="true" />
           <DxColumn data-field="Name" />
@@ -40,6 +42,7 @@ import {
   DxDataGrid,
   DxEditing,
   DxFilterRow,
+  DxHeaderFilter,
   DxMasterDetail,
 } from 'devextreme-vue/data-grid';
 
@@ -61,6 +64,7 @@ export default defineComponent({
     DxMasterDetail,
     DxEditing,
     MasterDetailedGroups,
+    DxHeaderFilter,
   },
   setup() {
     const showForm: Ref<boolean> = ref(false);

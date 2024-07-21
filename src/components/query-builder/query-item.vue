@@ -10,6 +10,7 @@
           :curent-table="currentAvailableTable"
           :type-data-base="dataBaseEngineItems"
           @update-query="setCommand"
+          @query-loaded="queryLoaded"
         />
         <!-- :type-data-base="dataBaseCurrentAlias === 'DefaultDB' ? 'postgresql' : 'mysql'" -->
       </div>
@@ -110,6 +111,10 @@ export default defineComponent({
       // updateCommand();
       emit('update-command', cmd.value);
     }
+    function queryLoaded(e: boolean): void {
+      console.log('query-loaded', e);
+      emit('query-loaded', e);
+    }
 
     // @Emit('update-command')
     // updateCommand(): string {
@@ -125,6 +130,7 @@ export default defineComponent({
       cmd,
       showQuery,
       query,
+      queryLoaded,
     };
   },
 });

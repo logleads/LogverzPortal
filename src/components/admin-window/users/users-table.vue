@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-useless-template-attributes -->
 <template>
   <div :class="$style['main-container']">
     <template v-if="showUpdateForm">
@@ -150,6 +151,7 @@
           @row-removing="handleRemove($event)"
           @editing-start="handleStartEdit($event)"
         >
+          <DxHeaderFilter :visible="true" />
           <DxEditing :allow-updating="allowEditing" :allow-deleting="allowEditing" mode="form" />
           <DxFilterRow :visible="true" />
           <DxColumn data-field="Name" />
@@ -183,6 +185,7 @@ import {
   DxDataGrid,
   DxEditing,
   DxFilterRow,
+  DxHeaderFilter,
   DxMasterDetail,
 } from 'devextreme-vue/data-grid';
 import Multiselect from 'vue-multiselect';
@@ -215,10 +218,13 @@ export default defineComponent({
     DxMasterDetail,
     DxColumn,
     DxEditing,
+    // eslint-disable-next-line vue/no-reserved-component-names
     Button,
+    // eslint-disable-next-line vue/no-reserved-component-names
     Input,
     Multiselect,
     ToolTip,
+    DxHeaderFilter,
   },
   setup() {
     const Name1: Ref<string> = ref('');
@@ -318,32 +324,32 @@ export default defineComponent({
               i.Policies.GroupAttached.length !== 1
                 ? i.Policies.GroupAttached.reduce(reducer)
                 : i.Policies.GroupAttached.length === 1
-                ? extractPolicy(i.Policies.GroupAttached[0])
-                : '',
+                  ? extractPolicy(i.Policies.GroupAttached[0])
+                  : '',
             GroupInline:
               i.Policies.GroupInline &&
               i.Policies.GroupInline.length &&
               i.Policies.GroupInline.length !== 1
                 ? i.Policies.GroupInline.reduce(reducer)
                 : i.Policies.GroupInline.length === 1
-                ? extractPolicy(i.Policies.GroupInline[0])
-                : '',
+                  ? extractPolicy(i.Policies.GroupInline[0])
+                  : '',
             UserAttached:
               i.Policies.UserAttached &&
               i.Policies.UserAttached.length &&
               i.Policies.UserAttached.length !== 1
                 ? i.Policies.UserAttached.reduce(reducer)
                 : i.Policies.UserAttached.length === 1
-                ? extractPolicy(i.Policies.UserAttached[0])
-                : '',
+                  ? extractPolicy(i.Policies.UserAttached[0])
+                  : '',
             UserInline:
               i.Policies.UserInline &&
               i.Policies.UserInline.length &&
               i.Policies.UserInline.length !== 1
                 ? i.Policies.UserInline.reduce(reducer)
                 : i.Policies.UserInline?.length === 1
-                ? extractPolicy(i.Policies.UserInline[0])
-                : '',
+                  ? extractPolicy(i.Policies.UserInline[0])
+                  : '',
           },
         };
       });
