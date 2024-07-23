@@ -36,8 +36,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
 import { DxColumn, DxDataGrid, DxFilterRow, DxMasterDetail } from 'devextreme-vue/data-grid';
+import { defineComponent, ref } from 'vue';
 
 import MasterDetailedSettings from '~/components/create-query/load-settings/master-detailed-settings.vue';
 import TimeFields from '~/components/shared/time-fields.vue';

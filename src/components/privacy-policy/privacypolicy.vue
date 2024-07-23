@@ -1,20 +1,21 @@
 <template>
-  <!-- <vue-pdf-app :pdf="url"></vue-pdf-app> -->
-  <h1>VUE PDF</h1>
+  <vue-pdf-app :pdf="url"></vue-pdf-app>
 </template>
 <script lang="ts">
 // import this to use default icons for buttons
 
-import { defineComponent, Ref, ref } from 'vue';
+import 'vue3-pdf-app/dist/icons/main.css';
 
-// import VuePdfApp from 'vue-pdf-app';
+import { defineComponent, Ref, ref } from 'vue';
+import VuePdfApp from 'vue3-pdf-app';
+
 // import pdfdoc from '~/components/termsandconditions/sample.pdf';
 import { WindowData, WindowName } from '~/store/modules/windows';
 
 export default defineComponent({
   name: 'PrivacyPolicy',
   components: {
-    // VuePdfApp
+    VuePdfApp,
   },
   setup() {
     const window: Ref<WindowData> = ref({

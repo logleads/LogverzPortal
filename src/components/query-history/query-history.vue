@@ -56,8 +56,8 @@
 
         <DxColumn type="buttons" caption="Actions" data-field="id">
           <DxButton v-if="tableContent">
-            <template #default="{ data }">
-              <div v-if="data.data.Active === false" width="150">
+            <template #default="{ data = {} }">
+              <div v-if="data && data.data && data.data.Active === false" width="150">
                 <div :class="$style['text-1']">Underlying data was deleted</div>
                 <div :class="$style['text-2']">or have been overwritten</div>
               </div>
@@ -70,18 +70,18 @@
             </template>
           </DxButton>
           <DxButton>
-            <template #default="{ data }">
+            <template #default="{ data = {} }">
               <SimpleBtn
-                v-if="data.data.displayButton"
+                v-if="data && data.data && data.data.displayButton"
                 btn-text="Change Permissions"
                 @clicked.stop="openChangePermissionModal(data)"
               />
             </template>
           </DxButton>
           <DxButton>
-            <template #default="{ data }">
+            <template #default="{ data = {} }">
               <SimpleBtn
-                v-if="data.data.displayButton"
+                v-if="data && data.data && data.data.displayButton"
                 btn-text="Delete Record"
                 @clicked.stop="openDeleteRecordModal(data)"
               />
@@ -97,7 +97,7 @@
           cell-template="cellTemplate"
           :width="200"
         />
-        <template #cellTemplate="{ data }">
+        <template #cellTemplate="{ data = {} }">
           <p :class="$style['tooltip']">
             UTC time: {{ data.data.UnixTimeNormalFormat }}
             <span :class="$style['tooltip_tooltiptext']"
@@ -116,7 +116,7 @@
         <DxColumn caption="Database Name" data-field="DatabaseName" />
 
         <DxMasterDetail :enabled="true" template="queryHistorySettings" />
-        <template #queryHistorySettings="{ data }">
+        <template #queryHistorySettings="{ data = {} }">
           <QueryHistorySettings :data="data.data" />
         </template>
       </DxDataGrid>
@@ -133,7 +133,6 @@
 <script lang="ts">
 import 'devextreme/dist/css/dx.light.css';
 
-import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from 'vue';
 import {
   DxButton,
   DxColumn,
@@ -141,6 +140,7 @@ import {
   DxFilterRow,
   DxMasterDetail,
 } from 'devextreme-vue/data-grid';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from 'vue';
 
 import QueryHistoryDeleteRecord from '~/components/query-history/query-dialog-delete-record.vue';
 import QueryHistoryPermission from '~/components/query-history/query-dialog-save-permission.vue';

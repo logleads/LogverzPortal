@@ -1,28 +1,31 @@
 <!-- eslint-disable vue/no-multiple-template-root -->
 <template>
-  <!-- <Draggable
+  <Draggable
     v-model="items"
     :class="$style['tabs']"
+    item-key="items"
     @start="dragging = true"
     @end="dragging = false"
-  > -->
-  <TabItem
-    v-for="(window, index) in items"
-    :key="index"
-    :index="index"
-    :key-c="window.index"
-    :item="window"
   >
-    <!-- :dragging="dragging" -->
-    {{ window.name }}
-  </TabItem>
-  <!-- </Draggable> -->
+    <template #item="{ item }">
+      <TabItem
+        v-for="(window, index) in item"
+        :key="index"
+        :index="index"
+        :key-c="window.index"
+        :item="window"
+        :dragging="dragging"
+      >
+        {{ window.name }}
+      </TabItem>
+    </template>
+  </Draggable>
 </template>
 
 <script lang="ts">
 import { computed, ComputedRef, defineComponent, Ref, ref, watch } from 'vue';
+import Draggable from 'vuedraggable';
 
-// import Draggable from 'vuedraggable';
 import { WindowData, WindowsModule } from '~/store/modules/windows';
 
 import TabItem from './tab-item.vue';
@@ -31,7 +34,7 @@ export default defineComponent({
   // eslint-disable-next-line vue/multi-word-component-names, vue/no-reserved-component-names
   name: 'Header',
   components: {
-    // Draggable,
+    Draggable,
     TabItem,
   },
   setup() {
@@ -49,7 +52,7 @@ export default defineComponent({
     });
     return {
       items,
-      // dragging,
+      dragging,
       activeWindows,
     };
   },

@@ -1,15 +1,17 @@
 <template>
   <div>
-    <json-viewer :value="reshapedData" :expand-depth="5" sort></json-viewer>
+    <json-viewer-custom :value="reshapedData" :expand-depth="5" sort></json-viewer-custom>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, Ref, ref } from 'vue';
 
+import JsonViewerCustom from '~/components/shared/json-viewer.vue';
+
 export default defineComponent({
   name: 'QueryHistorySettings',
-  components: {},
+  components: { JsonViewerCustom },
   props: {
     data: {
       type: Object,

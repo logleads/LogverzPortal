@@ -194,13 +194,6 @@
   dependencies:
     tslib "2.3.1"
 
-"@devexpress/utils@1.3.16":
-  version "1.3.16"
-  resolved "https://registry.npmjs.org/@devexpress/utils/-/utils-1.3.16.tgz"
-  integrity sha512-4Az8FUtvesew89j6N7zmDGfZQyHicvSwVoPZMmxRPvz2u4UiLpI/LDD0zuzLYWsLa8pr+SsJ3JRIKmhlcDAsgA==
-  dependencies:
-    tslib "2.0.1"
-
 "@devextreme/runtime@^4.0.0":
   version "4.0.0"
   resolved "https://registry.npmjs.org/@devextreme/runtime/-/runtime-4.0.0.tgz"
@@ -210,10 +203,10 @@
     inferno-create-element "^7.4.6"
     inferno-hydrate "^7.4.6"
 
-"@devextreme/runtime@3.0.12":
-  version "3.0.12"
-  resolved "https://registry.npmjs.org/@devextreme/runtime/-/runtime-3.0.12.tgz"
-  integrity sha512-a2VCfi82xvB19E2UpaziHDwvbwJESfxm8KUoe1QzQeOFZ3tcgBnWh+oOhf2EIFLCTU34amG7AGVxrSDz+b+ZHg==
+"@devextreme/runtime@3.0.13":
+  version "3.0.13"
+  resolved "https://registry.npmjs.org/@devextreme/runtime/-/runtime-3.0.13.tgz"
+  integrity sha512-//24I6vo5a+XG/Ul3+vOGqU4M22IWyldpECxLY8iyGJWA5fiNaYzAedrMV2Ixo5oRj8DawiHTZKy5iKKF9ks5g==
   dependencies:
     inferno "^7.4.6"
     inferno-create-element "^7.4.6"
@@ -843,6 +836,20 @@
   version "3.4.26"
   resolved "https://registry.npmjs.org/@vue/shared/-/shared-3.4.26.tgz"
   integrity sha512-Fg4zwR0GNnjzodMt3KRy2AWGMKQXByl56+4HjN87soxLNU9P5xcJkstAlIeEF3cU6UYOzmJl1tV0dVPGIljCnQ==
+
+"@vuelidate/core@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.npmjs.org/@vuelidate/core/-/core-2.0.3.tgz"
+  integrity sha512-AN6l7KF7+mEfyWG0doT96z+47ljwPpZfi9/JrNMkOGLFv27XVZvKzRLXlmDPQjPl/wOB1GNnHuc54jlCLRNqGA==
+  dependencies:
+    vue-demi "^0.13.11"
+
+"@vuelidate/validators@^2.0.4":
+  version "2.0.4"
+  resolved "https://registry.npmjs.org/@vuelidate/validators/-/validators-2.0.4.tgz"
+  integrity sha512-odTxtUZ2JpwwiQ10t0QWYJkkYrfd0SyFYhdHH44QQ1jDatlZgTh/KRzrWVmn/ib9Gq7H4hFD4e8ahoo5YlUlDw==
+  dependencies:
+    vue-demi "^0.13.11"
 
 "@webassemblyjs/ast@^1.12.1", "@webassemblyjs/ast@1.12.1":
   version "1.12.1"
@@ -1835,26 +1842,18 @@ detect-node@^2.0.4:
   resolved "https://registry.npmjs.org/detect-node/-/detect-node-2.1.0.tgz"
   integrity sha512-T0NIuQpnTvFDATNuHN5roPwSBG83rFsuO+MXXH9/3N1eFbn4wcPjttvjMLEPWJ0RGUYgQE7cGgS3tNxbqCGM7g==
 
-devexpress-diagram@^2.1.57:
-  version "2.2.2"
-  resolved "https://registry.npmjs.org/devexpress-diagram/-/devexpress-diagram-2.2.2.tgz"
-  integrity sha512-wJvc9Q2lnha3BPFHMXoKYRiRmQP/W9rjZmjHAdp6N9yzyG32tUzoQEaa3U1f7feWSypWv2g28U+HO/xgNZN6FA==
+devexpress-diagram@^2.1.57, devexpress-diagram@2.2.8:
+  version "2.2.8"
+  resolved "https://registry.npmjs.org/devexpress-diagram/-/devexpress-diagram-2.2.8.tgz"
+  integrity sha512-pFsMfJdi8z0iAScWL7yjwPa+CobPQ+acVzbuUjpPe6ZXD42LniYoFbMeiGctvQJhv7BtuWRfg2ao1lEq8VUkzw==
   dependencies:
-    "@devexpress/utils" "1.3.16"
+    "@devexpress/utils" "^1.4.3"
     es6-object-assign "^1.1.0"
 
-devexpress-diagram@2.2.5:
-  version "2.2.5"
-  resolved "https://registry.npmjs.org/devexpress-diagram/-/devexpress-diagram-2.2.5.tgz"
-  integrity sha512-gxcBYNChijcfmsOnWOWPmTGxIPn+eGIf3635PUgpTBL/WPpDVZJsXdEV+eXe92OEX0MopcyxiCSJZN5o3zZ4hQ==
-  dependencies:
-    "@devexpress/utils" "1.3.16"
-    es6-object-assign "^1.1.0"
-
-devexpress-gantt@4.1.54:
-  version "4.1.54"
-  resolved "https://registry.npmjs.org/devexpress-gantt/-/devexpress-gantt-4.1.54.tgz"
-  integrity sha512-5o5Y/v+mc/ukYGwmRy9UJ2SegKB/XXsa981BsXXT437QGHcwLzT47+NBRhsmQ8yIkp7NvCzKz8nEsF4tYORGFg==
+devexpress-gantt@4.1.56:
+  version "4.1.56"
+  resolved "https://registry.npmjs.org/devexpress-gantt/-/devexpress-gantt-4.1.56.tgz"
+  integrity sha512-jnnvDYDDzjqr8pnWYsAM96mug6yXEQ1H26QLLBRbwLC72ckb1yv0Rk6DUae9ZwewIFNzIKHt1klQMF/KD9Mb8A==
   dependencies:
     "@devexpress/utils" "^1.4.3"
     tslib "2.3.1"
@@ -1872,20 +1871,20 @@ devextreme-quill@1.6.4:
     parchment "^2.0.1"
     quill-delta "^5.0.0"
 
-devextreme-vue@^23.2.6:
-  version "23.2.6"
-  resolved "https://registry.npmjs.org/devextreme-vue/-/devextreme-vue-23.2.6.tgz"
-  integrity sha512-uyPQ1OcyI2WagatW6jIbNDneBtOcO/tudKWVQHwbl/FS4LpKH8gNgrl7YaDpDhQGO0imFoOA0Qo8ERl0iAq3Tg==
+devextreme-vue@^23.2.7:
+  version "23.2.7"
+  resolved "https://registry.npmjs.org/devextreme-vue/-/devextreme-vue-23.2.7.tgz"
+  integrity sha512-swJC8b2McRC+zvjq20is0MChb5vus4k+5ouTK9O7X1kCw1YdslKKc8wwVApZI44LWaAln5sF49qhmgO7absUaw==
 
-devextreme@^23.2.6, devextreme@~23.2.6:
-  version "23.2.6"
-  resolved "https://registry.npmjs.org/devextreme/-/devextreme-23.2.6.tgz"
-  integrity sha512-JZkqvjLdv66feFWH0+23XRLSEKdp/DnW+AXJVTLeUc4ZvGcuZVLkOnusLF0yZ21BTG+xKxkZ4lTaSrw1BeYLDQ==
+devextreme@^23.2.7, devextreme@~23.2.7:
+  version "23.2.7"
+  resolved "https://registry.npmjs.org/devextreme/-/devextreme-23.2.7.tgz"
+  integrity sha512-o1a75Hw8wCpuDVbvmUxTMBUChgDSznY1bWJhzXCzOtOy8rGA4iGMFXRz7KVwPiDs0uu4MOrKlKLBu8CLSQOUzg==
   dependencies:
     "@babel/runtime" "^7.12.1"
-    "@devextreme/runtime" "3.0.12"
-    devexpress-diagram "2.2.5"
-    devexpress-gantt "4.1.54"
+    "@devextreme/runtime" "3.0.13"
+    devexpress-diagram "2.2.8"
+    devexpress-gantt "4.1.56"
     devextreme-quill "1.6.4"
     inferno "^7.4.9"
     inferno-hydrate "^7.4.9"
@@ -2789,7 +2788,7 @@ he@^1.2.0:
   resolved "https://registry.npmjs.org/he/-/he-1.2.0.tgz"
   integrity sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
 
-highlight.js@^10.7.3:
+highlight.js@^10.3.2, highlight.js@^10.7.3:
   version "10.7.3"
   resolved "https://registry.npmjs.org/highlight.js/-/highlight.js-10.7.3.tgz"
   integrity sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==
@@ -4613,10 +4612,10 @@ sockjs@^0.3.24:
     uuid "^8.3.2"
     websocket-driver "^0.7.4"
 
-sortablejs@1.10.2:
-  version "1.10.2"
-  resolved "https://registry.npmjs.org/sortablejs/-/sortablejs-1.10.2.tgz"
-  integrity sha512-YkPGufevysvfwn5rfdlGyrGjt7/CRHwvRPogD/lC+TnvcN29jDpCifKP+rBqf+LRldfXSTh+0CGLcSg0VIxq3A==
+sortablejs@1.14.0:
+  version "1.14.0"
+  resolved "https://registry.npmjs.org/sortablejs/-/sortablejs-1.14.0.tgz"
+  integrity sha512-pBXvQCs5/33fdN1/39pPL0NZF20LeRbLQ5jtnheIPN9JQAaufGjKdWduZn4U7wCtVuzKhmRkI0DFYHYRbB2H1w==
 
 source-map-js@^1.2.0, "source-map-js@>=0.6.2 <2.0.0":
   version "1.2.0"
@@ -4880,11 +4879,6 @@ tslib@^2.4.0:
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.6.2.tgz"
   integrity sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==
 
-tslib@2.0.1:
-  version "2.0.1"
-  resolved "https://registry.npmjs.org/tslib/-/tslib-2.0.1.tgz"
-  integrity sha512-SgIkNheinmEBgx1IUNirK0TUD4X9yjjBRTqqjggWCU3pUEqIk3/Uwl3yRixYKT6WjQuGiwDv4NomL3wqRCj+CQ==
-
 tslib@2.3.1:
   version "2.3.1"
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.3.1.tgz"
@@ -5000,6 +4994,11 @@ vary@~1.1.2:
   resolved "https://registry.npmjs.org/vary/-/vary-1.1.2.tgz"
   integrity sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==
 
+vue-demi@^0.13.11:
+  version "0.13.11"
+  resolved "https://registry.npmjs.org/vue-demi/-/vue-demi-0.13.11.tgz"
+  integrity sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A==
+
 vue-eslint-parser@^9.4.2:
   version "9.4.2"
   resolved "https://registry.npmjs.org/vue-eslint-parser/-/vue-eslint-parser-9.4.2.tgz"
@@ -5049,15 +5048,7 @@ vue-template-compiler@^2.6.14:
     de-indent "^1.0.2"
     he "^1.2.0"
 
-vue@^2.6.11:
-  version "2.7.16"
-  resolved "https://registry.npmjs.org/vue/-/vue-2.7.16.tgz"
-  integrity sha512-4gCtFXaAA3zYZdTp5s4Hl2sozuySsgz4jy1EnpBHNfpMa9dK1ZCG7viqBPCwXtmgc8nHqUsAu3G4gtmXkkY3Sw==
-  dependencies:
-    "@vue/compiler-sfc" "2.7.16"
-    csstype "^3.1.0"
-
-vue@^3.0.0, vue@^3.0.2, vue@^3.1.0, vue@^3.2.0, vue@>=2, vue@3.4.26:
+"vue@^2.0.0 || >=3.0.0", vue@^3.0.0, "vue@^3.0.0-0 || ^2.6.0", vue@^3.0.1, vue@^3.0.2, vue@^3.1.0, vue@^3.2.0, vue@>=2, vue@3.4.26:
   version "3.4.26"
   resolved "https://registry.npmjs.org/vue/-/vue-3.4.26.tgz"
   integrity sha512-bUIq/p+VB+0xrJubaemrfhk1/FiW9iX+pDV+62I/XJ6EkspAO9/DXEjbDFoe8pIfOZBqfk45i9BMc41ptP/uRg==
@@ -5068,6 +5059,21 @@ vue@^3.0.0, vue@^3.0.2, vue@^3.1.0, vue@^3.2.0, vue@>=2, vue@3.4.26:
     "@vue/server-renderer" "3.4.26"
     "@vue/shared" "3.4.26"
 
+vue@^2.6.11:
+  version "2.7.16"
+  resolved "https://registry.npmjs.org/vue/-/vue-2.7.16.tgz"
+  integrity sha512-4gCtFXaAA3zYZdTp5s4Hl2sozuySsgz4jy1EnpBHNfpMa9dK1ZCG7viqBPCwXtmgc8nHqUsAu3G4gtmXkkY3Sw==
+  dependencies:
+    "@vue/compiler-sfc" "2.7.16"
+    csstype "^3.1.0"
+
+vue3-highlightjs@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.npmjs.org/vue3-highlightjs/-/vue3-highlightjs-1.0.5.tgz"
+  integrity sha512-Q4YNPXu0X5VMBnwPVOk+IQf1Ohp9jFdMitEAmzaz8qVVefcQpN6Dx4BnDGKxja3TLDVF+EgL136wC8YzmoCX9w==
+  dependencies:
+    highlight.js "^10.3.2"
+
 vue3-json-viewer@^2.2.2:
   version "2.2.2"
   resolved "https://registry.npmjs.org/vue3-json-viewer/-/vue3-json-viewer-2.2.2.tgz"
@@ -5075,12 +5081,17 @@ vue3-json-viewer@^2.2.2:
   dependencies:
     clipboard "^2.0.10"
 
-vuedraggable@^2.24.3:
-  version "2.24.3"
-  resolved "https://registry.npmjs.org/vuedraggable/-/vuedraggable-2.24.3.tgz"
-  integrity sha512-6/HDXi92GzB+Hcs9fC6PAAozK1RLt1ewPTLjK0anTYguXLAeySDmcnqE8IC0xa7shvSzRjQXq3/+dsZ7ETGF3g==
+vue3-pdf-app@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.npmjs.org/vue3-pdf-app/-/vue3-pdf-app-1.0.3.tgz"
+  integrity sha512-qegWTIF4wYKiocZ3KreB70wRXhqSdXWbdERDyyKzT7d5PbjKbS9tD6vaKkCqh3PzTM84NyKPYrQ3iuwJb60YPQ==
+
+vuedraggable@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.npmjs.org/vuedraggable/-/vuedraggable-4.1.0.tgz"
+  integrity sha512-FU5HCWBmsf20GpP3eudURW3WdWTKIbEIQxh9/8GE806hydR9qZqRRxRE3RjqX7PkuLuMQG/A7n3cfj9rCEchww==
   dependencies:
-    sortablejs "1.10.2"
+    sortablejs "1.14.0"
 
 vuex-module-decorators@^1.0.1:
   version "1.2.0"

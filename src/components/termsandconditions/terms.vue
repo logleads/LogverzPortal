@@ -1,9 +1,9 @@
 <template>
-  <!-- <vue-pdf-app :pdf="urlData"></vue-pdf-app> -->
-  <h1>VUE PDF</h1>
+  <vue-pdf-app :pdf="urlData"></vue-pdf-app>
 </template>
 <script lang="ts">
 import { computed, ComputedRef, defineComponent } from 'vue';
+import VuePdfApp from 'vue3-pdf-app';
 
 // import VuePdfApp from 'vue-pdf-app';
 import { UserModule } from '~/store/modules/user';
@@ -11,7 +11,7 @@ import { UserModule } from '~/store/modules/user';
 export default defineComponent({
   name: 'TermsWindow',
   components: {
-    //  VuePdfApp
+    VuePdfApp,
   },
   setup() {
     // const url: Ref<string> = ref(

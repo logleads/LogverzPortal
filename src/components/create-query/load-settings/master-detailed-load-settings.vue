@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="rawitems && Object.keys(rawitems).length > 0 && format === 'json'">
-      <json-viewer-custom :value="customizedData" />
+      <json-viewer :value="customizedData" />
     </div>
     <div v-else>
       <template>
@@ -39,8 +39,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, Ref, ref } from 'vue';
 import { DxColumn, DxDataGrid } from 'devextreme-vue/data-grid';
+import { defineComponent, PropType, Ref, ref } from 'vue';
 
 export default defineComponent({
   name: 'MasterDetailedLoadSettings',

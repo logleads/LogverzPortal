@@ -75,15 +75,16 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, onMounted } from 'vue';
 import { DxColumn, DxDataGrid } from 'devextreme-vue/data-grid';
+import { computed, ComputedRef, defineComponent, onMounted } from 'vue';
 
+import JsonViewerCustom from '~/components/shared/json-viewer.vue';
 import Loader from '~/components/shared/loader.vue';
 import { AdminModule } from '~/store/modules/admin';
 
 export default defineComponent({
   name: 'MasterDetailedPolicy',
-  components: { Loader, DxColumn, DxDataGrid },
+  components: { Loader, DxColumn, DxDataGrid, JsonViewerCustom },
 
   // @Prop({ required: false, type: Object }) readonly data!: Record<string, any>;
   // @Prop({ required: false }) readonly usersOfPolicies!: any;

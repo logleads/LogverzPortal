@@ -20,6 +20,7 @@
   "plugins": ["@typescript-eslint", "prettier", "unused-imports", "simple-import-sort"],
   "rules": {
     "vue/require-default-prop": "off",
+    "vue/no-deprecated-slot-attribute": "off",
     "no-restricted-imports": [
       "error",
       {

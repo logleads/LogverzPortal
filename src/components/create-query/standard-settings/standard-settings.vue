@@ -20,8 +20,7 @@
           :class="[
             $style['standard__add-file'],
             {
-              [$style['error']]: submitted,
-              // && v$.S3Folders.$invalid
+              [$style['error']]: submitted && v$.S3Folders.$error,
             },
           ]"
         >
@@ -33,28 +32,19 @@
             @input="handleInput({ value: $event, label: 'S3Folders' })"
           />
         </div>
-        <div
-          v-if="
-            submitted
-            // && v$.S3Folders.required.$invalid
-          "
-          :class="$style['validation-text']"
-        >
+        <div v-if="submitted && v$.S3Folders.$error" :class="$style['validation-text']">
           S3Folders is required
         </div>
         <div
-          v-if="
-            submitted
-            // && (v$.S3Folders.minLength.$invalid || v$.S3Folders.maxLength.$invalid)
-          "
+          v-if="submitted && (v$.S3Folders.minLength.$invalid || v$.S3Folders.maxLength.$invalid)"
           :class="$style['validation-text']"
         >
-          <!-- <template v-if="v$.S3Folders.minLength.$invalid"
+          <template v-if="v$.S3Folders.minLength.$invalid"
             >{{ v$.S3Folders.minLength.$message }}
           </template>
           <template v-if="v$.S3Folders.maxLength.$invalid"
             >{{ v$.S3Folders.maxLength.$message }}
-          </template> -->
+          </template>
         </div>
         <div v-if="isFilesBrowses">
           <div :class="$style['standard__sites']">
@@ -82,35 +72,26 @@
                 slot="input"
                 v-model="input.content"
                 :name="input.label"
-                :error="
-                  submitted
-                  // && v$[input.label].$invalid
-                "
+                :error="submitted && v$[input.label].$error"
                 @input="handleInput({ value: $event, label: input.label })"
               />
             </InputContainer>
-            <div
-              v-if="
-                submitted
-                // && v$[input.label].required.$invalid
-              "
-              :class="$style['validation-text']"
-            >
+            <div v-if="submitted && v$[input.label].error" :class="$style['validation-text']">
               {{ input.label }} is required
             </div>
             <div
               v-if="
-                submitted
-                // && (v$[input.label].maxLength.$invalid || v$[input.label].maxLength.$invalid)
+                submitted &&
+                (v$[input.label].maxLength.$invalid || v$[input.label].maxLength.$invalid)
               "
             >
-              <!-- {{ v$[input.label].maxLength.$message }} -->
+              {{ v$[input.label].maxLength.$message }}
             </div>
           </div>
           <div>
             <label :class="$style['multiselect-label']">
               <span> Dataset Owners </span>
-              <!-- <ToolTip :tip="DCH_TABLE_OWNERS_Local" /> -->
+              <ToolTip :tip="DCH_TABLE_OWNERS_Local" />
             </label>
             <div>
               <multiselect
@@ -125,17 +106,11 @@
                 label="name"
                 track-by="name"
                 :preselect-first="true"
+                :class="{ invalid: submitted && v$.DatasetOwners.$error }"
               />
-              <!-- :class="{ invalid: submitted && v$.DatasetOwners.$invalid }" -->
             </div>
 
-            <div
-              v-if="
-                submitted
-                //  && v$.DatasetOwners.required.$invalid
-              "
-              :class="$style['validation-text']"
-            >
+            <div v-if="submitted && v$.DatasetOwners.$error" :class="$style['validation-text']">
               DatasetOwners is required
             </div>
           </div>
@@ -196,8 +171,8 @@ import { InputContent } from '~/types/models/data-collection-types';
 import { employees } from './data';
 import TreeList from './tree-list.vue';
 const emptySelectedText = 'Nobody has been selected';
-// import { useVuelidate } from '@vuelidate/core';
-// import { maxLength, minLength, required } from '@vuelidate/validators';
+import { useVuelidate } from '@vuelidate/core';
+import { maxLength, minLength, required } from '@vuelidate/validators';
 import {
   computed,
   ComputedRef,
@@ -250,13 +225,13 @@ export default defineComponent({
     const DCH_TABLE_OWNERS_Local = ref(DCH_TABLE_OWNERS);
     const DCH_TABLE_ACCESS_Local = ref(DCH_TABLE_ACCESS);
     const rules = {
-      // CurrentBucket: { required },
-      // DBServerAlias: { required },
-      // S3Folders: { required, minLength: minLength(6), maxLength: maxLength(2000) },
-      // LogVolume: { required },
-      // DatatypeSelector: { required },
-      // DatasetName: { required, minLength: minLength(1), maxLength: maxLength(63) },
-      // DatasetDescription: { required, maxLength: maxLength(500) },
+      CurrentBucket: { required },
+      DBServerAlias: { required },
+      S3Folders: { required, minLength: minLength(6), maxLength: maxLength(2000) },
+      LogVolume: { required },
+      DatatypeSelector: { required },
+      DatasetName: { required, minLength: minLength(1), maxLength: maxLength(63) },
+      DatasetDescription: { required, maxLength: maxLength(500) },
     };
 
     const DatasetOwners = computed({
@@ -399,15 +374,15 @@ export default defineComponent({
         hint: DCH_DB_SERVER_ALIAS_Local.value,
       },
     ]);
-    // const v$ = useVuelidate(rules, {
-    //   CurrentBucket,
-    //   DBServerAlias,
-    //   S3Folders,
-    //   LogVolume,
-    //   DatatypeSelector,
-    //   DatasetName,
-    //   DatasetDescription,
-    // });
+    const v$ = useVuelidate(rules, {
+      CurrentBucket,
+      DBServerAlias,
+      S3Folders,
+      LogVolume,
+      DatatypeSelector,
+      DatasetName,
+      DatasetDescription,
+    });
     onMounted(() => {
       DataCollectionModule.getQueryType();
       DataCollectionModule.getDBAlias();
@@ -537,7 +512,13 @@ export default defineComponent({
           hint: DCH_DB_SERVER_ALIAS_Local.value,
         },
       ];
-      // emit('validate', v$);
+      verifyValidation();
+      emit('validate', v$);
+    }
+
+    function verifyValidation() {
+      v$.value.$touch();
+      console.log(v$.value);
     }
 
     function handleBucketsSelect(payload: { item: string; content: string }): void {
@@ -545,12 +526,14 @@ export default defineComponent({
     }
 
     function handleInput(payload: { label: string; value: string }): void {
+      console.log(payload.label, payload.value);
       if (payload.label == 'DatasetName') {
         DataCollectionModule.setInputValue({ label: 'DatasetWarning', value: '' });
       }
       // console.log('first', payload);
       DataCollectionModule.setInputValue(payload);
-      // emit('validate', v$);
+      verifyValidation();
+      emit('validate', v$);
     }
 
     function browseFiles(): void {
@@ -599,7 +582,7 @@ export default defineComponent({
       DCH_TABLE_DESCRIPTION_Local,
       DCH_TABLE_OWNERS_Local,
       DCH_TABLE_ACCESS_Local,
-      // v$,
+      v$,
     };
   },
 });

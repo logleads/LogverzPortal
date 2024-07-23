@@ -538,12 +538,10 @@ import { defineComponent, Ref, ref } from 'vue';
 // import VueHighlightJS from 'vue-highlight.js';
 // import JsonViewer from 'vue-json-viewer';
 // import Notifications from 'vue-notification';
-// import Vuelidate from 'vuelidate';
 import { AD_HTML_TAG, AD_SCRIPT_SRC } from '~/constants';
 import HomePage from '~/pages/home-page.vue';
 import { ConnectionIndecatoreModule } from '~/store/modules/connection-indecatore';
-// Vue.use(VueCompositionApi);
-// Vue.use(Vuelidate);
+
 // Vue.use(Notifications);
 // Vue.use(JsonViewer);
 /*

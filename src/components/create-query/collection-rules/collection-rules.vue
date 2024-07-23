@@ -23,9 +23,11 @@
           <div v-else>
             <!-- <div :class="$style['input-item-text']">Generated rules query display field</div> -->
             <div :class="$style['generated-query']">
-              <highlight-code lang="sql">
+              <!-- <highlight-code lang="sql">
                 {{ QueryFromState }}
-              </highlight-code>
+              </highlight-code> -->
+              <pre v-highlightjs="QueryFromState"><code class="sql"></code></pre>
+
               <div
                 v-if="
                   submitted

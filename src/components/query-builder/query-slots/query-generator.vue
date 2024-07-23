@@ -81,9 +81,10 @@
           @input="handleCustomQuery"
         >
         </textarea>
-        <highlight-code v-else lang="sql">
-          {{ customQuery ? customQuery.replaceAll('\\', '') : placeholder }}
-        </highlight-code>
+        <pre
+          v-else
+          v-highlightjs="customQuery ? customQuery.replaceAll('\\', '') : placeholder"
+        ><code class="sql"></code></pre>
       </div>
     </div>
   </div>
