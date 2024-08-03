@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, Ref, ref } from '@vue/composition-api';
+import { defineComponent, onMounted, Ref, ref } from 'vue';
 import { DxDataGrid, DxHeaderFilter } from 'devextreme-vue/data-grid';
 
 // @Component({

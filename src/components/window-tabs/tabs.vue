@@ -3,27 +3,25 @@
   <Draggable
     v-model="items"
     :class="$style['tabs']"
-    item-key="items"
+    item-key="index"
     @start="dragging = true"
     @end="dragging = false"
   >
-    <template #item="{ item }">
+    <template #item="{ element }">
       <TabItem
-        v-for="(window, index) in item"
-        :key="index"
-        :index="index"
-        :key-c="window.index"
-        :item="window"
+        :key="element.index"
+        :index="element.index"
+        :key-c="element.index"
+        :item="element"
         :dragging="dragging"
       >
-        {{ window.name }}
+        {{ element.name }}
       </TabItem>
     </template>
   </Draggable>
 </template>
-
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, Ref, ref, watch } from 'vue';
+import { computed, ComputedRef, defineComponent, Ref, ref, watchEffect } from 'vue';
 import Draggable from 'vuedraggable';
 
 import { WindowData, WindowsModule } from '~/store/modules/windows';
@@ -45,11 +43,10 @@ export default defineComponent({
       return WindowsModule.activeWindows;
     });
 
-    watch(activeWindows, () => {
-      items.value = activeWindows.value;
-      // console.table(items.value);
-      // });
+    watchEffect(() => {
+      items.value = [...WindowsModule.activeWindows];
     });
+
     return {
       items,
       dragging,

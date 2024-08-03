@@ -50,10 +50,10 @@ export default defineComponent({
       required: true,
     },
   },
-  setup() {
+  setup(props) {
     const instance = getCurrentInstance();
     const key = instance?.vnode.key;
-
+    console.log('INSIDE TAB_ITEM: ', props.item);
     const focusedWindow: ComputedRef<Nullable<WindowName>> = computed(() => {
       return WindowsModule.focusedWindow;
     });

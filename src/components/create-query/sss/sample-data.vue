@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from 'vue';
 import { DxDataGrid, DxHeaderFilter } from 'devextreme-vue/data-grid';
 
 import Icon from '~/components/shared/icon.vue';

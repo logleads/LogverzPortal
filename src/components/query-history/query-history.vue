@@ -57,7 +57,8 @@
 
         <DxColumn type="buttons" caption="Actions" data-field="id">
           <DxButton v-if="tableContent">
-            <template #default="{ data = {} }">
+            <template #default="data">
+              <pre>{{ data }}</pre>
               <div v-if="data && data.data && data.data.Active === false" width="150">
                 <div :class="$style['text-1']">Underlying data was deleted</div>
                 <div :class="$style['text-2']">or have been overwritten</div>
@@ -71,21 +72,29 @@
             </template>
           </DxButton>
           <DxButton>
-            <template #default="{ data = {} }">
+            <template #default="data">
+              <pre>{{ data }}</pre>
               <SimpleBtn
                 v-if="data && data.data && data.data.displayButton"
                 btn-text="Change Permissions"
                 @clicked.stop="openChangePermissionModal(data)"
               />
+              <div v-else>
+                <span>No data available 2</span>
+              </div>
             </template>
           </DxButton>
           <DxButton>
-            <template #default="{ data = {} }">
+            <template #default="data">
+              <pre>{{ data }}</pre>
               <SimpleBtn
                 v-if="data && data.data && data.data.displayButton"
                 btn-text="Delete Record"
                 @clicked.stop="openDeleteRecordModal(data)"
               />
+              <div v-else>
+                <span>No data available 3</span>
+              </div>
             </template>
           </DxButton>
         </DxColumn>
