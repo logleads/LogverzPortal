@@ -22,18 +22,9 @@
             v-model="Name1"
             name="name"
             :placeholder="'Specify username'"
-            :error="
-              submitted
-              // && !v$.Name1.$invalid && v$.Name1.$dirty
-            "
+            :error="submitted && v$.Name1.$error"
           />
-          <div
-            v-if="
-              submitted
-              // && !v$.Name1.$invalid && v$.Name1.$dirty
-            "
-            :class="$style['validation-text']"
-          >
+          <div v-if="submitted && v$.Name1.$error" :class="$style['validation-text']">
             Name is required
           </div>
         </div>
@@ -50,13 +41,7 @@
             name="Type"
             @select-value="handleTypeSelect"
           />
-          <div
-            v-if="
-              submitted
-              // && !v$.Type.$invalid && v$.Type.$dirty
-            "
-            :class="$style['validation-text']"
-          >
+          <div v-if="submitted && v$.Type.$error" :class="$style['validation-text']">
             Type is required
           </div>
         </div>
@@ -77,18 +62,11 @@
             label="name"
             track-by="name"
             :class="{
-              invalid: submitted,
-              // && !v$.chosenGroup.$invalid && v$.chosenPolicies.$dirty,
+              invalid: submitted && v$.chosenGroup.$error,
             }"
           />
         </div>
-        <div
-          v-if="
-            submitted
-            // && !v$.chosenGroup.$invalid && v$.chosenPolicies.$dirty
-          "
-          :class="$style['validation-text']"
-        >
+        <div v-if="submitted && v$.chosenGroup.$error" :class="$style['validation-text']">
           Policies and Groups are required
         </div>
         <div :class="$style['input-wrapper__multi']">
@@ -108,17 +86,10 @@
             label="name"
             track-by="name"
             :class="{
-              invalid: submitted,
-              // && !v$.chosenGroup.$invalid && v$.chosenPolicies.$dirty,
+              invalid: submitted && v$.chosenGroup.$error,
             }"
           />
-          <div
-            v-if="
-              submitted
-              // && !v$.chosenGroup.$invalid && v$.chosenPolicies.$dirty
-            "
-            :class="$style['validation-text']"
-          >
+          <div v-if="submitted && !v$.chosenGroup.$error" :class="$style['validation-text']">
             Policies and Groups are required
           </div>
         </div>
@@ -126,11 +97,10 @@
           <Button
             text="Save"
             :disabled="
-              submitted
-              // ||
-              // (v$.chosenGroup.$invalid && v$.chosenPolicies.$invalid) ||
-              // v$.Type.$invalid ||
-              // v$.Name1.$invalid
+              submitted ||
+              (v$.chosenGroup.$error && v$.chosenPolicies.$error) ||
+              v$.Type.$error ||
+              v$.Name1.$error
             "
             no-load
             @click="handleSubmit"
@@ -194,8 +164,8 @@
 </template>
 
 <script lang="ts">
-// import { useVuelidate } from '@vuelidate/core';
-// import { required } from '@vuelidate/validators';
+import { useVuelidate } from '@vuelidate/core';
+import { required } from '@vuelidate/validators';
 import {
   DxColumn,
   DxDataGrid,
@@ -259,16 +229,16 @@ export default defineComponent({
     const AW_GROUPS_LOCAL = ref(AW_GROUPS);
     const AW_POLICIES_LOCAL = ref(AW_POLICIES);
     const rules = {
-      // Name1: { required },
-      // Type: { required },
-      // chosenGroup: { required },
-      // chosenPolicies: { required },
+      Name1: { required },
+      Type: { required },
+      chosenGroup: { required },
+      chosenPolicies: { required },
     };
     const Type: ComputedRef<string> = computed(() => {
       return AdminModule.currentType;
     });
 
-    // const v$ = useVuelidate(rules, { Name1, Type, chosenGroup, chosenPolicies });
+    const v$ = useVuelidate(rules, { Name1, Type, chosenGroup, chosenPolicies });
     onMounted(async () => {
       await AdminModule.getUsers();
       await AdminModule.getGroups();
@@ -341,32 +311,32 @@ export default defineComponent({
               i.Policies.GroupAttached.length !== 1
                 ? i.Policies.GroupAttached.reduce(reducer)
                 : i.Policies.GroupAttached.length === 1
-                  ? extractPolicy(i.Policies.GroupAttached[0])
-                  : '',
+                ? extractPolicy(i.Policies.GroupAttached[0])
+                : '',
             GroupInline:
               i.Policies.GroupInline &&
               i.Policies.GroupInline.length &&
               i.Policies.GroupInline.length !== 1
                 ? i.Policies.GroupInline.reduce(reducer)
                 : i.Policies.GroupInline.length === 1
-                  ? extractPolicy(i.Policies.GroupInline[0])
-                  : '',
+                ? extractPolicy(i.Policies.GroupInline[0])
+                : '',
             UserAttached:
               i.Policies.UserAttached &&
               i.Policies.UserAttached.length &&
               i.Policies.UserAttached.length !== 1
                 ? i.Policies.UserAttached.reduce(reducer)
                 : i.Policies.UserAttached.length === 1
-                  ? extractPolicy(i.Policies.UserAttached[0])
-                  : '',
+                ? extractPolicy(i.Policies.UserAttached[0])
+                : '',
             UserInline:
               i.Policies.UserInline &&
               i.Policies.UserInline.length &&
               i.Policies.UserInline.length !== 1
                 ? i.Policies.UserInline.reduce(reducer)
                 : i.Policies.UserInline?.length === 1
-                  ? extractPolicy(i.Policies.UserInline[0])
-                  : '',
+                ? extractPolicy(i.Policies.UserInline[0])
+                : '',
           },
         };
       });
@@ -381,12 +351,12 @@ export default defineComponent({
 
     function handleSubmit(): void {
       submitted.value = true;
+      v$.value.$touch();
       if (
-        submitted.value
-        // ||
-        // (!v$.value.chosenGroup.$invalid && !v$.value.chosenPolicies.$invalid) ||
-        // !v$.value.Type.$invalid ||
-        // !v$.value.Name1.$invalid
+        submitted.value ||
+        (!v$.value.chosenGroup.$error && !v$.value.chosenPolicies.$error) ||
+        !v$.value.Type.$error ||
+        !v$.value.Name1.$error
       ) {
         const IAMGroups = chosenGroup.value.map(i => i.name);
         const IAMPolicies = chosenPolicies.value.map(i => i.name);
@@ -467,7 +437,7 @@ export default defineComponent({
       availableTypes,
       groups,
       Type,
-      // v$,
+      v$,
       AW_GROUPS_LOCAL,
       AW_NAME_LOCAL,
       AW_POLICIES_LOCAL,

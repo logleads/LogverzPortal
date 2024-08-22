@@ -10,12 +10,12 @@
         { [$style['input__error']]: error },
         { [$style['height-44']]: fromQueryBuilder },
       ]"
-      :value="value"
+      :value="modelValue"
       :min="min"
       :name="name"
       :disabled="disabled"
       :placeholder="placeholder"
-      @input="handleInputChange($event.target.value)"
+      @input="handleInputChange"
     />
   </div>
 </template>
@@ -33,7 +33,7 @@ export default defineComponent({
   name: 'Input',
   components: { Icon },
   props: {
-    value: {
+    modelValue: {
       type: String,
       required: false,
     },
@@ -69,8 +69,10 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    function handleInputChange(value: string) {
-      emit('input', value);
+    function handleInputChange(e: Event) {
+      const input = e.target as HTMLInputElement;
+      console.log('Input', input.value);
+      emit('update:modelValue', input.value);
     }
     return {
       handleInputChange,

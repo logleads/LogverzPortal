@@ -128,7 +128,7 @@ export default defineComponent({
       let resp: any = ConnectionIndecatoreModule.DBinstanse;
       const instanceLocal = resp.find((ins: any) => ins.name == DatabaseParameters.value);
 
-      return instanceLocal.DBInstanceStatus;
+      return instanceLocal?.DBInstanceStatus;
     });
 
     const fields = ref([

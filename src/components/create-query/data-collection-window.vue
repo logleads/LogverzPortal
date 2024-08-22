@@ -175,16 +175,17 @@ export default defineComponent({
     function handleSubmit(e: Event): void {
       e.stopPropagation();
       submitted.value = true;
-      console.log('standard', validStandard.value);
+      // console.log('standard', validStandard.value);
+      // validAdvanced.value.$touch();
       console.log('advance', validAdvanced.value);
-      console.log('collection', validCollection.value);
-      if (
-        !validStandard.value?.$invalid &&
-        !validAdvanced.value?.$invalid &&
-        !validCollection.value?.$invalid
-      ) {
-        DataCollectionModule.startJob(startJobBody.value);
-      }
+      // console.log('collection', validCollection.value);
+      // if (
+      //   !validStandard.value?.$invalid &&
+      //   !validAdvanced.value?.$invalid &&
+      //   !validCollection.value?.$invalid
+      // ) {
+      //   DataCollectionModule.startJob(startJobBody.value);
+      // }
     }
     const DataType: ComputedRef<string> = computed(() => {
       return DataCollectionModule.DataType;

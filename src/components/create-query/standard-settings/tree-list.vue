@@ -22,8 +22,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
 import { DxColumn, DxSelection, DxTreeList } from 'devextreme-vue/tree-list';
+import { defineComponent, ref } from 'vue';
 
 import { DataCollectionService } from '~/services/api/data-collection-service';
 import { DataCollectionModule } from '~/store/modules/data-collection';
@@ -88,4 +88,8 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss"></style>
+<style module lang="scss">
+:global(.dx-virtual-row) {
+  display: none !important;
+}
+</style>

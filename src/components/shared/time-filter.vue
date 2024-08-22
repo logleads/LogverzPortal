@@ -71,7 +71,10 @@ export default defineComponent({
     });
 
     function handleInput(payload: { label: string; value: string }): void {
-      timeRange.value = payload.value;
+      console.log('TIME VAL', payload);
+      if (typeof payload.value == 'string') {
+        timeRange.value = payload.value;
+      }
     }
 
     function handleTimePeriod(data: { item: string }): void {

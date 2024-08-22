@@ -27,7 +27,7 @@
           open-direction="bottom"
           label="name"
           track-by="name"
-          :class="{ invalid: submitted && v$.chosenGroup.$invalid }"
+          :class="{ invalid: submitted && v$.chosenGroup.$error }"
         />
       </div>
       <div :class="$style['select-container']">
@@ -44,7 +44,7 @@
           open-direction="bottom"
           label="name"
           track-by="name"
-          :class="{ invalid: submitted && v$.chosenGroup.$invalid }"
+          :class="{ invalid: submitted && v$.chosenGroup.$error }"
         />
       </div>
       <div :class="$style['button-container']">
@@ -55,8 +55,8 @@
 </template>
 
 <script lang="ts">
-// import { useVuelidate } from '@vuelidate/core';
-// import { required } from '@vuelidate/validators';
+import { useVuelidate } from '@vuelidate/core';
+import { required } from '@vuelidate/validators';
 import { computed, ComputedRef, defineComponent, Ref, ref } from 'vue';
 import Multiselect from 'vue-multiselect';
 
@@ -87,18 +87,14 @@ export default defineComponent({
       required: true,
     },
   },
-
-  // @Prop({ required: true, type: String }) readonly type!: string;
-  // @Prop({ required: true, type: Array }) readonly prevGroups!: Array<{ name: string }>;
-  // @Prop({ required: true, type: Array }) readonly prevPolicies!: Array<{ name: string }>;
   setup(props, { emit }) {
     const submitted: Ref<boolean> = ref(false);
     const chosenGroup = ref(props.prevGroups);
     const chosenPolicies = ref(props.prevPolicies);
     const rules = {
-      // chosenGroup: { required },
+      chosenGroup: { required },
     };
-    // const v$ = useVuelidate(rules, { chosenGroup });
+    const v$ = useVuelidate(rules, { chosenGroup });
 
     const groups: ComputedRef<Array<{ name: string }>> = computed(() => {
       return AdminModule.groups.map(i => ({ name: i.Name }));
@@ -109,13 +105,16 @@ export default defineComponent({
 
     function handleSubmit(): void {
       submitted.value = true;
-      emit('toggleForm', false);
-      AdminModule.updateUser({
-        Name: props.name,
-        type: props.type,
-        IAMGroups: chosenGroup.value.map((i: any) => i.name),
-        IAMPolicies: chosenPolicies.value.map((i: any) => i.name),
-      });
+      v$.value.$touch();
+      if (!v$.value.chosenGroup.$error) {
+        emit('toggleForm', false);
+        AdminModule.updateUser({
+          Name: props.name,
+          type: props.type,
+          IAMGroups: chosenGroup.value.map((i: any) => i.name),
+          IAMPolicies: chosenPolicies.value.map((i: any) => i.name),
+        });
+      }
     }
 
     function handleBodyClick(e: Event): void {
@@ -135,7 +134,7 @@ export default defineComponent({
       chosenGroup,
       submitted,
       rules,
-      // v$,
+      v$,
       emit,
     };
   },

@@ -10,13 +10,40 @@
             <Loader accent />
           </div>
         </template>
-        <label for="s3folder" :class="$style['standard__file-label']"
+        <div v-for="input in S3FoldersValue" :key="input.label">
+          <InputContainer :label="input.label">
+            <template #icon>
+              <ToolTip :tip="input.hint" />
+            </template>
+            <template #input>
+              <Input
+                v-model="input.content"
+                :name="input.label"
+                :error="submitted && v$[input.label].$error"
+                :class="$style['standard__add-file__input']"
+                @input="handleInput({ value: $event.target.value, label: input.label })"
+              />
+            </template>
+          </InputContainer>
+          <div v-if="submitted && v$[input.label].$error" :class="$style['validation-text']">
+            {{ input.label }} is required
+          </div>
+          <div
+            v-if="
+              submitted &&
+              (v$[input.label].maxLength.$invalid || v$[input.label].maxLength.$invalid)
+            "
+          >
+            {{ v$[input.label].maxLength.$message }}
+          </div>
+        </div>
+        <!-- <label for="s3folder" :class="$style['standard__file-label']"
           >S3Folders
           <span>
             <ToolTip :tip="DCH_S3_FOLDERS_Local" />
           </span>
-        </label>
-        <div
+        </label> -->
+        <!-- <div
           :class="[
             $style['standard__add-file'],
             {
@@ -26,13 +53,14 @@
         >
           <Input
             id="s3folder"
-            v-model="S3Folders"
+            v-model="S3FoldersValue"
             name="S3Folders"
             :class="$style['standard__add-file__input']"
             @input="handleInput({ value: $event, label: 'S3Folders' })"
           />
-        </div>
-        <div v-if="submitted && v$.S3Folders.$error" :class="$style['validation-text']">
+           @input="data => handleInput({ value: data, label: 'S3Folders' })"
+        </div> -->
+        <!-- <div v-if="submitted && v$.S3Folders.$error" :class="$style['validation-text']">
           S3Folders is required
         </div>
         <div
@@ -45,7 +73,7 @@
           <template v-if="v$.S3Folders.maxLength.$invalid"
             >{{ v$.S3Folders.maxLength.$message }}
           </template>
-        </div>
+        </div> -->
         <div v-if="isFilesBrowses">
           <div :class="$style['standard__sites']">
             <SiteItem :path="Path" :deep="1" :root-folder-fetching="rootFolderFetching" />
@@ -67,16 +95,20 @@
           </div>
           <div v-for="input in inputs" :key="input.label">
             <InputContainer :label="input.label">
-              <ToolTip slot="icon" :tip="input.hint" />
-              <Input
-                slot="input"
-                v-model="input.content"
-                :name="input.label"
-                :error="submitted && v$[input.label].$error"
-                @input="handleInput({ value: $event, label: input.label })"
-              />
+              <template #icon>
+                <ToolTip :tip="input.hint" />
+              </template>
+              <template #input>
+                <Input
+                  v-model="input.content"
+                  :name="input.label"
+                  :error="submitted && v$[input.label].$error"
+                  :class="$style['standard__add-file__input']"
+                  @input="handleInput({ value: $event, label: input.label })"
+                />
+              </template>
             </InputContainer>
-            <div v-if="submitted && v$[input.label].error" :class="$style['validation-text']">
+            <div v-if="submitted && v$[input.label].$error" :class="$style['validation-text']">
               {{ input.label }} is required
             </div>
             <div
@@ -317,7 +349,7 @@ export default defineComponent({
       return DataCollectionModule.DatasetName;
     });
 
-    const S3Folders: ComputedRef<string> = computed(() => {
+    const S3Folders = computed(() => {
       return DataCollectionModule.s3Folders;
     });
 
@@ -470,8 +502,17 @@ export default defineComponent({
         },
       ];
     });
+    const S3FoldersValue = computed(() => {
+      return [
+        {
+          label: 'S3Folders',
+          content: S3Folders.value,
+          hint: DCH_S3_FOLDERS_Local.value,
+        },
+      ];
+    });
 
-    const inputs: WritableComputedRef<Array<InputContent>> = computed(() => {
+    const inputs = computed(() => {
       return [
         { label: 'DatasetName', content: DatasetName.value, hint: DCH_TABLE_NAME_Local.value },
         {
@@ -525,8 +566,8 @@ export default defineComponent({
       DataCollectionModule.setSelectValue({ label: 'CurrentBucket', value: payload.item });
     }
 
-    function handleInput(payload: { label: string; value: string }): void {
-      console.log(payload.label, payload.value);
+    function handleInput(payload): void {
+      console.log('Standard Setting', payload);
       if (payload.label == 'DatasetName') {
         DataCollectionModule.setInputValue({ label: 'DatasetWarning', value: '' });
       }
@@ -583,6 +624,7 @@ export default defineComponent({
       DCH_TABLE_OWNERS_Local,
       DCH_TABLE_ACCESS_Local,
       v$,
+      S3FoldersValue,
     };
   },
 });
