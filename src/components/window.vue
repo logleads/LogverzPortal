@@ -169,7 +169,7 @@ export default defineComponent({
 
     function resizeInput() {
       pHideElement.value.innerText = title.value;
-      windowName.value.style.width = pHideElement.value.clientWidth + 22 + 'px';
+      windowName.value.style.width = pHideElement.value?.clientWidth + 22 + 'px';
     }
 
     const resizeSides: ComputedRef<ResizeSide[]> = computed(() => {

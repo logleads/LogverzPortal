@@ -104,7 +104,7 @@
                   :name="input.label"
                   :error="submitted && v$[input.label].$error"
                   :class="$style['standard__add-file__input']"
-                  @input="handleInput({ value: $event, label: input.label })"
+                  @input="handleInput({ value: $event.target.value, label: input.label })"
                 />
               </template>
             </InputContainer>

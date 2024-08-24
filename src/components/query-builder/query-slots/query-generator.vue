@@ -32,7 +32,7 @@
         :value="query[index].value"
         :disabled="disabledValue(index)"
         :from-query-builder="true"
-        @input="e => handleInput(e, index)"
+        @input="e => handleInput(e.target.value, index)"
       />
       <div v-if="index == 0" :class="$style['hover']" @click="add">
         <Icon name="plus" :height="30" :width="30" />
@@ -389,8 +389,8 @@ export default defineComponent({
       SaveSettingModule.setQuerySettingsVal({ key: props.dataNumber, id: index, val: value });
     }
 
-    function handlebatchSize(value: string): void {
-      batchSize.value = value;
+    function handlebatchSize(value: any): void {
+      batchSize.value = value.target.value;
       genereteQuery();
       SaveSettingModule.setBatch({
         key: props.dataNumber,
@@ -401,8 +401,8 @@ export default defineComponent({
       });
     }
 
-    function handlebatchStart(value: string): void {
-      batchStart.value = value;
+    function handlebatchStart(value: any): void {
+      batchStart.value = value.target.value;
       genereteQuery();
       SaveSettingModule.setBatch({
         key: props.dataNumber,

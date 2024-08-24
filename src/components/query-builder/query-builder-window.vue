@@ -253,7 +253,7 @@ export default defineComponent({
       /**
        * TODO: handle refs here
        */
-      const procent = blockHeigth.value.clientWidth / 100;
+      const procent = blockHeigth.value?.clientWidth / 100;
       const ofset = e.movementX / procent;
 
       // 3 is left margin; 97 is right margin

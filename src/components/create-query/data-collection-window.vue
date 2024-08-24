@@ -1,6 +1,6 @@
 <template>
   <div :class="$style['con']">
-    <LoadSettings v-if="showLoadSettings" @toggleForm="toggleLoadSettings" />
+    <LoadSettings v-if="showLoadSettings" @toggleForm="toggleLoadSettings"  />
     <div :class="$style['data__body']">
       <h1 :class="$style['data__body__title']">Create query</h1>
       <div :class="$style['data__creation']">

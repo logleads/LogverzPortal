@@ -29,7 +29,7 @@
           :value="query[index].value"
           :from-query-builder="true"
           :disabled="disabledValue(index)"
-          @input="e => handleInput(e, index)"
+          @input="e => handleInput(e.target.value, index)"
         />
         <div v-if="index == 0" :class="$style['hover']" @click="add">
           <Icon name="plus" :height="30" :width="30" />

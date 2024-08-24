@@ -62,7 +62,7 @@
             name="actionsValue"
             :placeholder="'Type Action'"
             :type="'string'"
-            @input="handleInputAction({ value: $event, label: 'actionsValue' })"
+            @input="handleInputAction({ value: $event.target.value, label: 'actionsValue' })"
           />
           <div :class="$style['btn-place']">
             <button :class="$style['btn']" @click="getActions">Apply</button>

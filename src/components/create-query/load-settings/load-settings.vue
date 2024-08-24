@@ -5,60 +5,35 @@
         <label :class="$style['range-label']"><b> Range</b>:</label>
         <TimerFilter @clear="clear" @unix-time-change="timeFilter" />
 
-        <Tabs
-          btn-rigth-text="Shared"
-          btn-left-text="My"
-          :state-b-t-n="tableMode"
-          text-before-btn="Scope"
-          @change-table-content="changeTableMode"
-        />
-        <Tabs
-          btn-rigth-text="All"
-          btn-left-text="Current"
-          text-before-btn="Version"
-          :state-b-t-n="filterContent"
-          @change-table-content="applyVersionFilter"
-        />
+        <Tabs btn-rigth-text="Shared" btn-left-text="My" :state-b-t-n="tableMode" text-before-btn="Scope"
+          @change-table-content="changeTableMode" />
+        <Tabs btn-rigth-text="All" btn-left-text="Current" text-before-btn="Version" :state-b-t-n="filterContent"
+          @change-table-content="applyVersionFilter" />
         <div :class="$style['tooltip-margin']">
           <ToolTip :tip="DCH_QUERY_HISTORY_local" />
         </div>
       </div>
-      <div :class="$style['table-h']">
+      <div  :class="$style['table-h']">
         <Loader v-if="isSettingsFetch" accent />
-        <DxDataGrid
-          v-else
-          id="gridSettings"
-          :show-borders="true"
-          :data-source="tableData"
-          :show-column-lines="true"
-          :show-row-lines="true"
-          :allow-column-reordering="true"
-          :column-auto-width="true"
-        >
+        <DxDataGrid v-else id="gridSettings" :show-borders="true" :data-source="tableData" :show-column-lines="true"
+          :show-row-lines="true" :allow-column-reordering="true" :column-auto-width="true">
           <DxHeaderFilter :visible="true" />
           <DxFilterRow :visible="true" />
           <DxColumn type="buttons" :width="150" caption="Action" data-field="id">
             <DxButton>
-              <template #default="{ data }">
-                <SimpleBtn
-                  btn-text="Load configuration"
-                  @clicked.stop="loadConfiguration(data, $event)"
-                />
-              </template>
+              
+                <template #cellTemplate="{ data }">
+                  <SimpleBtn btn-text="Load configuration" @clicked.stop="loadConfiguration(data, $event)" />
+                </template>
+              
             </DxButton>
           </DxColumn>
           <DxColumn caption="Creator" data-field="UsersQuery" />
-          <DxColumn
-            caption="Time"
-            data-field="UnixTimeNormalFormat"
-            cell-template="cellTemplate"
-            :class="$style['cell-template']"
-          />
+          <DxColumn caption="Time" data-field="UnixTimeNormalFormat" cell-template="cellTemplate"
+            :class="$style['cell-template']" />
           <template #cellTemplate="{ data }">
-            <TimeFields
-              :unix-time-nomal-format="data.data.UnixTimeNormalFormat"
-              :time-local-format="data.data.TimeLocalFormat"
-            />
+            <TimeFields :unix-time-nomal-format="data.data.UnixTimeNormalFormat"
+              :time-local-format="data.data.TimeLocalFormat" />
           </template>
           <DxColumn caption="Dataset Name" data-field="DatasetName" />
           <DxColumn caption="Description" data-field="Description" />
@@ -303,6 +278,7 @@ export default defineComponent({
   align-items: center;
   justify-content: space-between;
 }
+
 .popup {
   position: fixed;
   left: 50%;
@@ -343,11 +319,13 @@ export default defineComponent({
     color: var(--ink-color);
   }
 }
+
 .range-label {
   margin-top: 6px;
   padding-top: 4px;
   padding-left: 4px;
 }
+
 .table {
   display: flex;
   width: 100%;
@@ -365,7 +343,7 @@ export default defineComponent({
     font-size: 14px;
     color: var(--blue-text-color);
 
-    > div {
+    >div {
       display: flex;
       align-items: center;
       // padding-right: 19px;
@@ -377,6 +355,7 @@ export default defineComponent({
   height: 85%;
   width: 95%;
 }
+
 .tooltip-margin {
   margin-top: 6px;
 }

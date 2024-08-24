@@ -217,5 +217,3 @@ export default defineComponent({
   font-style: italic;
 }
 </style>
-
-function elseif(arg0: boolean) { throw new Error('Function not implemented.'); }

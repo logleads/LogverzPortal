@@ -27,7 +27,7 @@
     </label>
     <div v-show="scopeExpanded" :class="$style['input-unwrapped']">
       <div
-        v-for="item in items"
+        v-for="item in $props.items"
         :key="item + Math.random() * 1000"
         :class="$style['input-unwrapped__item']"
         contenteditable="false"
@@ -85,10 +85,12 @@ export default defineComponent({
     }
 
     watch(scopeExpanded, (value: boolean) => {
+      console.log("asdad",props.items);
+      
       if (value) {
-        select.value.focus();
+        select.value?.focus();
       } else {
-        select.value.blur();
+        select.value?.blur();
       }
     });
 
