@@ -12,7 +12,7 @@
       >
         {{ item.label }}:
       </div>
-      <div :class="$style['item-field__value']">{{ item.value.value }}</div>
+      <div :class="$style['item-field__value']">{{ item.value }}</div>
     </div>
     <p :class="$style['warning-text']">
       {{ DatasetWarning }}
@@ -153,6 +153,8 @@ export default defineComponent({
         DBStatus.value = value[0].DBInstanceStatus;
       }
     });
+    console.log("fields",fields);
+    
 
     return {
       fields,
