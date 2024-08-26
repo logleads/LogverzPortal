@@ -32,7 +32,7 @@
     <DxColumn caption="Source" data-field="source" />
     <DxMasterDetail :enabled="true" template="masterDetailedLoadSettings" />
     <template #masterDetailedLoadSettings="{ data }">
-      <MasterDetailedSettings :data="data" />
+      <MasterDetailedSettings :data="data" :rawitems="data.data" />
     </template>
   </DxDataGrid>
 </template>

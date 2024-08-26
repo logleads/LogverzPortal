@@ -179,13 +179,13 @@ export default defineComponent({
       // validAdvanced.value.$touch();
       console.log('advance', validAdvanced.value);
       // console.log('collection', validCollection.value);
-      // if (
-      //   !validStandard.value?.$invalid &&
-      //   !validAdvanced.value?.$invalid &&
-      //   !validCollection.value?.$invalid
-      // ) {
-      //   DataCollectionModule.startJob(startJobBody.value);
-      // }
+      if (
+        !validStandard.value?.$invalid &&
+        !validAdvanced.value?.$invalid &&
+        !validCollection.value?.$invalid
+      ) {
+        DataCollectionModule.startJob(startJobBody.value);
+      }
     }
     const DataType: ComputedRef<string> = computed(() => {
       return DataCollectionModule.DataType;

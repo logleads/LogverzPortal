@@ -5,8 +5,8 @@
         :class="[
           $style['item-field__key'],
           {
-            [$style[decideDisplayError(item.label, item.value.value).classDisplay]]:
-              decideDisplayError(item.label, item.value.value).show,
+            [$style[decideDisplayError(item.label, item.value).classDisplay]]:
+              decideDisplayError(item.label, item.value).show,
           },
         ]"
       >

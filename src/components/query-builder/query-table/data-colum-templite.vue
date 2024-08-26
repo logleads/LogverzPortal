@@ -13,8 +13,6 @@
     <DxHeaderFilter :visible="true" />
     <DxFilterRow :visible="true" />
     <DxPaging :page-size="10" />
-    // eslint-disable-next-line vue/no-v-for-template-key
-
     <template v-for="(v, k) in headers" :key="genereteRandomKey(k)">
       <DxColumn
         width="200px"

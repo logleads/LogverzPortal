@@ -1,11 +1,12 @@
 <template>
   <div>
     <div v-if="rawitems && Object.keys(rawitems).length > 0 && format === 'json'">
-      <json-viewer-custom :value="customizedData" />
+      {{ console.log("customizedData",customizedData)
+       }}
+      <!-- <json-viewer-custom :value="rawitems" /> -->
     </div>
-    <div v-else>
-      // eslint-disable-next-line vue/no-lone-template
-      <template>
+    <div  v-else-if="Object.keys(customizedData).length">
+      <!-- <template> -->
         <DxDataGrid
           :columns="csvHeader"
           :show-borders="true"
@@ -16,7 +17,7 @@
         >
           <DxHeaderFilter :visible="true" />
         </DxDataGrid>
-      </template>
+      <!-- </template> -->
       <!-- <template v-for="item in Object.keys(customizedData)">
         <div
           v-if="
@@ -74,48 +75,52 @@ export default defineComponent({
     const resizingModes = ref(['nextColumn', 'widget']);
     const currentMode = ref('nextColumn');
     onMounted(() => {
-      if (props.rawitems) {
-        if (Object.keys(props.data.data.length > 0)) {
-          customizedData.value = props.rawitems[props.data.data.rawindex];
-        } else {
-          customizedData.value = {};
-        }
-      } else {
-        customizedData.value = props.data.data;
-      }
-      if (customizedData.value['TableName']) {
-        customizedData.value['DatasetName'] = customizedData.value['TableName'];
-        delete customizedData.value['TableName'];
-      }
-      if (Object.keys(customizedData.value).length > 0) {
-        const blackList = [
-          // 'UsersQuery',
-          // 'UnixTime',
-          // 'DatasetName',
-          '0',
-          '1',
-          '2',
-          '3',
-          '4',
-          'Archive',
-          'rawindex',
-          // 'S3Folders',
-        ];
-        let csvkeys = Object.keys(customizedData.value);
-        // eslint-disable-next-line no-console
-        // console.log("CSVKEYS", csvkeys);
-        csvkeys.forEach((e1, idx, arr) => {
-          if (blackList.includes(e1) || e1 === '1') {
-            arr.splice(idx, 1);
-          }
-        });
-        csvHeader.value = csvkeys;
-        // csvkeys.map(({ '0','1','2','Archive', 'rawindex', ...rest }) => rest)
-        // eslint-disable-next-line no-console
-        console.log('CSV header: ', csvHeader.value);
-      }
-      // eslint-disable-next-line no-console
-      console.log('customizedData', customizedData.value);
+      console.log("props.rawitems",props.rawitems,props.data);
+      // if (props.rawitems) {
+        
+      //   if (Object.keys(props.data.data.length > 0)) {
+      //     console.log("=========",props.data.data);
+          
+      //     // customizedData.value = props.rawitems[props.data.data.rawindex];
+      //   } else {
+      //     customizedData.value = {};
+      //   }
+      // } else {
+      //   customizedData.value = props.data.data;
+      // }
+      // if (customizedData.value['TableName']) {
+      //   customizedData.value['DatasetName'] = customizedData.value['TableName'];
+      //   delete customizedData.value['TableName'];
+      // }
+      // if (Object.keys(customizedData.value).length > 0) {
+      //   const blackList = [
+      //     // 'UsersQuery',
+      //     // 'UnixTime',
+      //     // 'DatasetName',
+      //     '0',
+      //     '1',
+      //     '2',
+      //     '3',
+      //     '4',
+      //     'Archive',
+      //     'rawindex',
+      //     // 'S3Folders',
+      //   ];
+      //   let csvkeys = Object.keys(customizedData.value);
+      //   // eslint-disable-next-line no-console
+      //   // console.log("CSVKEYS", csvkeys);
+      //   csvkeys.forEach((e1, idx, arr) => {
+      //     if (blackList.includes(e1) || e1 === '1') {
+      //       arr.splice(idx, 1);
+      //     }
+      //   });
+      //   csvHeader.value = csvkeys;
+      //   // csvkeys.map(({ '0','1','2','Archive', 'rawindex', ...rest }) => rest)
+      //   // eslint-disable-next-line no-console
+      //   console.log('CSV header: ', csvHeader.value);
+      // }
+      // // eslint-disable-next-line no-console
+      // console.log('customizedData', customizedData.value);
     });
     return {
       currentMode,

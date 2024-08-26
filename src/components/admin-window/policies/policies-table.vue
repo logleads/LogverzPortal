@@ -8,18 +8,10 @@
       <Loader accent :size="50" />
     </div>
     <div v-if="isSuccess" :class="$style['table-wrapper']">
-      // eslint-disable-next-line vue/no-useless-template-attributes
       <template v-if="items.length > 0" :class="$style['table']">
-        <DxDataGrid
-          id="gridContainer3"
-          :show-borders="true"
-          :data-source="items"
-          :show-column-lines="true"
-          :show-row-lines="true"
-          :allow-column-reordering="true"
-          :column-auto-width="true"
-          @editing-start="handleStartEdit($event)"
-        >
+        <DxDataGrid id="gridContainer3" :show-borders="true" :data-source="items" :show-column-lines="true"
+          :show-row-lines="true" :allow-column-reordering="true" :column-auto-width="true"
+          @editing-start="handleStartEdit($event)">
           <DxHeaderFilter :visible="true" />
           <DxEditing :allow-updating="true" mode="form" />
           <DxFilterRow :visible="true" />
@@ -37,7 +29,6 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from 'vue';
 import {
   DxColumn,
   DxDataGrid,
@@ -46,6 +37,7 @@ import {
   DxHeaderFilter,
   DxMasterDetail,
 } from 'devextreme-vue/data-grid';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from 'vue';
 
 import MasterDetailedPolicy from '~/components/admin-window/policies/master-detailed-policy.vue';
 import PoliciesForm from '~/components/admin-window/policies/policiesForm.vue';
