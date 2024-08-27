@@ -1,7 +1,6 @@
 <template>
   <div :class="$style['advanced']">
     <template v-if="!isFetching">
-      {{ inputs }}
       <div v-for="input in inputs" :key="input.label" :class="$style['advanced__inputs']">
         <InputContainer :label="input.label">
           <template #icon>

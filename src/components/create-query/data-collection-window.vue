@@ -1,6 +1,6 @@
 <template>
   <div :class="$style['con']">
-    <LoadSettings v-if="showLoadSettings" @toggleForm="toggleLoadSettings"  />
+    <LoadSettings v-if="showLoadSettings" @toggleForm="toggleLoadSettings" />
     <div :class="$style['data__body']">
       <h1 :class="$style['data__body__title']">Create query</h1>
       <div :class="$style['data__creation']">
@@ -10,25 +10,16 @@
           <!-- <p v-if="item.id === 3" :class="$style['data__creation__item__hide-line']" /> -->
           <DropDownCreate :label="item.label">
             <template v-if="item.id === 0">
-              <StandardSettings
-                :submitted="submitted"
-                :is-fetching="isFetching"
-                @validate="handleValidate($event, 'standard')"
-              />
+              <StandardSettings :submitted="submitted" :is-fetching="isFetching"
+                @validate="handleValidate($event, 'standard')" />
             </template>
             <template v-if="item.id === 1">
-              <AdvancedSettings
-                :submitted="submitted"
-                :is-fetching="isFetching"
-                @validate="handleValidate($event, 'advanced')"
-              />
+              <AdvancedSettings :submitted="submitted" :is-fetching="isFetching"
+                @validate="handleValidate($event, 'advanced')" />
             </template>
             <template v-if="item.id === 2">
-              <CollectionRules
-                :submitted="submitted"
-                :is-fetching="isFetching"
-                @validate="handleValidate($event, 'collection')"
-              />
+              <CollectionRules :submitted="submitted" :is-fetching="isFetching"
+                @validate="handleValidate($event, 'collection')" />
             </template>
             <template v-if="item.id === 3">
               <Review />
@@ -38,12 +29,8 @@
       </div>
       <div :class="$style['additional-settings']">
         <p :class="$style['additional-settings__label']">Check progress of data collection</p>
-        <input
-          id="withRedirect"
-          v-model="withRedirect"
-          :class="$style['additional-settings__checkbox']"
-          type="checkbox"
-        />
+        <input id="withRedirect" v-model="withRedirect" :class="$style['additional-settings__checkbox']"
+          type="checkbox" />
       </div>
       <div :class="$style['data__body__footer']">
         <div>
@@ -52,13 +39,9 @@
           </button>
         </div>
 
-        <MyButton
-          text="Submit"
-          :class="$style['_btn-submit']"
-          :disabled="isFetching || !isDatatypeDefined || !DBinstanse"
-          :no-load="!isDatatypeDefined || !DBinstanse"
-          @click="handleSubmit($event)"
-        />
+        <MyButton text="Submit" :class="$style['_btn-submit']"
+          :disabled="isFetching || !isDatatypeDefined || !DBinstanse" :no-load="!isDatatypeDefined || !DBinstanse"
+          @click="handleSubmit($event)" />
       </div>
     </div>
   </div>
@@ -92,7 +75,7 @@ export default defineComponent({
     MyButton,
   },
   setup() {
-      console.log("ConnectionIndecatoreModule.DBinstanse",ConnectionIndecatoreModule.DBinstanse);
+    console.log("ConnectionIndecatoreModule.DBinstanse", ConnectionIndecatoreModule.DBinstanse);
 
     const validStandard: Ref<any> = ref(null);
     const validAdvanced: Ref<any> = ref(null);
@@ -192,11 +175,14 @@ export default defineComponent({
     const DataType: ComputedRef<string> = computed(() => {
       return DataCollectionModule.DataType;
     });
+
     const DBinstanse: ComputedRef<any> = computed(() => {
-      // return
-      
-      let resp: any = ConnectionIndecatoreModule.DBinstanse;
-      return resp[0].DBInstanceStatus === 'available' ? true : false;
+      // Find the active database instance
+      const activeDBInstanse = ConnectionIndecatoreModule.DBinstanse?.find(
+        (item) => item.name === startJobBody?.value?.DatabaseParameters
+      );
+      // Ensure that activeDBInstanse has DBInstanceStatus property
+      return activeDBInstanse && 'DBInstanceStatus' in activeDBInstanse && activeDBInstanse.DBInstanceStatus === 'available';
     });
 
     watch(DataType, (value: string) => {
@@ -232,6 +218,7 @@ export default defineComponent({
   width: 100%;
   height: 100%;
 }
+
 .data {
   &__window {
     width: 90%;
@@ -261,6 +248,7 @@ export default defineComponent({
     //fixing blurred text
     -webkit-transform: translate3d(0, 0, 0) !important;
     transform: translate3d(0, 0, 0) !important;
+
     &__footer {
       display: flex;
       justify-content: space-between;
@@ -304,15 +292,18 @@ export default defineComponent({
       width: 3px;
       height: 18px;
     }
+
     /* Track */
     &::-webkit-scrollbar-track {
       background: #f1f1f1;
     }
+
     /* Handle */
     &::-webkit-scrollbar-thumb {
       background: var(--accent-color);
       border-radius: 31px;
     }
+
     /* Handle on hover */
     &::-webkit-scrollbar-thumb:hover {
       background: var(--accent-color);
@@ -351,7 +342,7 @@ export default defineComponent({
         z-index: 1;
       }
 
-      > div {
+      >div {
         width: 90%;
       }
 
@@ -388,7 +379,7 @@ export default defineComponent({
   display: flex;
   align-items: center;
 
-  > span {
+  >span {
     transform: rotate(90deg) translateY(-13px);
   }
 }
@@ -411,6 +402,7 @@ export default defineComponent({
     color: var(--ink-color);
   }
 }
+
 .warning-text {
   float: left;
   color: #e2c36b;
