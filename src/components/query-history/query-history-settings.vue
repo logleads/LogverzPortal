@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="Object.keys(reshapedData).length">
     <json-viewer-custom :value="reshapedData" :expand-depth="5" sort></json-viewer-custom>
   </div>
 </template>
@@ -22,11 +22,13 @@ export default defineComponent({
     // @Prop({ required: false, type: Object }) readonly data!: Record<string, any>;
     const reshapedData: Ref<any> = ref({});
     onMounted(() => {
-      reshapedData.value = JSON.parse(JSON.stringify(props.data));
-      delete reshapedData.value.displayButton;
-      delete reshapedData.value.displayAccess;
-      delete reshapedData.value.displayOwners;
+      reshapedData.value = props.data;
+      delete reshapedData.value?.displayButton;
+      delete reshapedData.value?.displayAccess;
+      delete reshapedData.value?.displayOwners;
     });
+    console.log("reshapedData",reshapedData);
+    
     return {
       reshapedData,
     };

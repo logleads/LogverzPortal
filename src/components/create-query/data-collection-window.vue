@@ -92,6 +92,8 @@ export default defineComponent({
     MyButton,
   },
   setup() {
+      console.log("ConnectionIndecatoreModule.DBinstanse",ConnectionIndecatoreModule.DBinstanse);
+
     const validStandard: Ref<any> = ref(null);
     const validAdvanced: Ref<any> = ref(null);
     const validCollection: Ref<any> = ref(null);
@@ -192,6 +194,7 @@ export default defineComponent({
     });
     const DBinstanse: ComputedRef<any> = computed(() => {
       // return
+      
       let resp: any = ConnectionIndecatoreModule.DBinstanse;
       return resp[0].DBInstanceStatus === 'available' ? true : false;
     });

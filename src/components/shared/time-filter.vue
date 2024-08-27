@@ -9,8 +9,8 @@
     <div v-if="customTimeRange" :class="$style['custome-time-filter']">
       <div :class="$style['custome-time-filter-form']">
         <p for="timeRange">Choose number value</p>
-        <Input id="timeRange" :value="timeRange" name="timeRange" :min="1" :type="'number'"
-          @input="handleInput({ value: $event.target.value, label: 'timeRange' })" />
+        <Input id="timeRange" v-model="timeRange" name="timeRange" :min="1" :type="'number'"
+          />
         <p for="timePeriod">Choose time period</p>
         <DropDownSimple :content="timePeriod" :items="timePeriods" name="timePeriod" @select-value="handleTimePeriod" />
       </div>

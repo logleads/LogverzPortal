@@ -149,8 +149,11 @@ export default defineComponent({
     watch(DBinstance, (value: any) => {
       // eslint-disable-next-line no-console
       // console.log('**watchConnectionIndicator**: ', value);
+      
       if (value.length > 0 === value[0].DBInstanceStatus) {
         DBStatus.value = value[0].DBInstanceStatus;
+      console.log("value",value,DBStatus.value);
+
       }
     });
     console.log("fields",fields);

@@ -19,13 +19,13 @@
               <Input
                 v-model="input.content"
                 :name="input.label"
-                :error="submitted && v$[input.label].$error"
+                :error="submitted && v$[input.label]?.$error"
                 :class="$style['standard__add-file__input']"
                 @input="handleInput({ value: $event.target.value, label: input.label })"
               />
             </template>
           </InputContainer>
-          <div v-if="submitted && v$[input.label].$error" :class="$style['validation-text']">
+          <div v-if="submitted && v$[input.label]?.$error" :class="$style['validation-text']">
             {{ input.label }} is required
           </div>
           <div
@@ -47,7 +47,7 @@
           :class="[
             $style['standard__add-file'],
             {
-              [$style['error']]: submitted && v$.S3Folders.$error,
+              [$style['error']]: submitted && v$.S3Folders?.$error,
             },
           ]"
         >
@@ -60,7 +60,7 @@
           />
            @input="data => handleInput({ value: data, label: 'S3Folders' })"
         </div> -->
-        <!-- <div v-if="submitted && v$.S3Folders.$error" :class="$style['validation-text']">
+        <!-- <div v-if="submitted && v$.S3Folders?.$error" :class="$style['validation-text']">
           S3Folders is required
         </div>
         <div
@@ -102,13 +102,13 @@
                 <Input
                   v-model="input.content"
                   :name="input.label"
-                  :error="submitted && v$[input.label].$error"
+                  :error="submitted && v$[input.label]?.$error"
                   :class="$style['standard__add-file__input']"
                   @input="handleInput({ value: $event.target.value, label: input.label })"
                 />
               </template>
             </InputContainer>
-            <div v-if="submitted && v$[input.label].$error" :class="$style['validation-text']">
+            <div v-if="submitted && v$[input.label]?.$error" :class="$style['validation-text']">
               {{ input.label }} is required
             </div>
             <div
@@ -138,11 +138,11 @@
                 label="name"
                 track-by="name"
                 :preselect-first="true"
-                :class="{ invalid: submitted && v$.DatasetOwners.$error }"
+                :class="{ invalid: submitted && v$.DatasetOwners?.$error }"
               />
             </div>
 
-            <div v-if="submitted && v$.DatasetOwners.$error" :class="$style['validation-text']">
+            <div v-if="submitted && v$.DatasetOwners?.$error" :class="$style['validation-text']">
               DatasetOwners is required
             </div>
           </div>
