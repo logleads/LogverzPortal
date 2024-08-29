@@ -32,43 +32,45 @@
         <DxHeaderFilter :visible="true" />
         <DxFilterRow :visible="true" />
 
-        <DxColumn type="buttons" caption="Actions" data-field="id">
-          <DxButton v-if="tableContent">
-            <template #cellTemplate="{ row = {} }">
-              <pre>{{ row.data }}</pre>
-              <div v-if="row.data && row.data.Active === false" width="150">
+        <DxColumn type="buttons" caption="Actions" data-field="id" cell-template="cellTemplate" />
+        <!-- <DxButton v-if="tableContent">
+            <template #cellTemplate="{ data }">
+              <pre>{{ data }}</pre>
+              <div v-if="data && data.Active === false" width="150">
                 <div :class="$style['text-1']">Underlying data was deleted</div>
                 <div :class="$style['text-2']">or have been overwritten</div>
               </div>
               <SimpleBtn v-else :disable="exportV" btn-text="Load configuration"
-                @clicked.stop="loadConfiguration(row.data)" />
+                @clicked.stop="loadConfiguration(data)" />
             </template>
-          </DxButton>
-          <DxButton>
-            <template #cellTemplate="{ row = {} }">
-              <pre>{{ row.data }}</pre>
-              <SimpleBtn v-if="row.data && row.data.displayButton" btn-text="Change Permissions"
-                @clicked.stop="openChangePermissionModal(row.data)" />
-              <div v-else>
-                <span>No data available 2</span>
-              </div>
-            </template>
-          </DxButton>
-          <DxButton>
-            <template #cellTemplate="{ row = {} }">
-              <pre>{{ row.data }}</pre>
-              <SimpleBtn v-if="row.data && row.data.displayButton" btn-text="Delete Record"
-                @clicked.stop="openDeleteRecordModal(row.data)" />
-              <div v-else>
-                <span>No data available 3</span>
-              </div>
-            </template>
-          </DxButton>
-        </DxColumn>
+</DxButton> -->
+        <!-- <DxButton> -->
+          <template #cellTemplate="{ data }">
+            <!-- <pre>{{ data }}</pre> -->
+            <SimpleBtn v-if="data && data.displayButton" btn-text="Change Permissions"
+              @clicked.stop="openChangePermissionModal(data)" />
+            
+            <SimpleBtn v-if="data && data.displayButton" btn-text="Delete Record"
+              @clicked.stop="openDeleteRecordModal(data)" />
+            <div v-else>
+              <span>No data available</span>
+            </div>
+          </template>
+        <!-- </DxButton> -->
+        <!-- <DxButton>
+          <template #cellTemplate="{ row = {} }">
+            <pre>{{ row.data }}</pre>
+            <SimpleBtn v-if="row.data && row.data.displayButton" btn-text="Delete Record"
+              @clicked.stop="openDeleteRecordModal(row.data)" />
+            <div v-else>
+              <span>No data available 3</span>
+            </div>
+          </template>
+        </DxButton> -->
 
         <DxColumn caption="Creator" data-field="UsersQuery" />
-        <DxColumn caption="UnixTime" data-field="tm" format="dd/MM/yyyy" cell-template="cellTemplate" :width="200" />
-        <template #cellTemplate="{ data = {} }">
+        <DxColumn caption="UnixTime" data-field="tm" format="dd/MM/yyyy" cell-template="span" :width="200" />
+        <template #span="{ data = {} }">
           <p :class="$style['tooltip']">
             UTC time: {{ data.UnixTimeNormalFormat }}
             <span :class="$style['tooltip_tooltiptext']">Local time: {{ data.TimeLocalFormat || '...' }}</span>

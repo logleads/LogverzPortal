@@ -289,7 +289,7 @@ export default defineComponent({
         return extractPolicy(accumulator) + ', ' + extractPolicy(currentValue);
       };
 
-      return data.map(i => {
+      return data?.map(i => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let addedProperty: any = {};
         if (i['IAMPolicies']?.length) {

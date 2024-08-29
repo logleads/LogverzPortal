@@ -194,12 +194,12 @@ export default defineComponent({
 
     const items: ComputedRef<CloudTrailDataResponse[] | null> = computed(() => {
       const data = QueryBuilderModule.dataForAllWindows[props.dataNumber as number]
-        ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].data.map(
+        ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].data?.map(
             (i: Record<string, unknown>) => i,
           )
         : [];
 
-      const sortedBySelectedColum = data.map((item: Record<string, unknown>) => {
+      const sortedBySelectedColum = data?.map((item: Record<string, unknown>) => {
         const obj: Record<string, unknown> = {};
         Object.keys(item).map((key: string) => {
           obj[key] = item[key];

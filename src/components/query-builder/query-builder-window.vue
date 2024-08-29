@@ -200,7 +200,7 @@ export default defineComponent({
       const dataWithKey = await QueryBuilderModule.dataForAllWindows[props.dataNumber as number];
       const data = dataWithKey
         ? dataWithKey.data
-          ? dataWithKey.data.map((i: Record<string, unknown>) => i)
+          ? dataWithKey.data?.map((i: Record<string, unknown>) => i)
           : []
         : [];
       console.log('querybuilder window mount function', props.dataNumber);

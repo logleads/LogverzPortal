@@ -83,7 +83,7 @@ class Windows extends VuexModule {
       const windows = [...this.activeWindows].filter((item: any) => item.index != index); //
       resolve(windows);
     }).then((data: any) => {
-      const updatedActiveWindows = data.map((item: any) => {
+      const updatedActiveWindows = data?.map((item: any) => {
         return {
           ...item,
           index: item.index < index ? item.index : item.index - 1,

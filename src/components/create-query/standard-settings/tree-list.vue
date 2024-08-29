@@ -1,33 +1,35 @@
 <template>
-  <DxTreeList
-    id="employees"
-    ref="treeList"
-    :data-source="listFolder"
-    :show-row-lines="true"
-    :allow-column-reordering="true"
-    :allow-column-resizing="true"
-    :show-borders="true"
-    :column-auto-width="true"
-    key-expr="ID"
-    parent-id-expr="IDH"
-    @row-expanding="log"
-    @selection-changed="onSelectionChanged"
-  >
-    <DxSelection :recursive="recursive" mode="multiple" />
-    <DxColumn data-field="name" />
-    <DxColumn data-field="BucketName" />
-    <DxColumn data-field="Geography" caption="Geography" />
-    <DxColumn data-field="Region" />
-  </DxTreeList>
+  <div class="tree-list-container">
+    <DxTreeList
+      id="employees"
+      ref="treeList"
+      :data-source="listFolder"
+      :show-row-lines="true"
+      :allow-column-reordering="true"
+      :allow-column-resizing="true"
+      :show-borders="true"
+      :column-auto-width="true"
+      key-expr="ID"
+      parent-id-expr="IDH"
+      @row-expanding="log"
+      @selection-changed="onSelectionChanged"
+    >
+      <DxSelection :recursive="recursive" mode="multiple" />
+      <DxColumn data-field="name" />
+      <DxColumn data-field="BucketName" />
+      <DxColumn data-field="Geography" caption="Geography" />
+      <DxColumn data-field="Region" />
+    </DxTreeList>
+  </div>
 </template>
 
 <script lang="ts">
 import { DxColumn, DxSelection, DxTreeList } from 'devextreme-vue/tree-list';
 import { defineComponent, ref } from 'vue';
-
 import { DataCollectionService } from '~/services/api/data-collection-service';
 import { DataCollectionModule } from '~/store/modules/data-collection';
 import { isObject } from '~/utils/checkIsItObj';
+
 export default defineComponent({
   name: 'TreeList',
   components: {
@@ -41,24 +43,18 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props, { emit }) {
+  setup(props) {
     const expandedRowKeys = ref([1, 2]);
     const selectedRowKeys = ref([]);
     const recursive = ref(false);
 
     function onSelectionChanged(e: any): void {
-      const currentSelectedRowKeys = e.currentSelectedRowKeys;
-      const currentDeselectedRowKeys = e.currentDeselectedRowKeys;
-      const allSelectedRowKeys = e.selectedRowKeys;
-      const allSelectedRowsData = e.selectedRowsData;
-
       const selectedData = e.component.getSelectedRowsData('all');
-      // eslint-disable-next-line no-console
       console.log(
-        selectedData.map((item: any) => item.value),
-        'selectedData',
+        selectedData?.map((item: any) => item.value),
+        'selectedData'
       );
-      DataCollectionModule.setFoldersPathHard(selectedData.map((item: any) => item.value));
+      DataCollectionModule.setFoldersPathHard(selectedData?.map((item: any) => item.value));
     }
 
     function log({ component, key }: any): void {
@@ -76,7 +72,7 @@ export default defineComponent({
         }
       });
     }
-    console.log('listFolder ==', props.listFolder);
+
     return {
       log,
       onSelectionChanged,
@@ -88,7 +84,13 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped>
+.tree-list-container {
+  width: 100%;
+  overflow-y: auto; /* Enable horizontal scrolling if content overflows */
+  height: 500px;
+}
+
 :global(.dx-virtual-row) {
   display: none !important;
 }

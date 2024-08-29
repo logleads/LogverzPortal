@@ -559,7 +559,7 @@ class DataCollection extends VuexModule {
     this.SET_BUCKET_FETCH_STATUS(true);
     try {
       const response = await DataCollectionService.getBuckets();
-      const buckets = response.data.map(i => i.BucketName);
+      const buckets = response.data?.map(i => i.BucketName);
       this.SET_SELECT_VALUE({ label: 'CurrentBucket', value: buckets[0] });
       this.SET_BUCKETS(buckets);
     } catch (e: any) {
@@ -644,7 +644,7 @@ class DataCollection extends VuexModule {
           return item.value.data;
         });
       console.log('DATA', data);
-      const newListFolder = data.map((item: any) => {
+      const newListFolder = data?.map((item: any) => {
         return filteredListFolder.filter((it: any) => it.BucketName === Object.keys(item)[0])[0];
       });
       console.log('new Folder List', newListFolder);
@@ -709,47 +709,49 @@ class DataCollection extends VuexModule {
     DatasetWarnings: string;
     // TableName: string;
   }) {
-    this.HARD_SET_S3_FOLDERS(data.S3Folders);
-    this.HARD_SET_TABLE_DESCRIPRION(data.Description);
-    // console.log('GRAB DATA', data);
-    this.SET_INPUT_VALUE({
-      value: data.DatasetWarnings,
-      label: 'DatasetWarning',
-    });
-    this.SET_INPUT_VALUE({
-      value: data.DatasetName,
-      label: 'DatasetName',
-    });
-    this.SET_INPUT_VALUE({
-      value: data.QueryString,
-      label: 'QueryString',
-    });
-    this.SET_INPUT_VALUE({
-      value: data.DatabaseName,
-      label: 'DBServerAlias',
-    });
-    this.SET_INPUT_VALUE({
-      value: data.DataType,
-      label: 'DatatypeSelector',
-    });
+    console.log("data: " ,data);
+    
+    // this.HARD_SET_S3_FOLDERS(data.S3Folders);
+    // this.HARD_SET_TABLE_DESCRIPRION(data.Description);
+    // // console.log('GRAB DATA', data);
+    // this.SET_INPUT_VALUE({
+    //   value: data.DatasetWarnings,
+    //   label: 'DatasetWarning',
+    // });
+    // this.SET_INPUT_VALUE({
+    //   value: data.DatasetName,
+    //   label: 'DatasetName',
+    // });
+    // this.SET_INPUT_VALUE({
+    //   value: data.QueryString,
+    //   label: 'QueryString',
+    // });
+    // this.SET_INPUT_VALUE({
+    //   value: data.DatabaseName,
+    //   label: 'DBServerAlias',
+    // });
+    // this.SET_INPUT_VALUE({
+    //   value: data.DataType,
+    //   label: 'DatatypeSelector',
+    // });
 
-    //data.UsersQuery was using here before changes [{ name: data.UsersQuery }]
-    const dataOwners = data.Owners.split(' ').map(i => {
-      return { name: i };
-    });
-    this.SET_MULTI_SELECT({
-      label: 'DatasetOwners',
-      value: dataOwners,
-    });
-    const DatasetAccess = data.Access.split(' ').map(i => {
-      return { name: i };
-    });
-    this.SET_MULTI_SELECT({
-      label: 'DatasetAccess',
-      value: DatasetAccess,
-    });
+    // //data.UsersQuery was using here before changes [{ name: data.UsersQuery }]
+    // const dataOwners = data.Owners?.split(' ').map(i => {
+    //   return { name: i };
+    // });
+    // this.SET_MULTI_SELECT({
+    //   label: 'DatasetOwners',
+    //   value: dataOwners,
+    // });
+    // const DatasetAccess = data.Access?.split(' ').map(i => {
+    //   return { name: i };
+    // });
+    // this.SET_MULTI_SELECT({
+    //   label: 'DatasetAccess',
+    //   value: DatasetAccess,
+    // });
 
-    this.SET_LOAD_CONFIGURATION(true);
+    // this.SET_LOAD_CONFIGURATION(true);
   }
 
   @Action

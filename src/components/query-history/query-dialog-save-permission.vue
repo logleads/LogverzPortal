@@ -117,7 +117,7 @@ export default defineComponent({
     });
 
     function reArrangetheMultiSelectData(data: any): Array<{ name: string }> {
-      return data.map((item: any) => {
+      return data?.map((item: any) => {
         return { name: item };
       });
       // .filter(item => item.name !== '');
