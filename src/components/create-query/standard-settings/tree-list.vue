@@ -1,5 +1,5 @@
 <template>
-  <div class="tree-list-container">
+  <!-- <div class="tree-list-container"> -->
     <DxTreeList
       id="employees"
       ref="treeList"
@@ -13,14 +13,17 @@
       parent-id-expr="IDH"
       @row-expanding="log"
       @selection-changed="onSelectionChanged"
+      height="800px" 
+
     >
       <DxSelection :recursive="recursive" mode="multiple" />
       <DxColumn data-field="name" />
       <DxColumn data-field="BucketName" />
       <DxColumn data-field="Geography" caption="Geography" />
       <DxColumn data-field="Region" />
+
     </DxTreeList>
-  </div>
+  <!-- </div> -->
 </template>
 
 <script lang="ts">

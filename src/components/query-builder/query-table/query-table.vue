@@ -140,6 +140,8 @@ export default defineComponent({
     });
     // TODO think about it
     function exportDataBase(): void {
+      console.log("props.dataNumber",props.dataNumber);
+      
       QueryBuilderModule.toggleForExport(props.dataNumber);
     }
 

@@ -1,36 +1,20 @@
 <template>
   <div>
-    <Tabs
-      btn-rigth-text="OR"
-      btn-left-text="AND"
-      :state-b-t-n="isAnd"
-      @change-table-content="handleIsAnd"
-    />
+    <Tabs btn-rigth-text="OR" btn-left-text="AND" :state-b-t-n="isAnd" @change-table-content="handleIsAnd" />
     <div v-for="(item, index) in lineWithRules" :key="item" :class="$style['query-bilder']">
       <div :class="$style['query-bilder__item']">
-        <DropDownSimple
-          :content="query[index].field"
-          :items="fieldsLabel"
-          :class="$style['query-bilder__item__input']"
-          name="field"
-          @select-value="e => handleFields(e.item, index)"
-        />
-        <DropDownSimple
-          :content="query[index].role"
-          :items="getRules(index)"
-          :class="$style['query-bilder__item__input']"
-          name="rules"
-          @select-value="e => handleRules(e.item, index)"
-        />
+        <DropDownSimple :content="query[index].field" :items="fieldsLabel" :class="$style['query-bilder__item__input']"
+          name="field" @select-value="e => handleFields(e.item, index)" />
+        <DropDownSimple :content="query[index].role" :items="getRules(index)"
+          :class="$style['query-bilder__item__input']" name="rules" @select-value="e => handleRules(e.item, index)" />
       </div>
       <div :class="$style['query-bilder__item']">
-        <Input
-          :class="[$style['query-bilder__item__input'], $style['input-margin']]"
-          :value="query[index].value"
-          :from-query-builder="true"
-          :disabled="disabledValue(index)"
-          @input="e => handleInput(e.target.value, index)"
-        />
+        {{ console.log("query[index].value", query[index].value)
+        }}
+        <Input 
+        v-model="query[index].value"
+         :class="[$style['query-bilder__item__input'], $style['input-margin']]"
+          :from-query-builder="true" :disabled="disabledValue(index)" />
         <div v-if="index == 0" :class="$style['hover']" @click="add">
           <Icon name="plus" :height="30" :width="30" />
         </div>
@@ -138,15 +122,15 @@ export default defineComponent({
       return checkRulesByTypeJSON(query.value[index].typeField)
         ? ['like', 'not like', 'is empty', 'is not empty']
         : [
-            'equals',
-            'does not equal',
-            'like',
-            'not like',
-            'smaller',
-            'bigger',
-            'is empty',
-            'is not empty',
-          ];
+          'equals',
+          'does not equal',
+          'like',
+          'not like',
+          'smaller',
+          'bigger',
+          'is empty',
+          'is not empty',
+        ];
     }
 
     const fieldsLabel: ComputedRef<Array<string>> = computed(() => {
@@ -291,6 +275,7 @@ export default defineComponent({
     align-items: center;
     align-content: center;
     flex-direction: row;
+
     &__input {
       width: 90%;
 
@@ -301,11 +286,13 @@ export default defineComponent({
     }
   }
 }
+
 .hover {
   cursor: pointer;
   // margin-bottom: 6%;
   margin-bottom: 25px;
 }
+
 .input-margin {
   margin-bottom: 25px;
 }

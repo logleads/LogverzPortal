@@ -47,10 +47,10 @@
         <!-- <DxButton> -->
           <template #cellTemplate="{ data }">
             <!-- <pre>{{ data }}</pre> -->
-            <SimpleBtn v-if="data && data.displayButton" btn-text="Change Permissions"
+            <SimpleBtn v-if="data && !data.displayButton" btn-text="Change Permissions"
               @clicked.stop="openChangePermissionModal(data)" />
             
-            <SimpleBtn v-if="data && data.displayButton" btn-text="Delete Record"
+            <SimpleBtn v-if="data && !data.displayButton" btn-text="Delete Record"
               @clicked.stop="openDeleteRecordModal(data)" />
             <div v-else>
               <span>No data available</span>

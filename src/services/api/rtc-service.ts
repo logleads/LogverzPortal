@@ -1,9 +1,6 @@
-/* eslint-disable no-console */
+/* eslint-disable unused-imports/no-unused-imports-ts */
 import axios, { AxiosRequestConfig } from 'axios';
-// import * as buffer from 'buffer';
 import { Buffer } from 'safer-buffer';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import SimplePeer from 'simple-peer/simplepeer.min';
 
 import { BASE_URL, DEVELOPMENT_MODE, STAGE_NAME } from '~/constants';
@@ -12,23 +9,26 @@ import { ErrorsModule } from '~/store/modules/errors';
 import { ServerConnectionModule } from '~/store/modules/server-connection';
 import { UserModule } from '~/store/modules/user';
 import { DataBaseTypes } from '~/types/data-base-type';
-// import { ServerConnectionModule } from '~/store/modules/server-connection';
 import { ParametersType } from '~/types/models/query-builder-types';
 import { getSQLQuery } from '~/utils/getDefaultQuery';
 import { getServerList } from '~/utils/getServerList';
 import { parseDBAlias, parseDBEngine } from '~/utils/parseDBAlias';
 
-// (window as any).Buffer = buffer;
 import { QueryBuilderService } from './query-builder-service';
+
 const END_OF_FILE_MESSAGE = 'EOF';
+const MAX_RETRY_ATTEMPTS = 5;
+const RETRY_DELAY = 2000; // in milliseconds
+
 class RTCService {
   peer: any;
   config: any;
   TurnServerPassword: any;
-  isConected: any;
-  isQueryForInfo: any;
-  isQueryForGetTable: any;
+  isConected: boolean = false;
+  isQueryForInfo: boolean = false;
+  isQueryForGetTable: boolean = false;
   receivedBuffers: any = [];
+  retryAttempts: number = 0;
 
   async getTurnServerPassword(): Promise<void> {
     try {
@@ -46,6 +46,7 @@ class RTCService {
       throw new Error(e.message);
     }
   }
+
   async uploadConfig(): Promise<void> {
     try {
       const { data } = await BaseRequest.get(`${STAGE_NAME}/HTTP/S3/WRTCB/webrtc.config`);
@@ -56,31 +57,32 @@ class RTCService {
       throw new Error(e.message);
     }
   }
+
   async init(callback: any): Promise<any> {
     try {
       callback(false, true);
       await this.uploadConfig();
       await this.getTurnServerPassword();
+
       let config: any = {
         initiator: true,
         trickle: true,
         objectMode: false,
-        //,iceCompleteTimeout: 4000
       };
 
       if (JSON.parse(UserModule.useTurnServer) === true) {
         const servers = getServerList(this.config, this.TurnServerPassword);
         config = { ...config, config: { iceServers: servers } };
       }
+
       console.log('ACTUAL CONFIG', config);
       this.peer = new SimplePeer(config);
 
       this.peer.on('signal', async (data2: { [k: string]: string }) => {
         const urlpath = 'WebRTC/Signal';
-        // key needs to be get from request (Password)
         const payload = JSON.stringify(data2);
-        console.log('The signal:');
-        console.log(data2);
+        console.log('The signal:', data2);
+
         if (data2.type == 'offer') {
           try {
             const answer = await axios({
@@ -93,20 +95,22 @@ class RTCService {
                     }
                   : { 'content-type': 'application/x-www-form-urlencoded' },
               method: 'POST',
-              //host:host, //'127.0.0.1'   host
               port: 443,
               withCredentials: true,
-              url: `${STAGE_NAME}/${urlpath}`, // '/'
+              url: `${STAGE_NAME}/${urlpath}`,
               data: payload,
             } as AxiosRequestConfig);
 
-            this.peer.signal(answer.data);
+            // Ensure the peer is not destroyed and the state is appropriate
+            if (!this.peer.destroyed && this.peer._pc.signalingState === 'have-local-offer') {
+              this.peer.signal(answer.data);
+            } else {
+              console.warn(
+                'Peer is in the wrong state or destroyed. Skipping setRemoteDescription.',
+              );
+            }
           } catch (e: any) {
-            ErrorsModule.showErrorMessage(e.message);
-            // eslint-disable-next-line no-console
-            console.log('trouble in offer  ', e);
-            ServerConnectionModule.manualConnect(false);
-            ServerConnectionModule.connectionFetchingFinished();
+            this.handleOfferError(e, callback);
           }
         }
       });
@@ -122,12 +126,11 @@ class RTCService {
             }
             this.receivedBuffers = [];
             ServerConnectionModule.setTables(decodedstring);
-            // console.log('firstIndex', decodedstring);
             ServerConnectionModule.setDataToTables(decodedstring);
             callback(true, false);
             ServerConnectionModule.checkFinishConnections(decodedstring);
             ServerConnectionModule.setSendingStatus(false);
-            console.log('--------------------------decodedstring---------------------------------');
+            console.log('Decoded string received and processed.');
           }
         } catch (e: any) {
           console.log('%c The server connection closed' + e, 'color: red');
@@ -135,32 +138,61 @@ class RTCService {
       });
 
       this.peer.on('connect', () => {
-        // eslint-disable-next-line no-console
         this.isConected = true;
         ServerConnectionModule.setFlagIsConnectedToWebRTC(true);
-
         callback(true, false);
-        console.log('connection...');
+        console.log('Connected successfully.');
       });
 
       this.peer.on('close', () => {
         this.isConected = false;
         ServerConnectionModule.setFlagIsConnectedToWebRTC(false);
-
         callback(false, false);
         console.log('%c The server connection closed', 'color: red');
+        this.retryConnection(callback);
       });
 
       this.peer.on('error', (err: Error) => {
-        // eslint-disable-next-line no-console
-        callback(false, false);
-        this.isConected = false;
-        ServerConnectionModule.setFlagIsConnectedToWebRTC(false);
-        ServerConnectionModule.setSendingStatus(false);
-        console.log('%c The following error: any happened:' + err, 'color: red');
+        this.handleError(callback, err);
       });
     } catch (error: any) {
-      throw new Error(error);
+      this.handleError(callback, error);
+    }
+  }
+
+  private handleError(callback: any, err: Error): void {
+    console.error('Connection error:', err.message);
+    this.isConected = false;
+    ServerConnectionModule.setFlagIsConnectedToWebRTC(false);
+    ServerConnectionModule.setSendingStatus(false);
+
+    if (this.peer && !this.peer.destroyed) {
+      this.retryConnection(callback);
+    } else {
+      console.warn('Peer is already destroyed, not retrying connection.');
+    }
+  }
+
+  private handleOfferError(e: any, callback: any): void {
+    ErrorsModule.showErrorMessage(e.message);
+    console.log('Trouble in offer: ', e);
+    ServerConnectionModule.manualConnect(false);
+    ServerConnectionModule.connectionFetchingFinished();
+    this.retryConnection(callback);
+  }
+
+  private retryConnection(callback: any): void {
+    if (this.retryAttempts < MAX_RETRY_ATTEMPTS) {
+      this.retryAttempts++;
+      console.log(`Retrying connection attempt ${this.retryAttempts} of ${MAX_RETRY_ATTEMPTS}...`);
+
+      if (this.peer && !this.peer.destroyed) {
+        this.peer.destroy();
+      }
+
+      setTimeout(() => this.init(callback), RETRY_DELAY);
+    } else {
+      console.error('Max retry attempts reached. Could not establish connection.');
     }
   }
 
@@ -172,7 +204,7 @@ class RTCService {
           query: cmd,
         });
         console.log(query, 'query');
-        this.peer.send(query);
+        this.peer?.send(query);
       }
     } catch (error: any) {
       throw new Error(error);
@@ -181,10 +213,8 @@ class RTCService {
 
   public async uploadDBAlias(): Promise<any> {
     try {
-      // console.log('181 roger');
       const { data } = await QueryBuilderService.getDBAlias();
       const DBAlias = parseDBAlias(data.Parameter.Value);
-      // console.log('184', DBAlias);
       const DBEngine = parseDBEngine(data.Parameter.Value);
       return { DBAlias: DBAlias, DBEngine: DBEngine };
     } catch (error: any) {
@@ -198,9 +228,8 @@ class RTCService {
       query: `{"LogverzDBFriendlyName": "${payload.LogverzDBFriendlyName}","Mode": "ListTables","QueryParams": {"where": {"Table Name":{"<like>":".*"}}}}\n`,
     });
 
-    // eslint-disable-next-line no-console
-    console.log('2sending...   ', `${SQLQueryTables}`);
-    this.peer.send(SQLQueryTables);
+    console.log('Sending SQL query for tables:', SQLQueryTables);
+    this.peer?.send(SQLQueryTables);
   }
 
   async getDataByTableName(payload: {
@@ -213,7 +242,7 @@ class RTCService {
       const data = payload.dataBaseEngineItems.find(
         (engine: any) => engine.name == payload.LogverzDBFriendlyName,
       );
-      // console.log("engineData",data)
+
       if (data.value.includes('sqlserver')) {
         dbEngine = DataBaseTypes.MSSQL;
       } else {
@@ -232,10 +261,8 @@ class RTCService {
       )}}`,
     });
 
-    // eslint-disable-next-line no-console
-    console.log('1sending...   ', `${code}`);
-
-    this.peer.send(code);
+    console.log('Sending SQL query for data by table name:', code);
+    this.peer?.send(code);
   }
 
   endQueryForInfo() {
@@ -248,5 +275,4 @@ class RTCService {
 }
 
 const RTCServiceObj = new RTCService();
-
 export default RTCServiceObj;

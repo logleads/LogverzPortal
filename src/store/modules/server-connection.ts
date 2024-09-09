@@ -212,11 +212,11 @@ class ServerConnection extends VuexModule {
       this.SET_SELECT_VALUE({ label: 'turnServerPassword', value: response.data.Parameter.Value });
     } catch (e: any) {
       ErrorsModule.showErrorMessage(e.message);
-    } finally {
-    }
+    } finally { /* empty */ }
   }
 
-  @Action setFlagIsConnectedToWebRTC(value: boolean) {
+  @Action
+   setFlagIsConnectedToWebRTC(value: boolean) {
     this.SET_IS_CONNECTED_TO_WEB_RTC(value);
   }
 

@@ -292,7 +292,7 @@ export default defineComponent({
       /**
        * TODO: handle ref here
        */
-      if (blockHeigth.value.clientWidth > 900) {
+      if (blockHeigth.value?.clientWidth > 900) {
         setHeigthidtchForTextEditor(95, 20);
       } else {
         setHeigthidtchForTextEditor(98, 20);
@@ -313,7 +313,7 @@ export default defineComponent({
       /**
        * TODO: handle ref
        */
-      if (blockHeigth.value.clientWidth > 700) {
+      if (blockHeigth.value?.clientWidth > 700) {
         setWidthForSideBar(20, 99);
       } else {
         setWidthForSideBar(20, 99);
