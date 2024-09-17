@@ -298,7 +298,7 @@ class ServerConnection extends VuexModule {
   @Action
   public setDataToTables(data: any): void {
     if (RTCServiceObj.isQueryForInfo && this.isFinishConnected) {
-      // console.log('finish connection', data);
+      console.log('finish connection', data);
       QueryBuilderModule.setData(data);
       this.SET_IS_WAITING_FOR_DATA(false);
       this.SET_BUSY_STREAM_STATUS(false);

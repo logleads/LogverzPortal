@@ -146,6 +146,7 @@ export default defineComponent({
       { label: 'QueryString', value: QueryString },
       { label: 'DBinstance', value: DBinstance },
     ]);
+    console.log("QUERY STRING", QueryString.value)
     watch(DBinstance, (value: any) => {
       // eslint-disable-next-line no-console
       // console.log('**watchConnectionIndicator**: ', value);

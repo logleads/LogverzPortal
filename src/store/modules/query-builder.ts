@@ -354,6 +354,7 @@ class QueryBuilder extends VuexModule {
 
   @Action
   public setData(value: string): void {
+    console.log("SETTING DATA", value)
     const response = JSON.parse(value);
 
     if (response.status === 'Deny') {

@@ -200,6 +200,7 @@ class RTCService {
     try {
       if (this.isConected) {
         this.isQueryForInfo = true;
+        
         const query = JSON.stringify({
           query: cmd,
         });

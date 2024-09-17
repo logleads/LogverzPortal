@@ -6,7 +6,7 @@
         :class="$style['user-icon']"
         alt="user-icon"
       />
-      <span :class="$style['user-block_text']">{{ userName || 'userName' }}</span>
+      <span :class="$style['user-block_text']">{{userName}}</span>
       <img :src="require('~/assets/images/vector.svg')" alt="user-vector" />
     </div>
     <div v-if="isOpen" :class="$style['user-dropdown']">

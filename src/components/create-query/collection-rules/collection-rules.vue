@@ -106,6 +106,7 @@ export default defineComponent({
     const items: Ref<Array<{ id: number }>> = ref([{ id: 1 }, { id: 2 }]);
 
     watch(isCustomRules, (value: boolean) => {
+      console.log("IS CUSTOME RULE", query.value)
       DataCollectionModule.setInputValue({
         label: 'QueryString',
         value: parserQuery(
@@ -122,7 +123,6 @@ export default defineComponent({
       console.log('DataCollectionModule.queryString', DataCollectionModule.queryString);
       return DataCollectionModule.queryString.replaceAll('.undefined', ' ');
     });
-
     const rules: ComputedRef<Array<QueryBuilderRule>> = computed(() => {
       return DataCollectionModule.rules;
     });
@@ -136,7 +136,12 @@ export default defineComponent({
     });
     watch(customQuery, (value: string) => {
       if (isCustomRules.value) {
-        DataCollectionModule.setInputValue({ label: 'QueryString', value });
+        console.log("customQuery",value);
+        // DataCollectionModule.setInputValue({ label: 'QueryString', value });
+        DataCollectionModule.setInputValue({
+        label: 'QueryString',
+        value: value
+      });
       }
     });
     watch(rules, () => {
