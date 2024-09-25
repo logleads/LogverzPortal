@@ -176,6 +176,10 @@ class QueryBuilder extends VuexModule {
 
   @Mutation
   private TOGGLE_FOR_EXPORT() {
+    console.log(
+      'Mutating togglingExport',
+      this.dataForAllWindows[this.key as number].togglingExport,
+    );
     this.dataForAllWindows = {
       ...this.dataForAllWindows,
       [this.key as number]: {
@@ -354,7 +358,7 @@ class QueryBuilder extends VuexModule {
 
   @Action
   public setData(value: string): void {
-    console.log("SETTING DATA", value)
+    console.log('SETTING DATA', value);
     const response = JSON.parse(value);
 
     if (response.status === 'Deny') {

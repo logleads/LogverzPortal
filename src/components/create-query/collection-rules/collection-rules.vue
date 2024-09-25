@@ -14,8 +14,7 @@
           </div>
           <Input
             v-if="isCustomRules"
-            slot="input"
-            v-model="QueryFromState"
+            v-model="customQuery"
             :disabled="!isCustomRules"
             placeholder="Type custom rules here"
             :class="[$style['input-border'], { [$style['disabled']]: !isCustomRules }]"
@@ -50,8 +49,6 @@
 </template>
 
 <script lang="ts">
-// import { useVuelidate } from '@vuelidate/core';
-// import { required } from '@vuelidate/validators';
 import { computed, ComputedRef, defineComponent, onMounted, Ref, ref, watch } from 'vue';
 
 import CollectionRulesItem from '~/components/create-query/collection-rules/collection-rules-item.vue';
@@ -106,7 +103,10 @@ export default defineComponent({
     const items: Ref<Array<{ id: number }>> = ref([{ id: 1 }, { id: 2 }]);
 
     watch(isCustomRules, (value: boolean) => {
-      console.log("IS CUSTOME RULE", query.value)
+      console.log('IS CUSTOME RULE', value);
+      if (value) {
+        customQuery.value = QueryString.value;
+      }
       DataCollectionModule.setInputValue({
         label: 'QueryString',
         value: parserQuery(
@@ -136,12 +136,12 @@ export default defineComponent({
     });
     watch(customQuery, (value: string) => {
       if (isCustomRules.value) {
-        console.log("customQuery",value);
+        console.log('customQuery', value);
         // DataCollectionModule.setInputValue({ label: 'QueryString', value });
         DataCollectionModule.setInputValue({
-        label: 'QueryString',
-        value: value
-      });
+          label: 'QueryString',
+          value: value,
+        });
       }
     });
     watch(rules, () => {
