@@ -420,7 +420,11 @@ class QueryBuilder extends VuexModule {
       const data = JSON.parse(response.data.Parameter.Value).Views.reduce((acc: any, item: any) => {
         return { ...acc, ...item };
       }, {});
-      tableDataFormat.CSV ? this.SET_TABLE_DATA_FORMAT('csv') : this.SET_TABLE_DATA_FORMAT('json');
+      if (tableDataFormat.CSV) {
+        this.SET_TABLE_DATA_FORMAT('csv');
+      } else {
+        this.SET_TABLE_DATA_FORMAT('json');
+      }
       this.SET_VIEWS(data);
       this.SET_SHOW_COLLUMS(data.Default);
       this.SET_SELECTED_VIEWS_NAME('Default');

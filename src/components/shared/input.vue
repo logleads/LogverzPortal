@@ -25,9 +25,6 @@ import { defineComponent } from 'vue';
 
 import Icon from './icon.vue';
 
-// @Component({
-
-// })
 export default defineComponent({
   // eslint-disable-next-line vue/no-reserved-component-names, vue/multi-word-component-names
   name: 'Input',
@@ -111,6 +108,7 @@ $iconSize: 16px;
   font-weight: 500;
   padding: 0 $inputPadding;
   width: 100%;
+  margin-top: 5px;
   height: 30px;
   transition: background 0.1s linear;
   &__error {

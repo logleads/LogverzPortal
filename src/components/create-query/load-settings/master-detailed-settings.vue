@@ -80,7 +80,7 @@ export default defineComponent({
         if (Object.keys(props.data.data.length > 0)) {
           console.log('=========', props.data.data);
 
-          customizedData.value = props.rawitems; //[props.data.data.rawindex];
+          customizedData.value = props.rawitems[props.data.data.rawindex];
         } else {
           customizedData.value = {};
         }
@@ -116,7 +116,7 @@ export default defineComponent({
         csvHeader.value = csvkeys;
         // csvkeys.map(({ '0','1','2','Archive', 'rawindex', ...rest }) => rest)
         //   // eslint-disable-next-line no-console
-        //   console.log('CSV header: ', csvHeader.value);
+        console.log('CSV header: ', csvHeader.value);
       }
       // // eslint-disable-next-line no-console
       // console.log('customizedData', customizedData.value);

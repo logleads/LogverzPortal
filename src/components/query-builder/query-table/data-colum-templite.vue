@@ -50,6 +50,7 @@ import {
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import { computed, ComputedRef, defineComponent, PropType, Ref, ref, watch } from 'vue';
+import { watchEffect } from 'vue';
 
 import MasterDetailedSettings from '~/components/create-query/load-settings/master-detailed-settings.vue';
 import { QueryBuilderModule } from '~/store/modules/query-builder';
@@ -123,8 +124,6 @@ export default defineComponent({
     }
 
     const togglingExport: ComputedRef<boolean> = computed(() => {
-      console.log('toggling COMPUTED');
-      exportData();
       return QueryBuilderModule.dataForAllWindows[props.dataNumber as number]
         ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].togglingExport
         : false;
@@ -150,16 +149,12 @@ export default defineComponent({
         ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].tableDataFormat
         : null;
     });
-    watch(togglingExport, (newVal, oldVal) => {
-      console.log('togglingExport changed', { newVal, oldVal });
-      // Add your logic here that should happen when the computed value changes
-    });
-    // watch(togglingExport, () => {
-    //   // eslint-disable-next-line no-console
-    //   console.log('handleExporting1');
-    //   exportData();
-    // });
-
+    watch(
+      () => QueryBuilderModule.dataForAllWindows[props.dataNumber as number],
+      newVal => {
+        exportData();
+      },
+    );
     function exportData(): void {
       const workbook = new ExcelJS.Workbook();
       const worksheet = workbook.addWorksheet(
