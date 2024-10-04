@@ -8,7 +8,7 @@
         <div v-for="item in setupArray" :key="item.id" :class="$style['data__creation__item']">
           <span :class="$style['data__creation__item__numbers']">{{ item.id + 1 }} </span>
           <!-- <p v-if="item.id === 3" :class="$style['data__creation__item__hide-line']" /> -->
-          <DropDownCreate :label="item.label">
+          <DropDownCreate :label="item.label" @onPress="toggleExpanded">
             <template v-if="item.id === 0">
               <StandardSettings :submitted="submitted" :is-fetching="isFetching"
                 @validate="handleValidate($event, 'standard')" />
@@ -22,7 +22,7 @@
                 @validate="handleValidate($event, 'collection')" />
             </template>
             <template v-if="item.id === 3">
-              <Review />
+              <Review :review-expend="isReviewExpanded"/>
             </template>
           </DropDownCreate>
         </div>
@@ -82,6 +82,8 @@ export default defineComponent({
     const validCollection: Ref<any> = ref(null);
     const withRedirect = ref(false);
     const submitted = ref(false);
+    const isReviewExpanded = ref(false);
+
     const isDatatypeDefined = ref(false);
     const showLoadSettings = ref(false);
     const setupArray: Ref<Array<{ id: number; label: string }>> = ref([
@@ -156,7 +158,10 @@ export default defineComponent({
         DatasetAccess,
       };
     });
-
+    const toggleExpanded=(expend:boolean)=>{
+      isReviewExpanded.value = expend;
+      
+    }
     function handleSubmit(e: Event): void {
       e.stopPropagation();
       submitted.value = true;
@@ -209,6 +214,8 @@ export default defineComponent({
       isDatatypeDefined,
       showLoadSettings,
       setupArray,
+      toggleExpanded,
+      isReviewExpanded
     };
   },
 });

@@ -6,20 +6,8 @@
         <div :class="$style['input-drop-down__block']">
           {{ label }}
         </div>
-        <Icon
-          v-if="!isExpanded"
-          name="arrow-down"
-          :class="$style['input-arrow']"
-          :width="12"
-          :height="7.7"
-        />
-        <Icon
-          v-if="isExpanded"
-          name="arrow-up"
-          :class="$style['input-arrow']"
-          :width="12"
-          :height="7.7"
-        />
+        <Icon v-if="!isExpanded" name="arrow-down" :class="$style['input-arrow']" :width="12" :height="7.7" />
+        <Icon v-if="isExpanded" name="arrow-up" :class="$style['input-arrow']" :width="12" :height="7.7" />
       </label>
     </div>
     <div :class="{ [$style['hidden']]: !isExpanded }">
@@ -42,10 +30,13 @@ export default defineComponent({
       type: String,
     },
   },
-  setup(props) {
+
+  setup(props, { emit }) {
     const isExpanded: Ref<boolean> = ref(false);
     function toggleExpanded(): void {
       isExpanded.value = !isExpanded.value;
+      if (props.label === 'Review')
+        emit('onPress', isExpanded.value)
     }
     const isLoadConfigurationUpload: WritableComputedRef<boolean> = computed(() => {
       return DataCollectionModule.isLoadConfigurationUpload;
@@ -84,11 +75,16 @@ export default defineComponent({
     padding-left: 18px;
     border-radius: 5px;
     border: 1.59091px solid var(--secondary-text-color);
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Old versions of Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Old versions of Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
     user-select: none;
   }
 
@@ -139,15 +135,18 @@ export default defineComponent({
     width: 3px;
     height: 18px;
   }
+
   /* Track */
   &::-webkit-scrollbar-track {
     background: #f1f1f1;
   }
+
   /* Handle */
   &::-webkit-scrollbar-thumb {
     background: var(--accent-color);
     border-radius: 31px;
   }
+
   /* Handle on hover */
   &::-webkit-scrollbar-thumb:hover {
     background: var(--accent-color);
