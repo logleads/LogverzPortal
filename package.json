@@ -11,6 +11,7 @@
   "dependencies": {
     "@devextreme/runtime": "^4.0.0",
     "@devextreme/vdom": "^2.3.4",
+    "@toast-ui/vue-editor": "^3.2.3",
     "@vuelidate/core": "^2.0.3",
     "@vuelidate/validators": "^2.0.4",
     "axios": "^1.7.7",
@@ -25,6 +26,7 @@
     "highlight.js": "^10.7.3",
     "json-2-csv": "^3.20.0",
     "lodash": "^4.17.21",
+    "or": "^0.2.0",
     "safer-buffer": "^2.1.2",
     "simple-peer": "^9.11.1",
     "vue": "^3.1.0",

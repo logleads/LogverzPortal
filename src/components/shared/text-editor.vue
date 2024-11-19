@@ -10,23 +10,27 @@
     @focus="onEditorFocus"
     @change="onEditorChange"
   /> -->
-  <h1>Hello</h1>
+  <!-- <h1>Hello</h1> -->
+  <div>
+    <div ref="editor" />
+  </div>
 </template>
 
 <script lang="ts">
 // import 'codemirror/lib/codemirror.css';
 
-// import '@toast-ui/editor/dist/toastui-editor.css';
-// import { Editor } from '@toast-ui/vue-editor';
-import { computed, ComputedRef, defineComponent, Ref, ref } from 'vue';
+import '@toast-ui/editor/dist/toastui-editor.css';
+
+import Editor from '@toast-ui/editor';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from 'vue';
 
 import { SaveSettingModule } from '~/store/modules/save-setting';
 
 export default defineComponent({
   name: 'TextEditor',
-  components: {
-    // Editor,
-  },
+  // components: {
+  //   editor: Editor,
+  // },
   props: {
     curentKey: {
       type: Number,
@@ -37,6 +41,7 @@ export default defineComponent({
       required: true,
     },
   },
+  
   setup(props) {
     const content: Ref<string> = ref('sdf');
     const editor: Ref<any> = ref('');
@@ -69,9 +74,22 @@ export default defineComponent({
         'codeblock',
       ],
     });
+    // const emit = defineEmits(['update:modelValue']);
+onMounted(() => {
+  const e = new Editor({
+    el: editor.value,
+    // height: '500px',
+    initialEditType: 'markdown',
+    previewStyle: 'vertical',
+    events: {
+      change: () =>onEditorChange(e.getMarkdown()) ,
+    },
+  });
+});
 
     function onEditorChange(editor: any): void {
-      const text = editor?.innerText.replace('MarkdownWYSIWYG', '');
+      
+      const text = editor?.replace('MarkdownWYSIWYG', '');
       // const text = editor.$refs.toastuiEditor.innerText.replace('MarkdownWYSIWYG', '');
       const textS = text.split('\n\n');
       textS.pop();
