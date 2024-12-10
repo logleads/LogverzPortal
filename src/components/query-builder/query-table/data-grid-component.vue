@@ -80,16 +80,25 @@ export default defineComponent({
         return obj;
       });
       const json2csvCallback = (err: unknown, csv: string | undefined) => {
-        if (err) throw err;
+        
+        if (err){
+          console.log("err---");
+          throw err;
+        }
+          
         if (csv) {
+
           const tmp = csv as string;
           const arr = tmp.split('\n');
           headers.value = arr[0].split(',').map((item: any) => {
             return item.replaceAll('.', '-').toLowerCase();
           });
+          console.log("csv----?",headers);
+
         }
       };
-
+      console.log("sortedBySelectedColum",sortedBySelectedColum);
+      
       json2csv(sortedBySelectedColum as CloudTrailDataResponse[], json2csvCallback);
       return sortedBySelectedColum;
     });

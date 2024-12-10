@@ -8,7 +8,7 @@
       @change-table-content="handleIsAnd"
     />
     <label>
-      <span>Available Fields</span>
+      <p :class="$style['customLabel']">Available Fields</p>
     </label>
     <div
       v-for="(item, index) in lineWithRules"
@@ -43,7 +43,7 @@
     </div>
     <div :class="[$style['query-bilder__limit'], $style['mb5']]">
       <label>
-        <span>Batch start</span>
+        <p :class="$style['customLabel']" >Batch start</p>
       </label>
       <Input
         :value="batchStart"
@@ -54,7 +54,7 @@
     </div>
     <div :class="$style['mb5']">
       <label>
-        <span>Batch size</span>
+        <p :class="$style['customLabel']">Batch size</p>
       </label>
       <Input
         :value="batchSize"
@@ -526,5 +526,8 @@ pre {
 }
 .query-bilder > .container {
   margin-bottom: 25px;
+}
+.customLabel{
+  margin-bottom: 7px !important;
 }
 </style>

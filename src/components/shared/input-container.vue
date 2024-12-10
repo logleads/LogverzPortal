@@ -39,5 +39,9 @@ export default defineComponent({
       margin-left: 5px;
     }
   }
+  .container__label{
+    margin-bottom: 5px !important;
+
+  }
 }
 </style>
