@@ -402,7 +402,7 @@ export default defineComponent({
   }
 
   &__label {
-    font-weight: 500;
+    font-weight: bold;
     font-size: 15px;
     color: var(--ink-color);
   }

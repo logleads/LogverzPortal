@@ -226,7 +226,11 @@ export default defineComponent({
   &__key {
     font-size: 14px;
     margin-right: 10px;
-    color: var(--secondary-text-color);
+    color: black;
+    width: 150px;
+    font-size: 12px;
+    font-weight: bold;
+    
   }
 
   &__value {

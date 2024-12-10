@@ -93,11 +93,9 @@ export default defineComponent({
           headers.value = arr[0].split(',').map((item: any) => {
             return item.replaceAll('.', '-').toLowerCase();
           });
-          console.log("csv----?",headers);
 
         }
       };
-      console.log("sortedBySelectedColum",sortedBySelectedColum);
       
       json2csv(sortedBySelectedColum as CloudTrailDataResponse[], json2csvCallback);
       return sortedBySelectedColum;

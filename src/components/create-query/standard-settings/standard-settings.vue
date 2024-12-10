@@ -660,6 +660,9 @@ export default defineComponent({
   }
 .customLabel{
   margin-bottom: 5px;
+  color: black;
+  font-size: 12px;
+  font-weight: bold;
 }
   &__inputs {
     // margin-top: 49px;
@@ -754,6 +757,8 @@ export default defineComponent({
 }
 .multiselect-label {
   margin-bottom:5px;
+  font-weight: bold;
+  color: black !important;
 }
 
 :global(.multiselect__tag) {
