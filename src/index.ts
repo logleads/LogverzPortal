@@ -1,5 +1,5 @@
 import 'vue3-json-viewer/dist/index.css';
-import 'highlight.js/styles/solarized-light.css';
+import 'highlight.js/styles/default.css';
 
 import { createApp } from 'vue';
 import VueHighlightJS from 'vue3-highlightjs';

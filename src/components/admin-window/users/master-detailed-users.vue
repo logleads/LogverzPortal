@@ -4,8 +4,10 @@
     <!-- <div>{{plainItems}}</div> -->
     <template v-for="(item, key) in Object.keys(data?.data)" :key="key">
       <div>
-        <div v-if="typeof data?.data[item] === 'object' && !Array.isArray(data.data[item])"
-          :key="item + Math.random() * 10000">
+        <div
+          v-if="typeof data?.data[item] === 'object' && !Array.isArray(data.data[item])"
+          :key="item + Math.random() * 10000"
+        >
           <template v-for="(k, i) in data?.data[item]" :key="i + Math.random() * 10000">
             <template v-if="typeof k === 'object'">
               <ParseUserObject :obj="k" :label="i" />
@@ -13,7 +15,8 @@
             <template v-else>
               <div v-if="k !== ''" :class="$style['container']">
                 <template v-if="i === 'UserInline'">
-                  <span :class="$style['container__key-clickable']" @click="handleShowMore">{{ i }}:
+                  <span :class="$style['container__key-clickable']" @click="handleShowMore"
+                    >{{ i }}:
                   </span>
                   <span :class="$style['container__value']"> {{ k }}</span>
                   <div v-if="showMoreInline">
@@ -26,8 +29,14 @@
                     <div>
                       <span :class="$style['container__key']">Policy document: </span>
 
-                      <json-viewer :value="formaterPolicyDocument(plainItems, data.data.Name)" :expand-depth="50"
-                        copyable boxed expanded="true" sort></json-viewer>
+                      <json-viewer
+                        :value="formaterPolicyDocument(plainItems, data.data.Name)"
+                        :expand-depth="50"
+                        copyable
+                        boxed
+                        expanded="true"
+                        sort
+                      ></json-viewer>
                     </div>
                   </div>
                 </template>
@@ -42,9 +51,12 @@
         <div v-if="Array.isArray(data?.data[item])" :key="item + Math.random() * 10000">
           <div :class="$style['container']">
             <span :class="$style['container__key']">{{ item }}: </span>
-            <span v-for="(arrItem, index) in data.data[item]" :key="arrItem + Math.random() * 10000"
-              :class="$style['container__value']">{{ arrItem }}{{ data.data[item].length - 1 !== index ? ',' : ''
-              }}</span>
+            <span
+              v-for="(arrItem, index) in data.data[item]"
+              :key="arrItem + Math.random() * 10000"
+              :class="$style['container__value']"
+              >{{ arrItem }}{{ data.data[item].length - 1 !== index ? ',' : '' }}</span
+            >
           </div>
         </div>
         <div v-if="data?.data[item] === 'null'" :key="item + Math.random() * 10000">
@@ -87,10 +99,7 @@ export default defineComponent({
       type: Array || null,
       required: false,
     },
-
   },
-
-
 
   // @Prop({ required: false, type: Object }) readonly data!: Record<string, unknown>;
   // @Prop({ required: false, type: Array }) readonly plainItems!: userResponse[];
@@ -126,13 +135,11 @@ export default defineComponent({
       showMoreInline,
     };
   },
-
 });
-
 </script>
 
 <style module lang="scss">
-@import '../styles';
+@use '../styles';
 
 .container {
   margin: 15px 0;

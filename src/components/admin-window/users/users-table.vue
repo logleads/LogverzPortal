@@ -311,32 +311,32 @@ export default defineComponent({
               i.Policies.GroupAttached.length !== 1
                 ? i.Policies.GroupAttached.reduce(reducer)
                 : i.Policies.GroupAttached.length === 1
-                ? extractPolicy(i.Policies.GroupAttached[0])
-                : '',
+                  ? extractPolicy(i.Policies.GroupAttached[0])
+                  : '',
             GroupInline:
               i.Policies.GroupInline &&
               i.Policies.GroupInline.length &&
               i.Policies.GroupInline.length !== 1
                 ? i.Policies.GroupInline.reduce(reducer)
                 : i.Policies.GroupInline.length === 1
-                ? extractPolicy(i.Policies.GroupInline[0])
-                : '',
+                  ? extractPolicy(i.Policies.GroupInline[0])
+                  : '',
             UserAttached:
               i.Policies.UserAttached &&
               i.Policies.UserAttached.length &&
               i.Policies.UserAttached.length !== 1
                 ? i.Policies.UserAttached.reduce(reducer)
                 : i.Policies.UserAttached.length === 1
-                ? extractPolicy(i.Policies.UserAttached[0])
-                : '',
+                  ? extractPolicy(i.Policies.UserAttached[0])
+                  : '',
             UserInline:
               i.Policies.UserInline &&
               i.Policies.UserInline.length &&
               i.Policies.UserInline.length !== 1
                 ? i.Policies.UserInline.reduce(reducer)
                 : i.Policies.UserInline?.length === 1
-                ? extractPolicy(i.Policies.UserInline[0])
-                : '',
+                  ? extractPolicy(i.Policies.UserInline[0])
+                  : '',
           },
         };
       });
@@ -459,7 +459,7 @@ export default defineComponent({
 </script>
 
 <style module lang="scss">
-@import '../styles';
+@use '../styles';
 
 .search {
   display: flex;

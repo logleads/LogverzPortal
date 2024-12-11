@@ -123,7 +123,7 @@ export default defineComponent({
 </script>
 
 <style module lang="scss">
-@import '../styles';
+@use '../styles';
 
 .container {
   margin: 15px 0;

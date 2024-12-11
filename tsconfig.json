@@ -3,29 +3,21 @@
     "target": "es2018",
     "module": "esnext",
     "moduleResolution": "node",
-    "lib": [
-      "esnext",
-      "dom"
-    ],
+    "lib": ["esnext", "dom"],
     "esModuleInterop": true,
     "allowJs": true,
     "noImplicitAny": false,
     "sourceMap": true,
     "strict": true,
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "useDefineForClassFields": true,
     "useUnknownInCatchVariables": false,
     "baseUrl": ".",
     "paths": {
-      "~/*": [
-        "./src/*"
-      ],
+      "~/*": ["./src/*"]
     },
-    "types": [
-      "node",
-      "webpack-env"
-    ]
+    "types": ["node", "webpack-env"]
   },
-  "include": [
-    "src/**/*"
-  ]
+  "include": ["src/**/*"]
 }
