@@ -1,19 +1,13 @@
 <template>
   <div>
-    <div v-if="rawitems && Object.keys(rawitems).length > 0 && format === 'json'">
+    <!-- <div v-if="rawitems && Object.keys(rawitems).length > 0 && format === 'json'">
       {{ console.log('customizedData', customizedData) }}
-      <!-- <json-viewer-custom :value="rawitems" /> -->
-    </div>
-    <div v-else-if="Object.keys(customizedData).length">
+      <json-viewer-custom :value="rawitems" />
+    </div> -->
+    <div v-if="Object.keys(customizedData).length">
       <!-- <template> -->
-      <DxDataGrid
-        :columns="csvHeader"
-        :show-borders="true"
-        :column-auto-width="true"
-        :column-resizing-mode="currentMode"
-        :data-source="[{ ...customizedData }]"
-        word-wrap-enabled="true"
-      >
+      <DxDataGrid :columns="csvHeader" :show-borders="true" :column-auto-width="true"
+        :column-resizing-mode="currentMode" :data-source="[{ ...customizedData }]" word-wrap-enabled="true">
         <DxHeaderFilter :visible="true" />
       </DxDataGrid>
       <!-- </template> -->
@@ -78,9 +72,10 @@ export default defineComponent({
       console.log('props.data', props.data.data);
       if (props.rawitems) {
         if (Object.keys(props.data.data.length > 0)) {
-          console.log('=========', props.data.data);
 
-          customizedData.value = props.rawitems[props.data.data.rawindex];
+
+          customizedData.value =props.rawitems[props.data.data.rawindex];
+
         } else {
           customizedData.value = {};
         }
@@ -103,11 +98,16 @@ export default defineComponent({
           '4',
           'Archive',
           'rawindex',
+          'requestParameters',
+          'resources',
+          'responseElements',
+          'userIdentity'
           // 'S3Folders',
         ];
         let csvkeys = Object.keys(customizedData.value);
         // eslint-disable-next-line no-console
         // console.log("CSVKEYS", csvkeys);
+
         csvkeys.forEach((e1, idx, arr) => {
           if (blackList.includes(e1) || e1 === '1') {
             arr.splice(idx, 1);
@@ -116,7 +116,6 @@ export default defineComponent({
         csvHeader.value = csvkeys;
         // csvkeys.map(({ '0','1','2','Archive', 'rawindex', ...rest }) => rest)
         //   // eslint-disable-next-line no-console
-        console.log('CSV header: ', csvHeader.value);
       }
       // // eslint-disable-next-line no-console
       // console.log('customizedData', customizedData.value);

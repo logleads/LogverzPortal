@@ -104,8 +104,6 @@ $iconSize: 16px;
   background: #ffffff;
   border: 1px solid var(--border-color);
   border-radius: 5px;
-  font-size: 12px;
-  font-weight: 500;
   padding: 0 $inputPadding;
   width: 100%;
   margin-top: 5px;

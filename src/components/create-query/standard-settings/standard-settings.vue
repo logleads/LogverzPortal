@@ -10,8 +10,8 @@
             <Loader accent />
           </div>
         </template>
-        <div v-for="input in S3FoldersValue" :key="input.label">
-          <InputContainer :label="input.label">
+        <div v-for="input in S3FoldersValue" :key="input.label" :class="$style['customeClass']">
+          <InputContainer :label="input.label"  >
             <template #icon>
               <ToolTip :tip="input.hint" />
             </template>
@@ -82,7 +82,7 @@
 
         <div :class="$style['standard__inputs']">
           <div v-for="select in selects" :key="select.label">
-            <label>
+            <label :class="$style['customLabel']">
               <span>{{ select.label }}</span>
               <ToolTip :tip="select.hint" />
             </label>
@@ -634,7 +634,10 @@ export default defineComponent({
 .selected-site {
   color: #4b75ed;
 }
-
+.customeClass{
+  margin-top: 10px;
+  padding-right: 9px !important;
+}
 .standard {
   margin-top: 23px;
   background-color: var(--gray-background);
@@ -655,14 +658,20 @@ export default defineComponent({
       margin-left: 6px;
     }
   }
-
+.customLabel{
+  margin-bottom: 5px;
+  color: black;
+  font-size: 12px;
+  font-weight: bold;
+}
   &__inputs {
     // margin-top: 49px;
     max-width: 99%;
     padding-bottom: 59px;
 
     > div {
-      margin-bottom: 29px;
+      // margin-bottom: 29px;
+      margin-top: 10px;
     }
   }
 
@@ -699,7 +708,7 @@ export default defineComponent({
     align-items: center;
     justify-content: space-between;
     margin-top: 9px;
-    margin-bottom: 29px;
+    // margin-bottom: 29px;
 
     &__button {
       width: 107px;
@@ -716,7 +725,6 @@ export default defineComponent({
     &__input {
       width: 100%;
       input {
-        border: none;
         height: 42px;
       }
     }
@@ -748,7 +756,9 @@ export default defineComponent({
   margin: 10px auto;
 }
 .multiselect-label {
-  margin-bottom: 9px;
+  margin-bottom:5px;
+  font-weight: bold;
+  color: black !important;
 }
 
 :global(.multiselect__tag) {

@@ -1,34 +1,21 @@
 <template>
-  <!-- <div class="tree-list-container"> -->
-    <DxTreeList
-      id="employees"
-      ref="treeList"
-      :data-source="listFolder"
-      :show-row-lines="true"
-      :allow-column-reordering="true"
-      :allow-column-resizing="true"
-      :show-borders="true"
-      :column-auto-width="true"
-      key-expr="ID"
-      parent-id-expr="IDH"
-      @row-expanding="log"
-      @selection-changed="onSelectionChanged"
-      height="800px" 
+  <DxTreeList id="employees" ref="treeList" :data-source="listFolder" :show-row-lines="true" height="800"
+    :allow-column-reordering="true" :allow-column-resizing="true" :show-borders="true" :column-auto-width="true"
+    key-expr="ID" parent-id-expr="IDH" @row-expanding="log" @selection-changed="onSelectionChanged">
+    <DxScrolling mode="standard" /> <!-- or "virtual" | "infinite" -->
+    <DxSelection :recursive="recursive" mode="multiple" />
+    <DxColumn data-field="name" />
+    <DxColumn data-field="BucketName" />
+    <DxColumn data-field="Geography" caption="Geography" />
+    <DxColumn data-field="Region" />
 
-    >
-      <DxSelection :recursive="recursive" mode="multiple" />
-      <DxColumn data-field="name" />
-      <DxColumn data-field="BucketName" />
-      <DxColumn data-field="Geography" caption="Geography" />
-      <DxColumn data-field="Region" />
-
-    </DxTreeList>
-  <!-- </div> -->
+  </DxTreeList>
 </template>
 
 <script lang="ts">
-import { DxColumn, DxSelection, DxTreeList } from 'devextreme-vue/tree-list';
+import { DxColumn, DxScrolling, DxSelection, DxTreeList } from 'devextreme-vue/tree-list';
 import { defineComponent, ref } from 'vue';
+
 import { DataCollectionService } from '~/services/api/data-collection-service';
 import { DataCollectionModule } from '~/store/modules/data-collection';
 import { isObject } from '~/utils/checkIsItObj';
@@ -39,6 +26,7 @@ export default defineComponent({
     DxTreeList,
     DxColumn,
     DxSelection,
+    DxScrolling
   },
   props: {
     listFolder: {
@@ -90,7 +78,8 @@ export default defineComponent({
 <style scoped>
 .tree-list-container {
   width: 100%;
-  overflow-y: auto; /* Enable horizontal scrolling if content overflows */
+  overflow-y: auto;
+  /* Enable horizontal scrolling if content overflows */
   height: 500px;
 }
 

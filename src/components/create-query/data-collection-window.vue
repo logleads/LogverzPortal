@@ -75,8 +75,6 @@ export default defineComponent({
     MyButton,
   },
   setup() {
-    console.log("ConnectionIndecatoreModule.DBinstanse", ConnectionIndecatoreModule.DBinstanse);
-
     const validStandard: Ref<any> = ref(null);
     const validAdvanced: Ref<any> = ref(null);
     const validCollection: Ref<any> = ref(null);
@@ -265,7 +263,7 @@ export default defineComponent({
 
       &__btn-submit {
         width: 158px;
-        height: 45px;
+        // height: 45px;
       }
 
       &__btn {
@@ -404,7 +402,7 @@ export default defineComponent({
   }
 
   &__label {
-    font-weight: 500;
+    font-weight: bold;
     font-size: 15px;
     color: var(--ink-color);
   }

@@ -47,7 +47,7 @@ export default defineComponent({
   border-radius: 5px;
   font-weight: bold;
   color: #fff;
-  height: 55px;
+  // height: 55px;
   display: flex;
   align-items: center;
   justify-content: center;

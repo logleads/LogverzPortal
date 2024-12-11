@@ -291,7 +291,7 @@ export default defineComponent({
       isSettingsFetch.value = false;
     }
 
-    function loadConfiguration(data: any): void {
+    function loadConfiguration(data: any): void {      
       SaveSettingModule.loadSetting(data.QuerySettings);
     }
 

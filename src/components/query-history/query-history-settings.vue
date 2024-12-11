@@ -22,7 +22,7 @@ export default defineComponent({
     // @Prop({ required: false, type: Object }) readonly data!: Record<string, any>;
     const reshapedData: Ref<any> = ref({});
     onMounted(() => {
-      reshapedData.value = props.data;
+      reshapedData.value = props.data?.data;
       delete reshapedData.value?.displayButton;
       delete reshapedData.value?.displayAccess;
       delete reshapedData.value?.displayOwners;

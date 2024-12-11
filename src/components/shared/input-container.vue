@@ -39,5 +39,12 @@ export default defineComponent({
       margin-left: 5px;
     }
   }
+  .container__label{
+    margin-bottom: 5px !important;
+    font-size: 12px;
+    font-weight: bold;
+    color: black;
+
+  }
 }
 </style>

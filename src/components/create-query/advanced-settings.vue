@@ -155,6 +155,9 @@ export default defineComponent({
 
   &__inputs {
     max-width: 99%;
+    input {
+        height: 42px;
+      }
 
     > div {
       margin-bottom: 20px;
