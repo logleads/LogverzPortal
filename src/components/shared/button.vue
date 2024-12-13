@@ -3,7 +3,8 @@
     type="button"
     :class="[$style['button'], classAssign]"
     :disabled="disabled"
-    @click="$emit('click', $event)"
+    
+
   >
     <template v-if="disabled">
       <template v-if="noLoad">{{ text }}</template>

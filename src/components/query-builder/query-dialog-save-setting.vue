@@ -62,13 +62,15 @@ export default defineComponent({
       };
     });
 
-    function close(): void {
+    function close(): void {      
       SaveSettingModule.closeDialogWindow();
     }
 
-    function save(): void {
-      SaveSettingModule.saveSetting({ key: props.dataNumber, name: Name.value });
-      close();
+    function save(): void {      
+      if(Name.value){
+        SaveSettingModule.saveSetting({ key: props.dataNumber, name: Name.value });
+        close();
+      }
     }
 
     function transformValue(obj: any) {
