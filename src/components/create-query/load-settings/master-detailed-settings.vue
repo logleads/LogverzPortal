@@ -1,10 +1,9 @@
 <template>
   <div>
-    <!-- <div v-if="rawitems && Object.keys(rawitems).length > 0 && format === 'json'">
-      {{ console.log('customizedData', customizedData) }}
-      <json-viewer-custom :value="rawitems" />
-    </div> -->
-    <div v-if="Object.keys(customizedData).length">
+    <div v-if="rawitems && Object.keys(rawitems).length > 0 && format === 'json'">
+      <json-viewer-custom :value="customizedData" />
+    </div>
+    <div v-else-if="Object.keys(customizedData).length">
       <!-- <template> -->
       <DxDataGrid :columns="csvHeader" :show-borders="true" :column-auto-width="true"
         :column-resizing-mode="currentMode" :data-source="[{ ...customizedData }]" word-wrap-enabled="true">
@@ -37,6 +36,8 @@
 import { DxDataGrid, DxHeaderFilter } from 'devextreme-vue/data-grid';
 import { defineComponent, onMounted, Ref, ref } from 'vue';
 
+import JsonViewerCustom from '~/components/shared/json-viewer.vue';
+
 // @Component({
 //   name: 'MasterDetailedSettings',
 //   components: { ParseObject, Loader, Icon, DxDataGrid },
@@ -46,7 +47,7 @@ export default defineComponent({
   // @Prop({ required: false }) readonly rawitems!: any;
   // @Prop({ required: false }) readonly format!: any;
   name: 'MasterDetailedSettings',
-  components: { DxDataGrid, DxHeaderFilter },
+  components: { DxDataGrid, DxHeaderFilter, JsonViewerCustom },
   props: {
     data: {
       type: Object,
@@ -61,12 +62,16 @@ export default defineComponent({
       required: false,
     },
   },
+
   setup(props) {
     const customizedData: Ref<any> = ref({});
     const csvHeader: Ref<any> = ref([]);
     const columnsData = ref([]);
     const resizingModes = ref(['nextColumn', 'widget']);
     const currentMode = ref('nextColumn');
+
+
+
     onMounted(() => {
       console.log('props.rawitems', props.rawitems);
       console.log('props.data', props.data.data);
@@ -74,7 +79,7 @@ export default defineComponent({
         if (Object.keys(props.data.data.length > 0)) {
 
 
-          customizedData.value =props.rawitems[props.data.data.rawindex];
+          customizedData.value = props.rawitems[props.data.data.rawindex];
 
         } else {
           customizedData.value = {};
@@ -98,10 +103,10 @@ export default defineComponent({
           '4',
           'Archive',
           'rawindex',
-          'requestParameters',
-          'resources',
-          'responseElements',
-          'userIdentity'
+          // 'requestParameters',
+          // 'resources',
+          // 'responseElements',
+          // 'userIdentity'
           // 'S3Folders',
         ];
         let csvkeys = Object.keys(customizedData.value);

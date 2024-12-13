@@ -267,7 +267,7 @@ export default defineComponent({
         ConnectionIndecatoreModule.setLoader(true);
         getServerStatus();
         timerId.value = setInterval(() => {
-          getServerStatus();
+          getServerStatus();          
           ConnectionIndecatoreModule.setLoaderForIndicator(true);
           setTimeout(() => {
             ConnectionIndecatoreModule.setLoaderForIndicator(false);

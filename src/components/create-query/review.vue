@@ -51,7 +51,6 @@ export default defineComponent({
   },
   
   setup(props) {
-    console.log(props);
     const instance = getCurrentInstance();
     const vis: Ref<any> = ref(instance?.data);
     const DBStatus: Ref<string | null> = ref(null);
@@ -63,7 +62,7 @@ export default defineComponent({
         getServerStatus()
 
         elapsedSeconds += 5;
-        if (elapsedSeconds >= 60) {
+        if (elapsedSeconds >= 300) {
           clearInterval(intervalId); 
         }
       }, 5000);

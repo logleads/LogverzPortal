@@ -127,7 +127,7 @@ class QueryBuilder extends VuexModule {
   data: CloudTrailDataResponse[] | null = null;
 
   togglingExport = false;
-
+  DataSet:string = 'null'; //
   @Mutation
   private SET_SHOW_COLLUMS(value: [string]) {
     this.dataForAllWindows = {
@@ -324,6 +324,7 @@ class QueryBuilder extends VuexModule {
 
   @Mutation
   private SET_CURRENT_AVAILABLE_TABLE(value: string) {
+    this.DataSet=value;    
     this.dataForAllWindows = {
       ...this.dataForAllWindows,
       [this.key as number]: {
@@ -375,6 +376,7 @@ class QueryBuilder extends VuexModule {
     this.SET_KEY_FOR_WINDOW(key);
     this.SET_CURRENT_AVAILABLE_TABLE(value);
     this.SET_DATA(null);
+
     await this.getTableDataType({
       databaseName: this.dataForAllWindows[key as number].dataBaseCurrentAlias,
       DatasetName: value,
@@ -401,6 +403,7 @@ class QueryBuilder extends VuexModule {
   @Action
   public setAvailableTables(value: string[]) {
     this.SET_AVAILABLE_TABLES(value);
+    
   }
 
   @Action

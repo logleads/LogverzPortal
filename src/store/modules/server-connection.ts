@@ -157,7 +157,7 @@ class ServerConnection extends VuexModule {
   public getTablesAfterConnect() {
     this.SET_BUSY_STREAM_STATUS(true);
     this.SET_WAITED_STATUS(false);
-    const timeout = setTimeout(() => {
+    const timeout = setTimeout(() => {      
       this.SET_WAITED_STATUS(true);
       // this.getTables();
       // eslint-disable-next-line no-console

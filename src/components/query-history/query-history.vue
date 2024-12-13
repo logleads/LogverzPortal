@@ -311,7 +311,6 @@ export default defineComponent({
     }
     function implementActiveFIlter(data: any[]): any {
       // let list=JSON.parse(JSON.stringify(data))
-      console.log('data0000000000', data);
 
       let list = data;
       if (filterContent.value) {
