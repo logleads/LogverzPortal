@@ -156,8 +156,8 @@ export default defineComponent({
   &__inputs {
     max-width: 99%;
     input {
-        height: 42px;
-      }
+      height: 42px;
+    }
 
     > div {
       margin-bottom: 20px;
@@ -179,8 +179,9 @@ export default defineComponent({
   align-content: center;
 
   &__text {
-    font-size: 12px;
-    color: var(--secondary-text-color);
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 10px;
     margin-right: 7px;
   }
 

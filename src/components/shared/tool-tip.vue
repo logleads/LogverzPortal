@@ -50,7 +50,7 @@ export default defineComponent({
   text-align: center;
   padding: 5px;
   border-radius: 6px;
-
+  font-family: 'Roboto', sans-serif;
   /* Position the tooltip text - see examples below! */
   position: absolute;
   z-index: 1;

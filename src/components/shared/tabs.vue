@@ -112,7 +112,7 @@ export default defineComponent({
         width: 111px;
         height: 27px;
         font-weight: 500;
-        font-size: 12px;
+        font-size: 14px;
         color: #242222;
         background-color: #ffffff;
         box-shadow: 0 4px 4px rgba(0, 0, 0, 0.03);
@@ -120,7 +120,7 @@ export default defineComponent({
         &.active {
           background-color: #88c4be;
           font-weight: 500;
-          font-size: 12px;
+          font-size: 14px;
           color: white;
           box-shadow: none;
         }

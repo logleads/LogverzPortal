@@ -112,7 +112,7 @@ export default defineComponent({
   &_tooltiptext {
     visibility: hidden;
     width: 320px;
-    background-color: black;
+    background-color: #1a1b20;
     color: #fff;
     text-align: center;
     border-radius: 6px;

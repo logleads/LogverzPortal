@@ -85,8 +85,8 @@ export default defineComponent({
     }
 
     watch(scopeExpanded, (value: boolean) => {
-      console.log("asdad",props.items);
-      
+      console.log('asdad', props.items);
+
       if (value) {
         select.value?.focus();
       } else {
@@ -111,13 +111,13 @@ export default defineComponent({
   position: relative;
 
   & input {
-    font-weight: 500;
+    // font-weight: 500;
     margin: 0px 0 0 0;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1;
     width: 100%;
     height: 44px;
-    padding-left: 18px;
+    padding-left: 16px;
     border-radius: 5px;
     border: 1px solid rgba(159, 166, 177, 0.22);
     background-color: white;

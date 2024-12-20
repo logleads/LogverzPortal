@@ -2,7 +2,7 @@
   <div :class="$style['fields-container']">
     <Icon name="arrow-down" :width="12" :height="7.7" />
     <button type="button" @click="onTriger">
-      <p>{{ triger ? 'Close sample data' : 'Open sample data' }}</p>
+      <p style="margin-left: 5px">{{ triger ? 'Close sample data' : 'Open sample data' }}</p>
     </button>
     <template v-if="triger">
       <template v-if="isSample">

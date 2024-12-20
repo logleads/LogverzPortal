@@ -1,14 +1,26 @@
 <template>
-  <DxTreeList id="employees" ref="treeList" :data-source="listFolder" :show-row-lines="true" height="800"
-    :allow-column-reordering="true" :allow-column-resizing="true" :show-borders="true" :column-auto-width="true"
-    key-expr="ID" parent-id-expr="IDH" @row-expanding="log" @selection-changed="onSelectionChanged">
-    <DxScrolling mode="standard" /> <!-- or "virtual" | "infinite" -->
+  <DxTreeList
+    id="employees"
+    ref="treeList"
+    :data-source="listFolder"
+    :show-row-lines="true"
+    height="800"
+    :allow-column-reordering="true"
+    :allow-column-resizing="true"
+    :show-borders="true"
+    :column-auto-width="true"
+    key-expr="ID"
+    parent-id-expr="IDH"
+    @row-expanding="log"
+    @selection-changed="onSelectionChanged"
+  >
+    <DxScrolling mode="standard" />
+    <!-- or "virtual" | "infinite" -->
     <DxSelection :recursive="recursive" mode="multiple" />
     <DxColumn data-field="name" />
     <DxColumn data-field="BucketName" />
     <DxColumn data-field="Geography" caption="Geography" />
     <DxColumn data-field="Region" />
-
   </DxTreeList>
 </template>
 
@@ -26,7 +38,7 @@ export default defineComponent({
     DxTreeList,
     DxColumn,
     DxSelection,
-    DxScrolling
+    DxScrolling,
   },
   props: {
     listFolder: {
@@ -43,7 +55,7 @@ export default defineComponent({
       const selectedData = e.component.getSelectedRowsData('all');
       console.log(
         selectedData?.map((item: any) => item.value),
-        'selectedData'
+        'selectedData',
       );
       DataCollectionModule.setFoldersPathHard(selectedData?.map((item: any) => item.value));
     }
@@ -81,6 +93,22 @@ export default defineComponent({
   overflow-y: auto;
   /* Enable horizontal scrolling if content overflows */
   height: 500px;
+  font-family: 'Roboto', sans-serif !important;
+}
+:deep(.dx-treelist) {
+  font-family: 'Roboto', sans-serif !important;
+  color: var(--ink-color) !important;
+}
+
+/* Or target specific elements */
+:deep(.dx-treelist-headers) {
+  font-family: 'Roboto', sans-serif !important;
+  color: var(--ink-color) !important;
+}
+
+:deep(.dx-treelist-rowsview) {
+  font-family: 'Roboto', sans-serif !important;
+  color: var(--ink-color) !important;
 }
 
 :global(.dx-virtual-row) {

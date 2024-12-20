@@ -95,7 +95,7 @@ body {
   font-weight: 400;
   font-style: normal;
   text-rendering: optimizeLegibility;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto', sans-serif !important;
   font-size: 14px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -119,4 +119,34 @@ body {
   --search-input-color: #d9dbe0;
   --gray-background: #f7f7f9;
   --gray-user-block: #A3A9CA;
+}
+.dx-datagrid,
+.dx-treelist {
+  font-family: 'Roboto', sans-serif !important;
+  color: var(--ink-color) !important;
+}
+
+.dx-datagrid-headers,
+.dx-treelist-headers {
+  font-family: 'Roboto', sans-serif !important;
+}
+
+.dx-datagrid-rowsview,
+.dx-treelist-rowsview {
+  font-family: 'Roboto', sans-serif !important;
+}
+
+.dx-datagrid-text-content,
+.dx-treelist-text-content {
+  font-family: 'Roboto', sans-serif !important;
+}
+// [class^="dx-"]:not([class*="dx-icon"]):not([class*="dx-font"]):not([class*="dxdi-"]):not([class*="dx-menu-item-"]),
+// [class*=" dx-"]:not([class*="dx-icon"]):not([class*="dx-font"]):not([class*="dxdi-"]):not([class*="dx-menu-item-"]) {
+//   font-family: 'Roboto', sans-serif !important;
+// }
+.dx-datagrid-text-content,
+.dx-treelist-text-content,
+.dx-cell-content,
+.dx-header-cell-content {
+  font-family: 'Roboto', sans-serif !important;
 }

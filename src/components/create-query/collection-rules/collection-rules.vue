@@ -266,7 +266,7 @@ export default defineComponent({
   align-items: center;
   font-size: 14px;
   margin-right: 10px;
-  color: var(--secondary-text-color);
+  // color: var(--secondary-text-color);
 }
 
 .generated-query {

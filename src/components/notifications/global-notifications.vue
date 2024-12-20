@@ -321,7 +321,7 @@ input:focus-visible + label {
     justify-content: space-between;
     align-items: center;
     padding: 5px;
-    border: 1px solid black;
+    border: 1px solid #1a1b20;
 
     &__title {
       display: flex;
@@ -339,7 +339,7 @@ input:focus-visible + label {
     justify-content: end;
     align-items: center;
     padding: 5px;
-    border: 1px solid black;
+    border: 1px solid #1a1b20;
 
     span {
       margin: 0 10px;
@@ -409,7 +409,7 @@ input:focus-visible + label {
   justify-content: space-between;
   align-items: center;
   padding: 5px;
-  border: 1px solid black;
+  border: 1px solid #1a1b20;
   color: #1a1b20;
 }
 

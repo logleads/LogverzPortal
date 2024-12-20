@@ -32,19 +32,18 @@ export default defineComponent({
   &__label {
     display: flex;
     align-items: center;
-    font-size: 12px;
+    font-size: 14px;
     margin-bottom: 9px;
-    color: var(--secondary-text-color);
+    color: var(--ink-color);
     &__icon {
       margin-left: 5px;
     }
   }
-  .container__label{
+  .container__label {
     margin-bottom: 5px !important;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: bold;
-    color: black;
-
+    color: #1a1b20;
   }
 }
 </style>

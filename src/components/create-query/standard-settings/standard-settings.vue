@@ -11,7 +11,7 @@
           </div>
         </template>
         <div v-for="input in S3FoldersValue" :key="input.label" :class="$style['customeClass']">
-          <InputContainer :label="input.label"  >
+          <InputContainer :label="input.label">
             <template #icon>
               <ToolTip :tip="input.hint" />
             </template>
@@ -138,7 +138,10 @@
                 label="name"
                 track-by="name"
                 :preselect-first="true"
-                :class="{ invalid: submitted && v$.DatasetOwners?.$error }"
+                :class="{
+                  [$style['invalid']]: submitted && v$.DatasetOwners?.$error,
+                  [$style['multiselect']]: true,
+                }"
               />
             </div>
 
@@ -634,7 +637,7 @@ export default defineComponent({
 .selected-site {
   color: #4b75ed;
 }
-.customeClass{
+.customeClass {
   margin-top: 10px;
   padding-right: 9px !important;
 }
@@ -658,12 +661,12 @@ export default defineComponent({
       margin-left: 6px;
     }
   }
-.customLabel{
-  margin-bottom: 5px;
-  color: black;
-  font-size: 12px;
-  font-weight: bold;
-}
+  .customLabel {
+    margin-bottom: 5px;
+    color: #1a1b20;
+    font-size: 14px;
+    font-weight: bold;
+  }
   &__inputs {
     // margin-top: 49px;
     max-width: 99%;
@@ -731,11 +734,11 @@ export default defineComponent({
   }
 
   label {
-    font-size: 12px;
+    font-size: 14px;
     line-height: 100%;
     display: flex;
     align-items: center;
-    color: var(--secondary-text-color);
+    color: var(--ink-color);
 
     > span {
       margin-right: 6px;
@@ -756,9 +759,13 @@ export default defineComponent({
   margin: 10px auto;
 }
 .multiselect-label {
-  margin-bottom:5px;
+  margin-bottom: 5px;
   font-weight: bold;
-  color: black !important;
+  color: #1a1b20 !important;
+}
+
+.multiselect {
+  height: 47px !important;
 }
 
 :global(.multiselect__tag) {

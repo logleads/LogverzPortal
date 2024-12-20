@@ -1,13 +1,17 @@
 <template>
   <div :class="$style['fields-container']">
     <div v-for="item in fields" :key="item.label" :class="$style['item-field']">
-      <div :class="[
-        $style['item-field__key'],
-        {
-          [$style[decideDisplayError(item.label, item.value).classDisplay]]:
-            decideDisplayError(item.label, item.value).show,
-        },
-      ]">
+      <div
+        :class="[
+          $style['item-field__key'],
+          {
+            [$style[decideDisplayError(item.label, item.value).classDisplay]]: decideDisplayError(
+              item.label,
+              item.value,
+            ).show,
+          },
+        ]"
+      >
         {{ item.label }}:
       </div>
       <div :class="$style['item-field__value']">{{ item.value }}</div>
@@ -45,11 +49,11 @@ export default defineComponent({
       type: Boolean,
       required: false,
     },
-    test:{
+    test: {
       type: String,
-    }
+    },
   },
-  
+
   setup(props) {
     const instance = getCurrentInstance();
     const vis: Ref<any> = ref(instance?.data);
@@ -59,11 +63,11 @@ export default defineComponent({
     const startInterval = () => {
       let elapsedSeconds = 0;
       intervalId = setInterval(() => {
-        getServerStatus()
+        getServerStatus();
 
         elapsedSeconds += 5;
         if (elapsedSeconds >= 300) {
-          clearInterval(intervalId); 
+          clearInterval(intervalId);
         }
       }, 5000);
     };
@@ -75,16 +79,17 @@ export default defineComponent({
       }
     };
     onMounted(() => {
-
-      watch(() => props.reviewExpend, (newVal) => {
-        if (newVal) {
-          startInterval();
-        } else {
-          stopInterval();
-        }
-      });
+      watch(
+        () => props.reviewExpend,
+        newVal => {
+          if (newVal) {
+            startInterval();
+          } else {
+            stopInterval();
+          }
+        },
+      );
     });
-
 
     function dataDisplay(param: any) {
       return param.value;
@@ -213,7 +218,6 @@ export default defineComponent({
     };
   },
 });
-
 </script>
 
 <style module lang="scss">
@@ -225,11 +229,9 @@ export default defineComponent({
   &__key {
     font-size: 14px;
     margin-right: 10px;
-    color: black;
-    width: 150px;
-    font-size: 12px;
+    color: #1a1b20;
+    width: 200px;
     font-weight: bold;
-    
   }
 
   &__value {
@@ -244,6 +246,9 @@ export default defineComponent({
   margin-bottom: 13px;
   background-color: var(--gray-background);
   border-radius: 5px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
   padding: 21.5px 30px 25.5px 30px;
 }
 
