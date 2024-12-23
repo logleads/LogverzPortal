@@ -2,19 +2,19 @@
   <div :class="$style['form']" @click="handleShowForm($event, false)">
     <div :class="$style['form__body']" @click="handleBodyClick($event)">
       <div :class="$style['container']">
-        <span :class="$style['container__key']">Name:</span>
+        <span :class="$style['container__key']">Name: </span>
         <span :class="$style['container__value']">
           {{ name }}
         </span>
       </div>
       <div :class="$style['container']">
-        <span :class="$style['container__key']">Type:</span>
+        <span :class="$style['container__key']">Type: </span>
         <span :class="$style['container__value']">
           {{ type }}
         </span>
       </div>
       <div :class="$style['select-container']">
-        <h1>Groups</h1>
+        <h3 :class="$style['label-heading']">Groups</h3>
         <multiselect
           v-model="chosenGroup"
           name="chosenGroup"
@@ -31,7 +31,7 @@
         />
       </div>
       <div :class="$style['select-container']">
-        <h1>Policies</h1>
+        <h3 :class="$style['label-heading']">Policies</h3>
         <multiselect
           v-model="chosenPolicies"
           name="chosenPolicies"
@@ -165,6 +165,9 @@ export default defineComponent({
     background-color: var(--gray-background);
   }
 }
+.label-heading{
+  margin-bottom: 5px;
+}
 .container {
   margin: 15px 0;
 
@@ -186,5 +189,9 @@ export default defineComponent({
 .button-container {
   display: flex;
   justify-content: flex-end;
+}
+.container__key {
+  color: #000000;
+  font-weight: 700;
 }
 </style>

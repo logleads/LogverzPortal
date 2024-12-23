@@ -107,7 +107,11 @@ export default defineComponent({
 }
 </style>
 
-<style>
+<style >
+#gridContainer3{
+  font-family: 'Roboto', sans-serif;
+
+}
 #gridContainer3 .dx-command-edit a {
   color: white;
   text-decoration: none;

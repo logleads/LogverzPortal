@@ -3,7 +3,7 @@
     <!-- <div > -->
 
     <!-- </div> -->
-    <div :class="$style['table']">
+    <div :class="$style['table']" >
       <label :class="$style['range-label']"><b> Range</b>:</label>
       <TimerFilter @clear="clear" @unix-time-change="timeFilter" />
       <CollectionTypes @collection-filter-change="changeTableContent" />
@@ -11,7 +11,7 @@
         <Tabs btn-rigth-text="Collection" btn-left-text="Analysis" text-before-btn="Type" :state-b-t-n="tableContent"
           @change-table-content="changeTableContent" />
       </div> -->
-      <div :class="$style['tab-padding']">
+      <div :class="$style['tab-padding']" style="width: 100%;">
         <Tabs
           btn-rigth-text="Shared"
           btn-left-text="My"
@@ -20,7 +20,7 @@
           @change-table-content="changeTableMode"
         />
       </div>
-      <div :class="$style['tab-padding']">
+      <div :class="$style['tab-padding']" style="width: 100%;">
         <Tabs
           btn-rigth-text="All"
           btn-left-text="Current"
@@ -653,9 +653,10 @@ export default defineComponent({
   visibility: visible;
 }
 
-// .tab-padding {
-//   padding-right: 5px;
-// }
+.tab-padding {
+  // padding-right: 5px;
+  // width: 100%;
+}
 .range-label {
   margin-top: 6px;
   padding-top: 4px;
@@ -667,14 +668,15 @@ export default defineComponent({
 
 .columnWidth {
   display: flex;
-  background-color: red;
 }
 </style>
-<style>
+<style scoped>
 #gridSettings {
   max-width: 100%;
   width: 100%;
   height: 85%;
+  font-family: 'Roboto', sans-serif;
+
 }
 :deep(.dx-datagrid) {
   font-family: 'Roboto', sans-serif !important;

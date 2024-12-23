@@ -5,7 +5,7 @@
         <Loader accent />
       </template>
       <template v-else>
-        <h1>Add or remove external users</h1>
+        <h3>Add or remove external users</h3>
         <div :class="$style['input-wrapper__multi']">
           <template v-if="usersOfGroupFetching">
             <Loader accent />

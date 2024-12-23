@@ -571,12 +571,14 @@ export default defineComponent({
 }
 </style>
 
-<style>
-#gridContainer2 {
+<style scoped>
+#gridContainer3 {
   height: 700px;
+  font-family: 'Roboto', sans-serif;
+
 }
 
-#gridContainer2 .dx-command-edit a {
+#gridContainer3 .dx-command-edit a {
   color: white;
   text-decoration: none;
   background-color: var(--accent-color);
@@ -584,5 +586,6 @@ export default defineComponent({
   padding: 5px 10px;
   font-weight: 500;
   font-size: 14px;
+  font-family: r;
 }
 </style>

@@ -6,7 +6,7 @@
       </div>
       <div :class="[$style['container__footer']]">
         <Button text="No" @click="close" />
-        <Button text="YES" @click="save" />
+        <Button text="YESsa" @click="save" />
       </div>
     </div>
   </div>

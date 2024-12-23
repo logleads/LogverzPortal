@@ -22,7 +22,7 @@
                 @validate="handleValidate($event, 'collection')" />
             </template>
             <template v-if="item.id === 3">
-              <Review :review-expend="isReviewExpanded"/>
+              <Review :review-expend="isReviewExpanded" />
             </template>
           </DropDownCreate>
         </div>
@@ -33,13 +33,11 @@
           type="checkbox" />
       </div>
       <div :class="$style['data__body__footer']">
-        <div>
           <button :class="$style['data__body__footer__btn']" @click="toggleLoadSettings(true)">
             Load Configuration
           </button>
-        </div>
 
-        <MyButton text="Submit" :class="$style['_btn-submit']"
+        <MyButton text="Submit" :classAssign="$style['_btn-submit']"
           :disabled="isFetching || !isDatatypeDefined || !DBinstanse" :no-load="!isDatatypeDefined || !DBinstanse"
           @click="handleSubmit($event)" />
       </div>
@@ -156,9 +154,9 @@ export default defineComponent({
         DatasetAccess,
       };
     });
-    const toggleExpanded=(expend:boolean)=>{
+    const toggleExpanded = (expend: boolean) => {
       isReviewExpanded.value = expend;
-      
+
     }
     function handleSubmit(e: Event): void {
       e.stopPropagation();
@@ -224,6 +222,14 @@ export default defineComponent({
   height: 100%;
 }
 
+._btn-submit {
+  width: 158px;
+  height: 45px;
+  padding: 0px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
 .data {
   &__window {
     width: 90%;
@@ -261,9 +267,9 @@ export default defineComponent({
       margin-left: 76px;
       align-items: center;
 
-      &__btn-submit {
+      &_btn-submit {
         width: 158px;
-        // height: 45px;
+        height: 45px;
       }
 
       &__btn {
