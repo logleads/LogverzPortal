@@ -7,7 +7,8 @@
         <div :class="$style['data__creation__line']" />
         <div v-for="item in setupArray" :key="item.id" :class="$style['data__creation__item']">
           <span :class="$style['data__creation__item__numbers']">{{ item.id + 1 }} </span>
-          <!-- <p v-if="item.id === 3" :class="$style['data__creation__item__hide-line']" /> -->
+          <p v-if="item.id === 3" :class="$style['data__creation__item__hide-line']" />
+
           <DropDownCreate :label="item.label" @onPress="toggleExpanded">
             <template v-if="item.id === 0">
               <StandardSettings :submitted="submitted" :is-fetching="isFetching"
@@ -300,7 +301,7 @@ export default defineComponent({
     }
 
     &::-webkit-scrollbar {
-      width: 3px;
+      width: 10px;
       height: 18px;
     }
 
@@ -317,7 +318,9 @@ export default defineComponent({
 
     /* Handle on hover */
     &::-webkit-scrollbar-thumb:hover {
-      background: var(--accent-color);
+      // background: var(--accent-color);
+  background: #555; 
+
     }
   }
 

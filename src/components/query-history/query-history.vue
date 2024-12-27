@@ -4,23 +4,23 @@
 
     <!-- </div> -->
     <div :class="$style['table']" >
-      <label :class="$style['range-label']"><b> Range</b>:</label>
+      <label :class="$style['range-label']"><b> Range</b></label>
       <TimerFilter @clear="clear" @unix-time-change="timeFilter" />
       <CollectionTypes @collection-filter-change="changeTableContent" />
       <!-- <div :class="$style['tab-padding']">
         <Tabs btn-rigth-text="Collection" btn-left-text="Analysis" text-before-btn="Type" :state-b-t-n="tableContent"
           @change-table-content="changeTableContent" />
       </div> -->
-      <div :class="$style['tab-padding']" style="width: 100%;">
+      <!-- <div :class="$style['tab-padding']" style="width: 30%; background-color: brown;"> -->
         <Tabs
-          btn-rigth-text="Shared"
-          btn-left-text="My"
+          btn-rigth-text="Other"
+          btn-left-text="Me"
           :state-b-t-n="tableMode"
-          text-before-btn="Scope"
+          text-before-btn="Owned by"
           @change-table-content="changeTableMode"
         />
-      </div>
-      <div :class="$style['tab-padding']" style="width: 100%;">
+      <!-- </div> -->
+      <!-- <div :class="$style['tab-padding']" style="width: 100%;"> -->
         <Tabs
           btn-rigth-text="All"
           btn-left-text="Current"
@@ -28,7 +28,7 @@
           :state-b-t-n="filterContent"
           @change-table-content="applyVersionFilter"
         />
-      </div>
+      <!-- </div> -->
 
       <div :class="$style['tooltip-margin']">
         <ToolTip :tip="local_DCH_QUERY_HISTORY" />

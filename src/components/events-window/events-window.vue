@@ -89,6 +89,13 @@
           <h2>Error</h2>
           <EventTable :searce="error" />
         </div>
+        <div :class="$style['event-window']">
+          <h1>Type</h1>
+          <h2>Api</h2>
+          <EventTable :searce="API" />
+          <h2>SQL</h2>
+          <EventTable :searce="SQL" />
+        </div>
       </template>
       <template v-if="canvas === 'Specific events'">
         <div>
@@ -143,6 +150,8 @@ export default defineComponent({
     const user: Ref<any> = ref([]);
     const infra: Ref<any> = ref([]);
     const info: Ref<any> = ref([]);
+    const API: Ref<any> = ref([]);
+    const SQL: Ref<any> = ref([]);
     const error: Ref<any> = ref([]);
     const searchMode: Ref<string> = ref('');
     const conditional: Ref<boolean> = ref(true);
@@ -360,6 +369,8 @@ export default defineComponent({
       user,
       infra,
       info,
+      API,
+      SQL,
       error,
       searchMode,
       conditional,

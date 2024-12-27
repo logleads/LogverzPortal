@@ -16,7 +16,7 @@
         </div>
         <template v-if="!loader">
           <div :class="$style['drop-down__first-part']">
-            <div :class="$style['drop-down__header']">
+            <div >
               <div :class="$style['drop-down__header__title']">
                 <img
                   :src="require('~/assets/images/server-storage.svg')"
@@ -35,12 +35,12 @@
                   :class="$style['drop-down__ind']"
                   :style="{ backgroundColor: instanse.status }"
                 ></span>
-                <p
-                  :class="$style['desc']"
+                <span
+                  :class="$style['desc','space']"
                   @click="() => openDbInstance(instanse.DBInstanceIdentifier)"
                 >
                   {{ instanse.name }}
-                </p>
+                </span>
               </span>
               <button
                 @click="
@@ -320,7 +320,16 @@ export default defineComponent({
   width: 15rem;
   height: 35px;
 }
-
+.drop-down__ind{
+  margin: 0px !important;
+}
+.drop-down__first-part{
+  border: 1px solid;
+  padding: 5px;
+}
+.space{
+  margin-left: 32px;
+}
 .drop-down {
   position: absolute;
   top: 50px;
@@ -441,4 +450,5 @@ export default defineComponent({
 .box {
   position: relative;
 }
+
 </style>

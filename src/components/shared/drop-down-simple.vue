@@ -7,7 +7,7 @@
     @click="toggleShow"
   >
     <label contenteditable="false">
-      <input type="text" :value="content" :placeholder="placeholder" disabled />
+      <input type="text" :value="content" :placeholder="placeholder"/>
       <div>
         <Icon
           v-if="!scopeExpanded"

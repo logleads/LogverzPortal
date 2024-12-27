@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="rawitems && Object.keys(rawitems).length > 0 && format === 'json'">
+    <div v-if="rawitems && Object.keys(customizedData).length > 0 && format === 'json'">
       <json-viewer-custom :value="customizedData" />
     </div>
     <div v-else-if="Object.keys(customizedData).length">
@@ -76,10 +76,8 @@ export default defineComponent({
       console.log('props.rawitems', props.rawitems);
       console.log('props.data', props.data.data);
       if (props.rawitems) {
-        if (Object.keys(props.data.data.length > 0)) {
-
-
-          customizedData.value = props.rawitems[props.data.data.rawindex];
+        if (Object.keys(props.data.length > 0)) {
+          customizedData.value = props.rawitems[0];
 
         } else {
           customizedData.value = {};
@@ -87,7 +85,7 @@ export default defineComponent({
       } else {
         customizedData.value = props.data.data;
       }
-      if (customizedData.value['TableName']) {
+      if (customizedData.value?.TableName) {
         customizedData.value['DatasetName'] = customizedData.value['TableName'];
         delete customizedData.value['TableName'];
       }
