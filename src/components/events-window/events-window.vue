@@ -1,7 +1,10 @@
 <template>
   <div :class="$style['table-query-history']">
     <div :class="$style['table']">
+      <label :class="$style['range-label']"><b> Range</b></label>
       <TimerFilter @clear="clear" @unix-time-change="timeFilter" />
+      <label :class="$style['range-label']"><b> Type</b></label>
+
       <div :class="$style['table__header__buttons']">
         <button
           :class="[
@@ -38,6 +41,8 @@
             'Clear',
           ]"
         /> -->
+      <label :class="$style['range-label']"><b> Refine results</b></label>
+
         <select v-model="searchMode" name="searchMode" :class="$style['searchMode']">
           <optgroup label="Category">
             <option value="Category:User">User</option>
@@ -554,6 +559,10 @@ h2 {
   width: 20% !important;
   border-radius: 5px;
   background-color: #fff !important;
+}
+.range-label {
+  margin-top: 6px;
+  padding-top: 4px;
 }
 </style>
 <style>

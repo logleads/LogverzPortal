@@ -101,7 +101,7 @@ export default defineComponent({
       display: flex;
       align-items: center;
       margin-right: 18px;
-      width: 193px;
+      width: 180px;
       height: 30px;
       // background-color: rgba(136, 196, 190, 0.1);
       // border-radius: 5px;

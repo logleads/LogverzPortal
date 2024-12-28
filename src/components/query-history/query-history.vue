@@ -6,6 +6,7 @@
     <div :class="$style['table']" >
       <label :class="$style['range-label']"><b> Range</b></label>
       <TimerFilter @clear="clear" @unix-time-change="timeFilter" />
+      <label :class="$style['range-label']"><b> Type</b></label>
       <CollectionTypes @collection-filter-change="changeTableContent" />
       <!-- <div :class="$style['tab-padding']">
         <Tabs btn-rigth-text="Collection" btn-left-text="Analysis" text-before-btn="Type" :state-b-t-n="tableContent"
@@ -13,7 +14,7 @@
       </div> -->
       <!-- <div :class="$style['tab-padding']" style="width: 30%; background-color: brown;"> -->
         <Tabs
-          btn-rigth-text="Other"
+          btn-rigth-text="Others"
           btn-left-text="Me"
           :state-b-t-n="tableMode"
           text-before-btn="Owned by"
