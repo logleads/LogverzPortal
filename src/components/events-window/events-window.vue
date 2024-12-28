@@ -38,7 +38,7 @@
             'Clear',
           ]"
         /> -->
-        <select v-model="searchMode" name="searchMode" class="searchMode">
+        <select v-model="searchMode" name="searchMode" :class="$style['searchMode']">
           <optgroup label="Category">
             <option value="Category:User">User</option>
             <option value="Category:Infra">Infra</option>
@@ -550,8 +550,10 @@ h2 {
   margin-top: 3px;
   padding: 2px;
   font-family: 'Roboto', sans-serif !important;
-  width: 120px;
   border-top: 1px solid gray;
+  width: 20% !important;
+  border-radius: 5px;
+  background-color: #fff !important;
 }
 </style>
 <style>

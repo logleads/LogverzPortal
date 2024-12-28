@@ -1,5 +1,4 @@
 <template>
-  <div>
     <div :class="$style['table__header__buttons']">
       <b v-if="textBeforeBtn !== ''" :class="$style['before-btn-text']"> {{ textBeforeBtn }} </b>
       <button
@@ -24,7 +23,6 @@
       </button>
       <b v-if="textAfterBtn !== ''" :class="$style['btn-text']"> {{ textAfterBtn }} </b>
     </div>
-  </div>
 </template>
 
 <script lang="ts">
@@ -103,7 +101,7 @@ export default defineComponent({
       display: flex;
       align-items: center;
       margin-right: 18px;
-      width: 133px;
+      width: 193px;
       height: 30px;
       // background-color: rgba(136, 196, 190, 0.1);
       // border-radius: 5px;
@@ -156,7 +154,8 @@ export default defineComponent({
   justify-content: center;
   height: 100%;
 }
-// .table__header__buttons{
-//   margin-right: 5px;
-// }
+.table__header__buttons{
+// background-color: red;
+// width: 240px;
+}
 </style>
