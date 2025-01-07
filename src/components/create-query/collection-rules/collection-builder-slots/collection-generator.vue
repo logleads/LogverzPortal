@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div>
     <Tabs
       btn-rigth-text="OR"
@@ -235,7 +235,7 @@ export default defineComponent({
      */
     // @Emit('update-query')
     function updateQuery(query: any): any {
-      // console.log('handle emit', query);
+      console.log('handle emit', query);
       emit('update-query', query);
       return query;
     }
@@ -315,5 +315,182 @@ export default defineComponent({
 
 .margin-top {
   margin-top: 5px;
+}
+</style>
+ -->
+
+<template>
+  <div>
+
+    <div class="filter-container">
+      <DxFilterBuilder :fields="getFormattedFields(props.fields)" v-model:value="filterValue"
+        :group-operation-descriptions="groupOperationDescriptions"  @initialized="saveInstance"/>
+      <DxButton text="Apply Filter" type="default" @click="buttonClick()" />
+      <div class="dx-clearfix" />
+    </div>
+
+  </div>
+</template>
+<script setup lang="ts">
+import { nextTick, ref, watch } from 'vue';
+import DxFilterBuilder from 'devextreme-vue/filter-builder';
+import DxButton from 'devextreme-vue/button';
+import DxDataGrid from 'devextreme-vue/data-grid';
+import DataSource from 'devextreme/data/data_source';
+import ODataStore from 'devextreme/data/odata/store';
+import { fields, filter } from '~/constants';
+interface Field {
+  id: string;
+  label: string;
+  type: string;
+}
+const filterValue = ref();
+const gridFilterValue = ref(null);
+const lastSelectedField = ref<string | null>(null);
+ const filterBuilderInstance=ref()
+
+const operatorMap = {
+  contains: 'contains',
+  notcontains: 'does not equal',  // Mapping 'notcontains' to 'does not equal'
+  equals: 'equals',
+  'does not equal': 'does not equal',
+  like: 'like',
+  'not like': 'not like',
+  smaller: 'smaller',
+  bigger: 'bigger',
+  'is empty': 'is empty',
+  'is not empty': 'is not empty',
+};
+
+const groupOperationDescriptions = {
+  and: 'And',
+  or: 'Or',
+  notAnd: '',
+  notOr: '',
+  addGroup: '',
+};
+// Declare props
+const props = defineProps<{
+
+  fields: Array<Field>;
+  casts: Record<string, any>;
+}>();
+const emit = defineEmits<{
+  (event: 'update-query', query: any): void;
+}>();
+const saveInstance = (e) => {
+  console.log("cllllllllll",e);
+  
+  filterBuilderInstance.value=e.component
+  console.log(filterBuilderInstance.value);
+  
+}
+const getFormattedFields = (fields) => {
+  if (fields && fields.length > 0) {
+    return fields.map((item) => {
+      if (item && item.label) {  // Check if item and label are defined
+        return {
+          dataField: item.label,
+          caption: item.label,
+        };
+      } else {
+        console.warn('Field item is missing a label or is undefined', item);
+        return null;  // Skip invalid items
+      }
+    }).filter(Boolean);  // Remove any null values
+  } else {
+    console.warn('Fields are empty or undefined');
+    return [];  // Return an empty array if fields are empty
+  }
+};
+const resetQueryBuilderState = () => {
+  filterValue.value = null;  // Reset the filter value
+  gridFilterValue.value = null;  // Reset grid filter value
+};
+
+// Watch for changes in the fields array and handle last selected value
+watch(
+  () => props.fields,
+  (newFields, oldFields) => {
+    // Only reset if fields have actually changed (to avoid unnecessary resets)
+    if (newFields !== oldFields) {
+      nextTick(() => {
+        resetQueryBuilderState();  // Reset the query builder state
+      });
+    }
+  },
+  { immediate: true }
+);
+
+// This will watch the filterValue and format it automatically
+watch(filterValue, (newFilterValue) => {
+  if (newFilterValue) {
+    const formattedFilter = formatFilterQuery(newFilterValue);
+    gridFilterValue.value = formattedFilter;
+  }
+});
+
+const formatFilterQuery = (query) => {
+
+  function parseQuery(queryPart, role) {
+    const findIndex = props.fields?.findIndex((item) => item.label === queryPart[0])
+    const typeField = props.fields.filter((item: any) => item.label === queryPart[0])[0]?.type
+    return {
+      field: queryPart[0],
+      typeField: typeField,
+      index: findIndex,
+      role: operatorMap[queryPart[1]] || queryPart[1],
+      value: queryPart[2],
+    };
+  }
+
+
+  // Iterate through the query parts and format them
+  if (query.length === 3 && (typeof query[0] === 'string')) {
+    return [parseQuery(query, null)];
+
+
+  }
+  if (query.length === 3 && (typeof query[0] === 'object')) {
+    return removeOddIndexes(query).map((item, index) => parseQuery(item, query[1]));
+
+
+  }
+};
+function removeOddIndexes(array) {
+  return array.filter((_, index) => index % 2 === 0);
+}
+
+function buttonClick() {
+  emit('update-query', {
+    logicalOperator: filterValue.value[1] || '',
+    children: gridFilterValue.value,
+  });
+
+
+}
+</script>
+<style scoped>
+.filter-container {
+  background-color: transparent;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.14), 0 0 2px 0 rgba(0, 0, 0, 0.12);
+  border-radius: 6px;
+  padding: 5px;
+  width: 500px;
+  margin: 24px;
+}
+
+.dx-filterbuilder {
+  background-color: transparent;
+  padding: 10px;
+}
+
+.dx-button {
+  margin: 10px;
+  float: right;
+}
+
+.dx-filterbuilder .dx-numberbox {
+  width: 80px;
 }
 </style>

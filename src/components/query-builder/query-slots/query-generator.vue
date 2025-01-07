@@ -349,7 +349,7 @@ export default defineComponent({
     function handleFields(field: string, index: number): void {
       const newQuery = query.value;
       newQuery[index].field = field;
-      newQuery[index].typeField = props.fields.filter((item: any) => item.label === field)[0].type;
+      newQuery[index].typeField = props.fields.filter((item: any) => item.label === field)[0]?.type;
       query.value = [...newQuery];
       SaveSettingModule.setQuerySettingsField({ key: props.dataNumber, id: index, val: field });
       // this.$forceUpdate()

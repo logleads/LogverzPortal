@@ -307,7 +307,7 @@ class DataCollection extends VuexModule {
     this.DataType = items
       .filter(item => !notShowDatatypeSelector.includes(item))
       .reduce((acc: string[], i: string) => {
-        if (i.toLowerCase().includes('set')) {
+        if (i?.toLowerCase().includes('set')) {
           return [i, ...acc];
         } else {
           return [...acc, i];

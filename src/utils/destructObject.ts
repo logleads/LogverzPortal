@@ -129,23 +129,23 @@ export function transformHeader(
       const obj_2 = transformHeader(value as Record<string, unknown>, key);
       Object.keys(obj_2).map((item: any) => {
         if (keyP) {
-          newObj[(keyP + '-' + item).toLowerCase()] = obj_2[item];
+          newObj[(keyP + '-' + item)?.toLowerCase()] = obj_2[item];
         } else {
-          newObj[item.toLowerCase()] = obj_2[item];
+          newObj[item?.toLowerCase()] = obj_2[item];
         }
       });
     } else {
       if (Array.isArray(value) || typeof value === 'object') {
         if (keyP) {
-          newObj[(keyP + '-' + key).toLowerCase()] = JSON.stringify(value);
+          newObj[(keyP + '-' + key)?.toLowerCase()] = JSON.stringify(value);
         } else {
-          newObj[key.toLowerCase()] = JSON.stringify(value);
+          newObj[key?.toLowerCase()] = JSON.stringify(value);
         }
       } else {
         if (keyP) {
-          newObj[(keyP + '-' + key).toLowerCase()] = value;
+          newObj[(keyP + '-' + key)?.toLowerCase()] = value;
         } else {
-          newObj[key.toLowerCase()] = value;
+          newObj[key?.toLowerCase()] = value;
         }
       }
     }

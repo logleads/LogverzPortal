@@ -121,7 +121,7 @@ export default defineComponent({
 
     const QueryFromState: ComputedRef<string> = computed(() => {
       console.log('DataCollectionModule.queryString', DataCollectionModule.queryString);
-      return DataCollectionModule.queryString.replaceAll('.undefined', ' ');
+      return DataCollectionModule.queryString?.replaceAll('.undefined', ' ');
     });
     const rules: ComputedRef<Array<QueryBuilderRule>> = computed(() => {
       return DataCollectionModule.rules;
@@ -134,22 +134,22 @@ export default defineComponent({
     const CsvHeaderInfo: ComputedRef<string> = computed(() => {
       return DataCollectionModule.csvHeader;
     });
-    watch(customQuery, (value: string) => {
-      if (isCustomRules.value) {
-        console.log('customQuery', value);
-        // DataCollectionModule.setInputValue({ label: 'QueryString', value });
-        DataCollectionModule.setInputValue({
-          label: 'QueryString',
-          value: value,
-        });
-      }
-    });
-    watch(rules, () => {
-      query.value = {
-        logicalOperator: logicalOperatorType.OR,
-        children: [],
-      };
-    });
+    // watch(customQuery, (value: string) => {
+    //   if (isCustomRules.value) {
+    //     console.log('customQuery', value);
+    //     // DataCollectionModule.setInputValue({ label: 'QueryString', value });
+    //     DataCollectionModule.setInputValue({
+    //       label: 'QueryString',
+    //       value: value,
+    //     });
+    //   }
+    // });
+    // watch(rules, () => {
+    //   query.value = {
+    //     logicalOperator: logicalOperatorType.OR,
+    //     children: [],
+    //   };
+    // });
     watch(QueryString, (value: string) => {
       if (!isCustomRules.value) {
         DataCollectionModule.setInputValue({
