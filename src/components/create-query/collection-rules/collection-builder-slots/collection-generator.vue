@@ -318,40 +318,53 @@ export default defineComponent({
 }
 </style>
  -->
-
-<template>
+ <template>
   <div>
-
     <div class="filter-container">
-      <DxFilterBuilder :fields="getFormattedFields(props.fields)" v-model:value="filterValue"
-        :group-operation-descriptions="groupOperationDescriptions"  @initialized="saveInstance"/>
-      <DxButton text="Apply Filter" type="default" @click="buttonClick()" />
+      <DxFilterBuilder 
+         v-if="shouldRenderFilterBuilder"
+        v-model:value="filterValue" 
+        :fields="formattedFields"
+        :group-operation-descriptions="groupOperationDescriptions"
+        @value-changed="onValueChanged" 
+
+      />
+      <DxButton text="Apply Filter" type="default" @click="buttonClick" />
       <div class="dx-clearfix" />
     </div>
-
   </div>
 </template>
+
 <script setup lang="ts">
-import { nextTick, ref, watch } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 import DxFilterBuilder from 'devextreme-vue/filter-builder';
 import DxButton from 'devextreme-vue/button';
-import DxDataGrid from 'devextreme-vue/data-grid';
-import DataSource from 'devextreme/data/data_source';
-import ODataStore from 'devextreme/data/odata/store';
-import { fields, filter } from '~/constants';
+
 interface Field {
   id: string;
   label: string;
   type: string;
 }
-const filterValue = ref();
-const gridFilterValue = ref(null);
-const lastSelectedField = ref<string | null>(null);
- const filterBuilderInstance=ref()
 
+const filterValue = ref();
+const gridFilterValue = ref();
+const lastSelectedField = ref<string | null>(null); // Store the last selected field
+  const filterBuilderInstance = ref<any>(null);
+    const shouldRenderFilterBuilder = ref(true);  // Control rendering
+
+const props = defineProps<{
+  fields: Field[];
+  casts: Record<string, any>;
+}>();
+
+const emit = defineEmits<{
+  (event: 'update-query', query: any): void;
+}>();
+
+// Define the operator map
 const operatorMap = {
   contains: 'contains',
-  notcontains: 'does not equal',  // Mapping 'notcontains' to 'does not equal'
+  notcontains: 'does not equal',
   equals: 'equals',
   'does not equal': 'does not equal',
   like: 'like',
@@ -362,6 +375,7 @@ const operatorMap = {
   'is not empty': 'is not empty',
 };
 
+// Define group operation descriptions
 const groupOperationDescriptions = {
   and: 'And',
   or: 'Or',
@@ -369,111 +383,111 @@ const groupOperationDescriptions = {
   notOr: '',
   addGroup: '',
 };
-// Declare props
-const props = defineProps<{
 
-  fields: Array<Field>;
-  casts: Record<string, any>;
-}>();
-const emit = defineEmits<{
-  (event: 'update-query', query: any): void;
-}>();
-const saveInstance = (e) => {
-  console.log("cllllllllll",e);
-  
-  filterBuilderInstance.value=e.component
-  console.log(filterBuilderInstance.value);
-  
-}
-const getFormattedFields = (fields) => {
-  if (fields && fields.length > 0) {
-    return fields.map((item) => {
-      if (item && item.label) {  // Check if item and label are defined
-        return {
-          dataField: item.label,
-          caption: item.label,
-        };
-      } else {
-        console.warn('Field item is missing a label or is undefined', item);
-        return null;  // Skip invalid items
-      }
-    }).filter(Boolean);  // Remove any null values
+// Format fields for the filter builder
+const formattedFields = computed(() => {
+  if (props.fields && props.fields.length > 0) {
+    return props.fields
+      .map(item => {
+        if (item && item.label) {
+          return {
+            dataField: item.label,
+            caption: item.label,
+          };
+        } else {
+          console.warn('Field item is missing a label or is undefined', item);
+          return null;
+        }
+      })
+      .filter(Boolean);
   } else {
     console.warn('Fields are empty or undefined');
-    return [];  // Return an empty array if fields are empty
+    return [];
+  }
+});
+
+// Reset the query builder state
+const resetQueryBuilderState = () => {
+  filterValue.value = null;
+  gridFilterValue.value = null;
+  if (filterBuilderInstance.value) {
+    filterBuilderInstance.value.option('value', null); 
   }
 };
-const resetQueryBuilderState = () => {
-  filterValue.value = null;  // Reset the filter value
-  gridFilterValue.value = null;  // Reset grid filter value
-};
 
-// Watch for changes in the fields array and handle last selected value
-watch(
-  () => props.fields,
-  (newFields, oldFields) => {
-    // Only reset if fields have actually changed (to avoid unnecessary resets)
-    if (newFields !== oldFields) {
-      nextTick(() => {
-        resetQueryBuilderState();  // Reset the query builder state
-      });
-    }
-  },
-  { immediate: true }
-);
+// Watch for changes in the `fields` prop
+watch(() => props.fields, (newFields, oldFields) => {
+      shouldRenderFilterBuilder.value = false; 
+  if (newFields !== oldFields) {
+    nextTick(() => {
+      resetQueryBuilderState();  
+      shouldRenderFilterBuilder.value = true;  
+    });
+  }
+}, { immediate: true });
 
-// This will watch the filterValue and format it automatically
+
+// Watch for changes in the filter value and format it
 watch(filterValue, (newFilterValue) => {
   if (newFilterValue) {
     const formattedFilter = formatFilterQuery(newFilterValue);
     gridFilterValue.value = formattedFilter;
   }
 });
+function onValueChanged(e: any) {
+  console.log('Filter Value Changed:', e.value);
+}
 
-const formatFilterQuery = (query) => {
-
-  function parseQuery(queryPart, role) {
-    const findIndex = props.fields?.findIndex((item) => item.label === queryPart[0])
-    const typeField = props.fields.filter((item: any) => item.label === queryPart[0])[0]?.type
+// Format the filter query
+const formatFilterQuery = (query: any) => {
+  function parseQuery(queryPart: any, role: any) {
+    // Ensure the field is valid
+    const field = props.fields?.find(item => item.label === queryPart[0]);
+    
+    if (!field) {
+      console.warn(`Field ${queryPart[0]} not found in fields list.`);
+      return null; // Skip if the field doesn't exist
+    }
+    
+    const typeField = field.type;
     return {
       field: queryPart[0],
       typeField: typeField,
-      index: findIndex,
       role: operatorMap[queryPart[1]] || queryPart[1],
       value: queryPart[2],
     };
   }
 
-
-  // Iterate through the query parts and format them
-  if (query.length === 3 && (typeof query[0] === 'string')) {
-    return [parseQuery(query, null)];
-
-
+  if (query.length === 3 && typeof query[0] === 'string') {
+    return [parseQuery(query, null)].filter(Boolean); // Filter out null values
   }
-  if (query.length === 3 && (typeof query[0] === 'object')) {
-    return removeOddIndexes(query).map((item, index) => parseQuery(item, query[1]));
 
-
+  if (query.length === 3 && typeof query[0] === 'object') {
+    return removeOddIndexes(query)
+      .map(item => parseQuery(item, query[1]))
+      .filter(Boolean); // Filter out null values
   }
 };
-function removeOddIndexes(array) {
+
+function removeOddIndexes(array: any[]) {
   return array.filter((_, index) => index % 2 === 0);
 }
 
+// Emit the updated query on button click
 function buttonClick() {
   emit('update-query', {
     logicalOperator: filterValue.value[1] || '',
     children: gridFilterValue.value,
   });
-
-
 }
 </script>
+
 <style scoped>
 .filter-container {
   background-color: transparent;
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.14), 0 0 2px 0 rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0 8px 16px 0 rgba(0, 0, 0, 0.14),
+    0 0 2px 0 rgba(0, 0, 0, 0.12);
   border-radius: 6px;
   padding: 5px;
   width: 500px;
