@@ -2,11 +2,8 @@
   <div>
     <div class="filter-container">
       <DxFilterBuilder v-if="shouldRenderFilterBuilder" v-model:value="filterValue" :fields="formattedFields"
-        :group-operations="groupOperations" 
-        :max-group-level="0"
-        />
-      <DxButton text="Apply Filter" type="default" @click="buttonClick" />
-      <div class="dx-clearfix" />
+        :group-operations="groupOperations" :max-group-level="0" />
+        <div class="dx-clearfix" />
     </div>
   </div>
 </template>
@@ -14,7 +11,6 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue';
 import DxFilterBuilder from 'devextreme-vue/filter-builder';
-import DxButton from 'devextreme-vue/button';
 
 interface Field {
   id: string;
@@ -51,15 +47,6 @@ const operatorMap = {
   bigger: 'bigger',
   'is empty': 'is empty',
   'is not empty': 'is not empty',
-};
-
-// Define group operation descriptions
-const groupOperationDescriptions = {
-  and: 'And',
-  or: 'Or',
-  notAnd: '',
-  notOr: '',
-  addGroup: '',
 };
 
 // Format fields for the filter builder
@@ -107,6 +94,10 @@ watch(filterValue, (newFilterValue) => {
   if (newFilterValue) {
     const formattedFilter = formatFilterQuery(newFilterValue);
     gridFilterValue.value = formattedFilter;
+    emit('update-query', {
+      logicalOperator: filterValue.value[1] || '',
+      children: gridFilterValue.value,
+    });
   }
 });
 
@@ -143,22 +134,7 @@ const formatFilterQuery = (query: any) => {
 function removeOddIndexes(array: any[]) {
   return array.filter((_, index) => index % 2 === 0);
 }
-function handleOptionClick(option) {
-  console.log("option",option);
-  
-      // Handle "Add Group" removal based on a condition
-      // if (option.value === "add-group") {
 
-      // }
-    }
-
-// Emit the updated query on button click
-function buttonClick() {
-  emit('update-query', {
-    logicalOperator: filterValue.value[1] || '',
-    children: gridFilterValue.value,
-  });
-}
 </script>
 
 <style scoped>
@@ -169,7 +145,7 @@ function buttonClick() {
     0 0 2px 0 rgba(0, 0, 0, 0.12);
   border-radius: 6px;
   padding: 5px;
-  width:80%;
+  width: 80%;
   margin: 24px;
 }
 

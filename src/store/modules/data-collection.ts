@@ -290,6 +290,8 @@ class DataCollection extends VuexModule {
         this.s3Folders = payload.value;
         break;
       case 'QueryString':
+        
+        
         this.queryString = payload.value;
         break;
       case 'DatatypeSelector':

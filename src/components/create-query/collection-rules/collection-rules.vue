@@ -12,13 +12,9 @@
             <label :class="$style['input-item-text']"> Custom rules editor field </label>
             <input v-model="isCustomRules" type="checkbox" />
           </div>
-          <Input
-            v-if="isCustomRules"
-            v-model="customQuery"
-            :disabled="!isCustomRules"
+          <Input v-if="isCustomRules" v-model="customQuery" :disabled="!isCustomRules"
             placeholder="Type custom rules here"
-            :class="[$style['input-border'], { [$style['disabled']]: !isCustomRules }]"
-          />
+            :class="[$style['input-border'], { [$style['disabled']]: !isCustomRules }]" />
           <div v-else>
             <!-- <div :class="$style['input-item-text']">Generated rules query display field</div> -->
             <div :class="$style['generated-query']">
@@ -27,13 +23,10 @@
               </highlight-code> -->
               <pre v-highlightjs="QueryFromState"><code class="sql"></code></pre>
 
-              <div
-                v-if="
-                  submitted
-                  //  && v$.QueryFromState.required.$invalid
-                "
-                :class="$style['validation-text']"
-              >
+              <div v-if="
+                submitted
+                //  && v$.QueryFromState.required.$invalid
+              " :class="$style['validation-text']">
                 Query string is required
               </div>
             </div>
@@ -121,7 +114,12 @@ export default defineComponent({
 
     const QueryFromState: ComputedRef<string> = computed(() => {
       console.log('DataCollectionModule.queryString', DataCollectionModule.queryString);
-      return DataCollectionModule.queryString?.replaceAll('.undefined', ' ');
+      if (DataCollectionModule.queryString) {
+
+        return DataCollectionModule.queryString?.replaceAll('._undefined', ' ');
+      } else {
+        return 'SELECT * FROM s3object s'
+      }
     });
     const rules: ComputedRef<Array<QueryBuilderRule>> = computed(() => {
       return DataCollectionModule.rules;
@@ -151,6 +149,7 @@ export default defineComponent({
     //   };
     // });
     watch(QueryString, (value: string) => {
+
       if (!isCustomRules.value) {
         DataCollectionModule.setInputValue({
           label: 'QueryString',
@@ -271,6 +270,7 @@ export default defineComponent({
 
 .generated-query {
   margin-top: 10px;
+
   &__text-area {
     width: 100%;
     resize: none;
@@ -280,15 +280,18 @@ export default defineComponent({
       width: 3px;
       height: 18px;
     }
+
     /* Track */
     &::-webkit-scrollbar-track {
       background: #f1f1f1;
     }
+
     /* Handle */
     &::-webkit-scrollbar-thumb {
       background: var(--accent-color);
       border-radius: 31px;
     }
+
     /* Handle on hover */
     &::-webkit-scrollbar-thumb:hover {
       background: var(--accent-color);
@@ -301,6 +304,7 @@ export default defineComponent({
   font-size: 14px;
   margin-top: 10px;
 }
+
 code {
   height: 95px !important;
   width: 100%;
@@ -311,6 +315,7 @@ code {
 pre {
   white-space: pre-wrap;
 }
+
 .input-border {
   border: 1px solid #45e799;
   margin-top: 2px;
