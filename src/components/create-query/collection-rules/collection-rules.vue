@@ -118,7 +118,7 @@ export default defineComponent({
 
         return DataCollectionModule.queryString?.replaceAll('._undefined', ' ');
       } else {
-        return 'SELECT * FROM [tableName]'
+        return 'SELECT * FROM '
       }
     });
     const rules: ComputedRef<Array<QueryBuilderRule>> = computed(() => {

@@ -74,7 +74,7 @@ class DataCollection extends VuexModule {
 
   DatasetAccess: Array<{ name: string }> = [];
 
-  queryString = 'select * from [tableName] Where errorMessage!=\u0027null\u0027';
+  queryString = 'select * from  Where errorMessage!=\u0027null\u0027';
 
   isCustomRules = false;
   jobCreated = false;
