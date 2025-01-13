@@ -74,7 +74,7 @@ class DataCollection extends VuexModule {
 
   DatasetAccess: Array<{ name: string }> = [];
 
-  queryString = 'select * from S3Object[*].Records[*] s Where s.errorMessage!=\u0027null\u0027';
+  queryString = 'select * from [tableName] Where errorMessage!=\u0027null\u0027';
 
   isCustomRules = false;
   jobCreated = false;
@@ -440,10 +440,7 @@ class DataCollection extends VuexModule {
         .map((item: any) => item[item.length - 1]);
       this.SET_QUERY_TYPE_ITEMS(queryTypes);
       this.SET_INPUT_VALUE({
-        value:
-          this.tableTypes[this.DataType] == 'CSV'
-            ? `Select * FROM S3Object[*].${this.rootsForJSON[this.DataType]} s`
-            : `SELECT * FROM s3object s`,
+        value:`SELECT * FROM ${this.DatasetName}`,
         label: 'QueryString',
       });
     } catch (e: any) {
@@ -491,7 +488,6 @@ class DataCollection extends VuexModule {
       let CSVFileHeader: string = '';
       // console.log('console coming here ', schema);
       const response = await DataCollectionService.getTableKeys(schema);
-      console.log('response', response.data);
       this.getSampleData(schema);
       try {
         const { S3SelectParameters } = JSON.parse(response.data.Parameter.Value);
@@ -506,10 +502,7 @@ class DataCollection extends VuexModule {
         console.log('this.rootsForJSON = ', rootsForJSON);
         console.log('this.DataType = ', schema);
         this.SET_INPUT_VALUE({
-          value:
-            tableTypes[schema] == 'CSV'
-              ? `SELECT * FROM s3object s`
-              : `Select * FROM S3Object[*].${rootsForJSON[schema] ? rootsForJSON[schema] : ''} s`,
+          value:`SELECT * FROM ${this.DatasetName}`,
           label: 'QueryString',
         });
         if (S3SelectParameters.Cast) {

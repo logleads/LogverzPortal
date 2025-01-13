@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { reservedKeywordsList } from '~/reservedKeywordsList';
+import { DataCollectionModule } from '~/store/modules/data-collection';
 import { MainQuery, QueryBuilderGroup, QueryBuilderRule } from '~/types/common';
 
 // const getOperator = (operator: string, value: string | null): string | boolean => {
@@ -170,30 +171,31 @@ export const parseQueryObject = (
   const elements = '*';
   let additionalQuery = '';
   let query = '';
-  if (format === 'JSON') {
-    // console.log('json HEADER INFO', csvHeader);
-    additionalQuery = parseChildren(
-      obj.children,
-      obj.logicalOperator,
-      additionalQuery,
-      format,
-      csvHeader,
-    );
-    query = `SELECT ${elements} FROM S3Object[*].${rootJSON}[*] s ${additionalQuery}`;
-  }
-  if (format === 'CSV') {
-    // console.log('obj', obj);
-    // console.log('CSV HEADER INFO', csvHeader);
-    additionalQuery = parseChildren(
-      obj.children,
-      obj.logicalOperator,
-      additionalQuery,
-      format,
-      csvHeader,
-    );
-    // console.log(additionalQuery, 'additionalQuery');
-    query = `SELECT ${elements} FROM s3object s ${additionalQuery}`;
-  }
+  additionalQuery = parseChildren(
+    obj.children,
+    obj.logicalOperator,
+    additionalQuery,
+    format,
+    csvHeader,
+  );
+  query = `SELECT ${elements} FROM ${DataCollectionModule.DatasetName} ${additionalQuery}`;
+  // if (format === 'JSON') {
+  //   // console.log('json HEADER INFO', csvHeader);
+   
+  // }
+  // if (format === 'CSV') {
+  //   // console.log('obj', obj);
+  //   // console.log('CSV HEADER INFO', csvHeader);
+  //   additionalQuery = parseChildren(
+  //     obj.children,
+  //     obj.logicalOperator,
+  //     additionalQuery,
+  //     format,
+  //     csvHeader,
+  //   );
+  //   // console.log(additionalQuery, 'additionalQuery');
+  //   query = `SELECT ${elements} FROM ${DataCollectionModule.DatasetName} ${additionalQuery}`;
+  // }
   // // eslint-disable-next-line no-console
   // console.log(query, 'parseQueryObject');
   return query;
