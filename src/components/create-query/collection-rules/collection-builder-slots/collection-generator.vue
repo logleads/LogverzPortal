@@ -2,8 +2,9 @@
   <div>
     <div class="filter-container">
       <DxFilterBuilder v-if="shouldRenderFilterBuilder" v-model:value="filterValue" :fields="formattedFields"
-        :group-operations="groupOperations" :max-group-level="0" />
-        <div class="dx-clearfix" />
+        :group-operations="groupOperations" :max-group-level="0" :custom-operations="customOperations"
+         />
+      <div class="dx-clearfix" />
     </div>
   </div>
 </template>
@@ -17,6 +18,29 @@ interface Field {
   label: string;
   type: string;
 }
+
+
+const customOperations = [
+  {
+    name: 'bigger',
+    caption: 'Greater',
+    
+    hasValue: true,
+    icon: 'icon-equal',
+    customizeText: (fieldInfo) => `${fieldInfo.value}`,
+    dataTypes: ['string', 'number', 'boolean']
+  },
+  {
+    name: 'smaller',
+    caption: 'Less',
+    
+    hasValue: true,
+    icon: 'icon-search',
+    customizeText: (fieldInfo) => `${fieldInfo.value}`,
+    dataTypes: ['string']
+  },
+  // Add other custom operations as needed
+]
 
 const filterValue = ref();
 const gridFilterValue = ref();
@@ -37,16 +61,16 @@ const emit = defineEmits<{
 
 // Define the operator map
 const operatorMap = {
-  contains: 'contains',
-  notcontains: 'does not equal',
+  contains: 'like',
+  notcontains: 'not like',
   equals: 'equals',
-  'does not equal': 'does not equal',
-  like: 'like',
-  'not like': 'not like',
-  smaller: 'smaller',
-  bigger: 'bigger',
-  'is empty': 'is empty',
-  'is not empty': 'is not empty',
+  'does not equal': '!=',
+  like: 'LIKE',
+  'not like': 'NOT LIKE',
+  smaller: '<',
+  bigger: '>',
+  'is empty': 'IS NULL',
+  'is not empty': 'IS NOT NULL',
 };
 
 // Format fields for the filter builder
@@ -112,6 +136,7 @@ const formatFilterQuery = (query: any) => {
     }
 
     const typeField = field.type;
+
     return {
       field: queryPart[0],
       typeField: typeField,

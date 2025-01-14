@@ -65,10 +65,11 @@ const getOperator = (
   value: string | null,
   castType: string | object | null,
 ): string | boolean => {
+  console.log('operator==============>', operator);
   switch (operator) {
-    case 'equals':
+    case '=':
       return !value ? false : ` = ${convertType(castType, value)}`;
-    case 'does not equal':
+    case '<>':
       return !value ? false : ` != ${convertType(castType, value)}`;
     case 'contains':
       return !value ? false : ` CONTAINS ${convertType(castType, value)}`;
@@ -80,11 +81,15 @@ const getOperator = (
       return ` IS NOT NULL`;
     case 'like':
       return !value ? false : ` LIKE '%${value}%'`;
+    case 'startswith':
+      return !value ? false : ` LIKE '%${value}%'`;
+    case 'endswith':
+      return !value ? false : ` LIKE '%${value}%'`;
     case 'not like':
       return !value ? false : ` NOT LIKE '%${value}%'`;
-    case 'smaller':
+    case '<':
       return !value ? false : ` < ${convertType(castType, value)}`;
-    case 'bigger':
+    case '>':
       return !value ? false : ` > ${convertType(castType, value)}`;
     default:
       return false;
@@ -102,19 +107,19 @@ const generateOneRawFromWhereQuery = (
 ): string => {
   const selectedField = field;
   console.log('children Index', typeof castType);
-  if (format === 'CSV' && header === 'NONE') {
-    if (castType && typeof castType !== 'object') {
-      return `CAST(s._${index} as ${castType}) ${getOperator(role, value, castType)}`;
-    }
-    return `s._${index} ${getOperator(role, value, castType)}`;
-  } else if (castType && typeof castType !== 'object') {
-    return `CAST(s.${checkForReservedKeyWord(selectedField)} as ${castType}) ${getOperator(
-      role,
-      value,
-      castType,
-    )}`;
-  }
-  return `s.${checkForReservedKeyWord(selectedField)} ${getOperator(role, value, castType)}`;
+  // if (format === 'CSV' && header === 'NONE') {
+  //   if (castType && typeof castType !== 'object') {
+  //     return `CAST(s._${index} as ${castType}) ${getOperator(role, value, castType)}`;
+  //   }
+  //   return `s._${index} ${getOperator(role, value, castType)}`;
+  // } else if (castType && typeof castType !== 'object') {
+  //   return `CAST(s.${checkForReservedKeyWord(selectedField)} as ${castType}) ${getOperator(
+  //     role,
+  //     value,
+  //     castType,
+  //   )}`;
+  // }
+  return `t.${checkForReservedKeyWord(selectedField)} ${getOperator(role, value, castType)}`;
 };
 
 const checkForReservedKeyWord = (selectedField: string) => {
@@ -181,7 +186,7 @@ export const parseQueryObject = (
   query = `SELECT ${elements} FROM ${DataCollectionModule.DatasetName} ${additionalQuery}`;
   // if (format === 'JSON') {
   //   // console.log('json HEADER INFO', csvHeader);
-   
+
   // }
   // if (format === 'CSV') {
   //   // console.log('obj', obj);
