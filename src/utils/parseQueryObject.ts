@@ -65,10 +65,14 @@ const getOperator = (
   value: string | null,
   castType: string | object | null,
 ): string | boolean => {
-  console.log('operator==============>', operator);
   switch (operator) {
     case '=':
       return !value ? false : ` = ${convertType(castType, value)}`;
+    case '>=':
+      return !value ? false : ` >= ${convertType(castType, value)}`;
+    case '<=':
+      return !value ? false : ` <= ${convertType(castType, value)}`;
+
     case '<>':
       return !value ? false : ` != ${convertType(castType, value)}`;
     case 'contains':
@@ -119,7 +123,7 @@ const generateOneRawFromWhereQuery = (
   //     castType,
   //   )}`;
   // }
-  return `t.${checkForReservedKeyWord(selectedField)} ${getOperator(role, value, castType)}`;
+  return ` tbl.${checkForReservedKeyWord(selectedField)} ${getOperator(role, value, castType)}`;
 };
 
 const checkForReservedKeyWord = (selectedField: string) => {
@@ -157,7 +161,7 @@ const parseChildren = (
       });
 
     if (!queryArray.length) return '';
-    const newQuery = `WHERE ${queryArray.join(` ${logicalOperator} `)}`;
+    const newQuery = ` AS tbl WHERE ${queryArray.join(` ${logicalOperator} `)}`;
 
     return newQuery;
   }
@@ -170,7 +174,7 @@ export const parseQueryObject = (
   rootJSON: string = 'Records',
   csvHeader: string,
 ): string => {
-  if (!obj.children.length) {
+  if (!obj.children?.length) {
     return '';
   }
   const elements = '*';

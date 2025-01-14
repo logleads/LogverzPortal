@@ -117,7 +117,7 @@ export default defineComponent({
 
         return DataCollectionModule.queryString?.replaceAll('._undefined', ' ');
       } else {
-        return `SELECT * FROM ${DataCollectionModule.DatasetName ? DataCollectionModule.DatasetName + ' AS t' : ''} `;
+        return `SELECT * FROM ${DataCollectionModule.DatasetName ? DataCollectionModule.DatasetName + ' AS tbl' : ''} `;
       }
     });
     const rules: ComputedRef<Array<QueryBuilderRule>> = computed(() => {

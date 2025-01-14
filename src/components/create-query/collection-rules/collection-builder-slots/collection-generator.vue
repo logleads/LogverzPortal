@@ -2,7 +2,7 @@
   <div>
     <div class="filter-container">
       <DxFilterBuilder v-if="shouldRenderFilterBuilder" v-model:value="filterValue" :fields="formattedFields"
-        :group-operations="groupOperations" :max-group-level="0" :custom-operations="customOperations"
+        :group-operations="groupOperations" :max-group-level="0" 
          />
       <div class="dx-clearfix" />
     </div>
@@ -12,19 +12,33 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue';
 import DxFilterBuilder from 'devextreme-vue/filter-builder';
+import { DataCollectionModule } from '~/store/modules/data-collection';
 
 interface Field {
   id: string;
   label: string;
   type: string;
 }
-
-
+const filterOperationDescriptions = {
+  between: "Between",
+  contains: "Contains",
+  endsWith: "Ends with",
+  equal: "Equals",
+  greaterThan: "Greater than",
+  greaterThanOrEqual: "Greater than or equal to",
+  isBlank: "Is blank",
+  isNotBlank: "Is not blank",
+  lessThan: "Less than",
+  lessThanOrEqual: "Less than or equal to",
+  notContains: "Does not contain",
+  notEqual: "Does not equal",
+  startsWith: "Starts with"
+}
 const customOperations = [
   {
     name: 'bigger',
     caption: 'Greater',
-    
+
     hasValue: true,
     icon: 'icon-equal',
     customizeText: (fieldInfo) => `${fieldInfo.value}`,
@@ -33,7 +47,7 @@ const customOperations = [
   {
     name: 'smaller',
     caption: 'Less',
-    
+
     hasValue: true,
     icon: 'icon-search',
     customizeText: (fieldInfo) => `${fieldInfo.value}`,
@@ -82,6 +96,8 @@ const formattedFields = computed(() => {
           return {
             dataField: item.label,
             caption: item.label,
+            filterOperations: ['=', '<>', 'contains', '>', '<','>=','<=', 'notcontains'],
+
           };
         } else {
           console.warn('Field item is missing a label or is undefined', item);
@@ -104,6 +120,7 @@ const resetQueryBuilderState = () => {
 // Watch for changes in the `fields` prop
 watch(() => props.fields, (newFields, oldFields) => {
   shouldRenderFilterBuilder.value = false;
+
   if (newFields !== oldFields) {
     nextTick(() => {
       resetQueryBuilderState();
@@ -112,17 +129,36 @@ watch(() => props.fields, (newFields, oldFields) => {
   }
 }, { immediate: true });
 
+watch(() => DataCollectionModule.DatasetName, (newFields, oldFields) => {
+  shouldRenderFilterBuilder.value = false;
+
+  if (newFields !== oldFields) {
+    nextTick(() => {
+      resetQueryBuilderState();
+      shouldRenderFilterBuilder.value = true;
+    });
+  }
+}, { immediate: true });
 
 // Watch for changes in the filter value and format it
 watch(filterValue, (newFilterValue) => {
+  console.log("newFilterValue", newFilterValue);
+
   if (newFilterValue) {
     const formattedFilter = formatFilterQuery(newFilterValue);
     gridFilterValue.value = formattedFilter;
+
     emit('update-query', {
       logicalOperator: filterValue.value[1] || '',
       children: gridFilterValue.value,
     });
+  } else {
+    emit('update-query', {
+      logicalOperator: '',
+      children: [],
+    });
   }
+
 });
 
 const formatFilterQuery = (query: any) => {
@@ -149,7 +185,7 @@ const formatFilterQuery = (query: any) => {
     return [parseQuery(query, null)].filter(Boolean); // Filter out null values
   }
 
-  if (query.length === 3 && typeof query[0] === 'object') {
+  else if (typeof query[0] === 'object') {
     return removeOddIndexes(query)
       .map(item => parseQuery(item, query[1]))
       .filter(Boolean); // Filter out null values

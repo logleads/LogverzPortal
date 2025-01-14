@@ -275,7 +275,7 @@ class DataCollection extends VuexModule {
     switch (payload.label) {
       case 'DatasetName':
         this.DatasetName = payload.value;
-        this.queryString = ` SELECT * FROM ${payload.value ? payload.value + ' AS t' : ''}`;
+        this.queryString = ` SELECT * FROM ${payload.value ? payload.value + ' AS tbl' : ''}`;
 
         break;
       case 'DatasetDescription':
@@ -439,7 +439,7 @@ class DataCollection extends VuexModule {
         .map((item: any) => item[item.length - 1]);
       this.SET_QUERY_TYPE_ITEMS(queryTypes);
       this.SET_INPUT_VALUE({
-        value: `SELECT * FROM ${this.DatasetName ? this.DatasetName + ' AS t' : ''}`,
+        value: `SELECT * FROM ${this.DatasetName ? this.DatasetName + ' AS tbl' : ''}`,
         label: 'QueryString',
       });
     } catch (e: any) {
@@ -501,7 +501,7 @@ class DataCollection extends VuexModule {
         console.log('this.rootsForJSON = ', rootsForJSON);
         console.log('this.DataType = ', schema);
         this.SET_INPUT_VALUE({
-          value: `SELECT * FROM ${this.DatasetName ? this.DatasetName + ' AS t' : ''}`,
+          value: `SELECT * FROM ${this.DatasetName ? this.DatasetName + ' AS tbl' : ''}`,
           label: 'QueryString',
         });
         if (S3SelectParameters.Cast) {
