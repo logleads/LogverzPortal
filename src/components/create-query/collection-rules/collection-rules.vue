@@ -113,12 +113,11 @@ export default defineComponent({
     });
 
     const QueryFromState: ComputedRef<string> = computed(() => {
-      console.log('DataCollectionModule.queryString', DataCollectionModule.queryString);
       if (DataCollectionModule.queryString) {
 
         return DataCollectionModule.queryString?.replaceAll('._undefined', ' ');
       } else {
-        return 'SELECT * FROM '
+        return `SELECT * FROM ${DataCollectionModule.DatasetName}`
       }
     });
     const rules: ComputedRef<Array<QueryBuilderRule>> = computed(() => {

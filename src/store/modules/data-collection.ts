@@ -274,8 +274,9 @@ class DataCollection extends VuexModule {
   private SET_INPUT_VALUE(payload: { label: string; value: string }): void {
     switch (payload.label) {
       case 'DatasetName':
-        console.log('check payload', payload);
         this.DatasetName = payload.value;
+        this.queryString = `SELECT * FROM ${payload.value}`;
+
         break;
       case 'DatasetDescription':
         this.DatasetDescription = payload.value;
@@ -290,8 +291,6 @@ class DataCollection extends VuexModule {
         this.s3Folders = payload.value;
         break;
       case 'QueryString':
-        
-        
         this.queryString = payload.value;
         break;
       case 'DatatypeSelector':
@@ -440,7 +439,7 @@ class DataCollection extends VuexModule {
         .map((item: any) => item[item.length - 1]);
       this.SET_QUERY_TYPE_ITEMS(queryTypes);
       this.SET_INPUT_VALUE({
-        value:`SELECT * FROM ${this.DatasetName}`,
+        value: `SELECT * FROM ${this.DatasetName}`,
         label: 'QueryString',
       });
     } catch (e: any) {
@@ -502,7 +501,7 @@ class DataCollection extends VuexModule {
         console.log('this.rootsForJSON = ', rootsForJSON);
         console.log('this.DataType = ', schema);
         this.SET_INPUT_VALUE({
-          value:`SELECT * FROM ${this.DatasetName}`,
+          value: `SELECT * FROM ${this.DatasetName}`,
           label: 'QueryString',
         });
         if (S3SelectParameters.Cast) {
@@ -704,8 +703,8 @@ class DataCollection extends VuexModule {
     DatasetWarnings: string;
     // TableName: string;
   }) {
-    console.log("data: " ,data);
-    
+    console.log('data: ', data);
+
     // this.HARD_SET_S3_FOLDERS(data.S3Folders);
     // this.HARD_SET_TABLE_DESCRIPRION(data.Description);
     // // console.log('GRAB DATA', data);
