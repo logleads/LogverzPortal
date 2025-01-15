@@ -49,6 +49,7 @@ import { MainQuery, QueryBuilderGroup, QueryBuilderRule } from '~/types/common';
 //   }
 //   return moderatedQuery;
 // };
+const regex = /[ :]/;
 
 const convertType = (castType: string | object | null, value: string) => {
   if (castType === 'int') {
@@ -127,7 +128,7 @@ const generateOneRawFromWhereQuery = (
 };
 
 const checkForReservedKeyWord = (selectedField: string) => {
-  if (reservedKeywordsList.includes(selectedField)) {
+  if (reservedKeywordsList.includes(selectedField)||regex.test(selectedField)) {
     return `"${selectedField}"`;
   } else {
     return selectedField;

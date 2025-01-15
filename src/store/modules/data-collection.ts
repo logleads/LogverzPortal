@@ -489,13 +489,13 @@ class DataCollection extends VuexModule {
       const response = await DataCollectionService.getTableKeys(schema);
       this.getSampleData(schema);
       try {
-        const { S3SelectParameters } = JSON.parse(response.data.Parameter.Value);
-        // console.log(S3SelectParameters, 'S3SelectParameters');
-        this.SET_DATA_SET_S3_SELECT(S3SelectParameters ? S3SelectParameters.IO : {});
-        tableTypes = { [schema]: S3SelectParameters.IO.InputSerialization.CSV ? 'CSV' : 'JSON' };
-        rootsForJSON = { [schema]: S3SelectParameters.IO.InputSerialization.RootElement };
-        if (S3SelectParameters.IO.InputSerialization.CSV) {
-          CSVFileHeader = S3SelectParameters.IO.InputSerialization.CSV.FileHeaderInfo;
+        const { StgSelectParameters } = JSON.parse(response.data.Parameter.Value);
+        // console.log(StgSelectParameters, 'StgSelectParameters');
+        this.SET_DATA_SET_S3_SELECT(StgSelectParameters ? StgSelectParameters.IO : {});
+        tableTypes = { [schema]: StgSelectParameters.IO.InputSerialization.CSV ? 'CSV' : 'JSON' };
+        rootsForJSON = { [schema]: StgSelectParameters.IO.InputSerialization.RootElement };
+        if (StgSelectParameters.IO.InputSerialization.CSV) {
+          CSVFileHeader = StgSelectParameters.IO.InputSerialization.CSV.FileHeaderInfo;
         }
         console.log('this.tableTypes = ', tableTypes);
         console.log('this.rootsForJSON = ', rootsForJSON);
@@ -504,8 +504,8 @@ class DataCollection extends VuexModule {
           value: `SELECT * FROM ${this.DatasetName ? this.DatasetName + ' AS tbl' : ''}`,
           label: 'QueryString',
         });
-        if (S3SelectParameters.Cast) {
-          this.SET_CAST_FOR_PARAMETERS(S3SelectParameters.Cast);
+        if (StgSelectParameters.Cast) {
+          this.SET_CAST_FOR_PARAMETERS(StgSelectParameters.Cast);
         }
         this.SET_ROOTS_FOR_JSON(rootsForJSON);
         this.SET_TABLE_TYPE(tableTypes);

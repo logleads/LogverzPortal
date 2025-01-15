@@ -418,7 +418,7 @@ class QueryBuilder extends VuexModule {
       this.COMMON_SET_FETCHING({ label: 'isFetching', value: true });
       const response = await QueryBuilderService.getTableParametersList(dataType);
       const rules = parseParametersList(response.data.Parameter.Value);
-      const tableDataFormat = JSON.parse(response.data.Parameter.Value)?.S3SelectParameters?.IO
+      const tableDataFormat = JSON.parse(response.data.Parameter.Value)?.StgSelectParameters?.IO
         ?.InputSerialization;
       const data = JSON.parse(response.data.Parameter.Value).Views.reduce((acc: any, item: any) => {
         return { ...acc, ...item };

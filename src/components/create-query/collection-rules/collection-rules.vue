@@ -4,7 +4,6 @@
       <div v-show="!isCustomRules">
         <CollectionRulesItem :class="$style['collection__item']" @update-query="handleUpdate" />
       </div>
-      <SampleDataCollection />
 
       <div :class="$style['collection__item']">
         <div :class="$style['collection__item__inputs']">
@@ -33,6 +32,8 @@
           </div>
         </div>
       </div>
+      <SampleDataCollection />
+
     </template>
 
     <template v-else>

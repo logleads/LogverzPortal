@@ -129,20 +129,19 @@ watch(() => props.fields, (newFields, oldFields) => {
   }
 }, { immediate: true });
 
-watch(() => DataCollectionModule.DatasetName, (newFields, oldFields) => {
-  shouldRenderFilterBuilder.value = false;
+// watch(() => DataCollectionModule.DatasetName, (newFields, oldFields) => {
+//   shouldRenderFilterBuilder.value = false;
 
-  if (newFields !== oldFields) {
-    nextTick(() => {
-      resetQueryBuilderState();
-      shouldRenderFilterBuilder.value = true;
-    });
-  }
-}, { immediate: true });
+//   if (newFields !== oldFields) {
+//     nextTick(() => {
+//       resetQueryBuilderState();
+//       shouldRenderFilterBuilder.value = true;
+//     });
+//   }
+// }, { immediate: true });
 
 // Watch for changes in the filter value and format it
 watch(filterValue, (newFilterValue) => {
-  console.log("newFilterValue", newFilterValue);
 
   if (newFilterValue) {
     const formattedFilter = formatFilterQuery(newFilterValue);
@@ -214,7 +213,11 @@ function removeOddIndexes(array: any[]) {
   background-color: transparent;
   padding: 10px;
 }
-
+.dx-filter-builder-group-operation {
+  background-color: #4caf50; /* Green background /
+  color: #ffffff; / White text /
+  border-radius: 5px; / Rounded corners */
+}
 .dx-button {
   margin: 10px;
   float: right;
