@@ -4,15 +4,19 @@
 <script lang="ts">
 // import this to use default icons for buttons
 
-import { defineComponent, Ref, ref } from '@vue/composition-api';
-import VuePdfApp from 'vue-pdf-app';
+import 'vue3-pdf-app/dist/icons/main.css';
+
+import { defineComponent, Ref, ref } from 'vue';
+import VuePdfApp from 'vue3-pdf-app';
 
 // import pdfdoc from '~/components/termsandconditions/sample.pdf';
 import { WindowData, WindowName } from '~/store/modules/windows';
 
 export default defineComponent({
   name: 'PrivacyPolicy',
-  components: { VuePdfApp },
+  components: {
+    VuePdfApp,
+  },
   setup() {
     const window: Ref<WindowData> = ref({
       minimized: false,

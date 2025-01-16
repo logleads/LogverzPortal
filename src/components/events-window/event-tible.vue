@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/attribute-hyphenation -->
 <template>
   <DxDataGrid
     ref="DataGrid"
@@ -32,13 +31,13 @@
     <DxColumn caption="Source" data-field="source" />
     <DxMasterDetail :enabled="true" template="masterDetailedLoadSettings" />
     <template #masterDetailedLoadSettings="{ data }">
-      <MasterDetailedSettings :data="data" />
+
+      <MasterDetailedSettings :data="data" :rawitems="[data.data]" />
     </template>
   </DxDataGrid>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@vue/composition-api';
 import {
   DxColumn,
   DxDataGrid,
@@ -46,6 +45,7 @@ import {
   DxHeaderFilter,
   DxMasterDetail,
 } from 'devextreme-vue/data-grid';
+import { defineComponent, ref } from 'vue';
 
 import MasterDetailedSettings from '~/components/create-query/load-settings/master-detailed-settings.vue';
 import TimeFields from '~/components/shared/time-fields.vue';
@@ -70,19 +70,19 @@ export default defineComponent({
   },
   setup() {
     const DataGrid: any = ref<HTMLElement | null>(null);
-    function onEditorPrepared() {
+    function onEditorPrepared(e) {
       // eslint-disable-next-line no-console
-      // console.log(e,'ff')
-      // if (e.dataField == 'tm' && e.parentType == 'filterRow') {
-      //   // eslint-disable-next-line no-console
-      //   console.log(this.$refs.DataGrid)
-      //   // eslint-disable-next-line no-console
-      //   // console.log(e.editorElement);
-      //   // e.editorElement.dxDateBox('instance').option('format', 'datetime');
-      //   // e.editorElement.dxDateBox('instance').option('onValueChanged', function (options: any) {
-      //   //   e.setValue(options.value);
-      //   // });
-      // }
+      console.log(e, 'ff');
+      if (e?.dataField == 'tm' && e?.parentType == 'filterRow') {
+        //   // eslint-disable-next-line no-console
+        //   // console.log(this.$refs.DataGrid)
+        //   // eslint-disable-next-line no-console
+        //   // console.log(e.editorElement);
+        // e?.editorElement?.dxDateBox('instance')?.option('format', 'datetime');
+        // e?.editorElement?.dxDateBox('instance')?.option('onValueChanged', function (options: any) {
+        //   e?.setValue(options.value);
+        // });
+      }
     }
     return {
       DataGrid,

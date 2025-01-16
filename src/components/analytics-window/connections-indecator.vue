@@ -1,11 +1,7 @@
 <template name="component-name">
   <div :class="$style['box']">
     <div :class="$style['indecator']" @click="openDropDown">
-      <img
-        v-if="isConnected"
-        :src="require('~/assets/images/connected.svg')"
-        alt="connected-vector"
-      />
+      <img v-if="isConnected" :src="require('~/assets/images/connected.svg')" alt="connected-vector" />
       <img v-else :src="require('~/assets/images/disconnected.svg')" alt="disconnected-vector" />
     </div>
 
@@ -16,121 +12,95 @@
         </div>
         <template v-if="!loader">
           <div :class="$style['drop-down__first-part']">
-            <div :class="$style['drop-down__header']">
+            <div>
               <div :class="$style['drop-down__header__title']">
-                <img
-                  :src="require('~/assets/images/server-storage.svg')"
-                  alt="connected-vector"
-                /><span>Database(s) </span>
+                <img :src="require('~/assets/images/server-storage.svg')" alt="connected-vector" />
+                <span >Database(s)
+                </span>
               </div>
-              <Loader v-if="isLoaderForIndicatore" accent :size="25" />
             </div>
-            <div
-              v-for="(instanse, index) in DBinstanse"
-              :key="index"
-              :class="$style['drop-down__body']"
-            >
+            <div v-for="(instanse, index) in DBinstanse" :key="index" :class="$style['drop-down__body']">
               <span :class="$style['drop-down__body__center']">
-                <span
-                  :class="$style['drop-down__ind']"
-                  :style="{ backgroundColor: instanse.status }"
-                ></span>
-                <p
-                  :class="$style['desc']"
-                  @click="() => openDbInstance(instanse.DBInstanceIdentifier)"
-                >
+                <span :class="$style['drop-down__ind']" :style="{ backgroundColor: instanse.status }"></span>
+                <span :class="$style['desc', 'space']" @click="() => openDbInstance(instanse.DBInstanceIdentifier)">
                   {{ instanse.name }}
-                </p>
+                </span>
+
               </span>
-              <button
-                @click="
-                  () =>
-                    setProperty(instanse.status, instanse.DBInstanceIdentifier, instanse.cluster)
-                "
-              >
+              <button @click="() =>
+                setProperty(instanse.status, instanse.DBInstanceIdentifier, instanse.cluster)
+                ">
                 {{ instanse.status == 'gray' ? 'start' : 'stop' }}
               </button>
+              <Loader v-if="isLoaderForIndicatore" accent :size="25" />
+
             </div>
           </div>
           <div :class="$style['drop-down__tmp-part-ferst']">
             <div :class="$style['drop-down__counter']">
-              <div :class="$style['drop-down__counter__left']">
-                <img :src="require('~/assets/images/undo-arrow.svg')" alt="connected-vector" /><span
-                  >TurnService</span
-                >
-              </div>
+
               <div :class="$style['drop-down__counter__self']">
-                <div :class="$style['drop-down__counter__self__flex']">
-                  <span title="Minimum size">M {{ turnServ[0].MinSize }}</span>
-                  <span title="Maximum size">M {{ turnServ[0].MaxSize }}</span>
-                  <span title="Desired capacity">D {{ turnServ[0].DesiredCapacity }}</span>
-                  <div>
-                    <div @click="() => operations('countTurnService', true)">+</div>
-                    <div @click="() => operations('countTurnService', false)">-</div>
-                  </div>
+                <div :class="$style['drop-down__counter__left']">
+
+                  <img :src="require('~/assets/images/undo-arrow.svg')"
+                    alt="connected-vector" /><span>TurnService</span>
                 </div>
+                <span title="Minimum size">Min {{ turnServ[0].MinSize }}</span>
+                <span title="Maximum size">Max {{ turnServ[0].MaxSize }}</span>
+                <span title="Desired capacity">Desired {{ turnServ[0].DesiredCapacity }}</span>
+                <div>
+                  <div @click="() => operations('countTurnService', true)">+</div>
+                  <div @click="() => operations('countTurnService', false)">-</div>
+                </div>
+
                 <Loader v-if="isLoaderForIndicatore" accent :size="25" />
               </div>
+              <div v-for="(i, index) in turnServInstances" :key="index" :class="$style['drop-down__bd']">
+                <span :class="$style['drop-down__ind']"
+                  :style="selectStatuseForAutoGroups(i.LifecycleState ? i.LifecycleState : '')"></span>
+                <p :class="$style['desc']" @click="() => open(i.InstanceId)">
+                  {{ i.InstanceId ? i.InstanceId : 'Turn instance' }}
+                </p>
+              </div>
             </div>
-            <div
-              v-for="(i, index) in turnServInstances"
-              :key="index"
-              :class="$style['drop-down__bd']"
-            >
-              <span
-                :class="$style['drop-down__ind']"
-                :style="selectStatuseForAutoGroups(i.LifecycleState ? i.LifecycleState : '')"
-              ></span>
-              <p :class="$style['desc']" @click="() => open(i.InstanceId)">
-                {{ i.InstanceId ? i.InstanceId : 'Turn instance' }}
-              </p>
-            </div>
+
           </div>
           <div :class="$style['drop-down__tmp-part']">
             <div :class="$style['drop-down__counter']">
-              <div :class="$style['drop-down__counter__left']">
-                <img :src="require('~/assets/images/server.svg')" alt="connected-vector" /><span
-                  >WebRTCProxy</span
-                >
-              </div>
+
               <div :class="$style['drop-down__counter__self']">
-                <div :class="$style['drop-down__counter__self__flex']">
-                  <span title="Minimum size">M {{ proxy[0].MinSize }}</span>
-                  <span title="Maximum size">M {{ proxy[0].MaxSize }}</span>
-                  <span title="Desired capacity">D{{ proxy[0].DesiredCapacity }}</span>
-                  <div>
-                    <div @click="() => operations('countProxy', true)">+</div>
-                    <div @click="() => operations('countProxy', false)">-</div>
-                  </div>
+                <div :class="$style['drop-down__counter__left']">
+                  <img :src="require('~/assets/images/server.svg')" alt="connected-vector" />
+                  <span>WebRTCProxy</span>
+                </div>
+                <span title="Minimum size">Min {{ proxy[0].MinSize }}</span>
+                <span title="Maximum size">Max {{ proxy[0].MaxSize }}</span>
+                <span title="Desired capacity">Desired{{ proxy[0].DesiredCapacity }}</span>
+                <div>
+                  <div @click="() => operations('countProxy', true)">+</div>
+                  <div @click="() => operations('countProxy', false)">-</div>
                 </div>
                 <Loader v-if="isLoaderForIndicatore" accent :size="25" />
               </div>
-            </div>
-            <div v-for="(i, index) in proxyInstances" :key="index" :class="$style['drop-down__bd']">
-              <span
-                :class="$style['drop-down__ind']"
-                :style="selectStatuseForAutoGroups(i.LifecycleState ? i.LifecycleState : '')"
-              ></span>
-              <p :class="$style['desc']" @click="() => open(i.InstanceId)">
-                {{ i.InstanceId ? i.InstanceId : 'Proxy instanse' }}
-              </p>
+              <div v-for="(i, index) in proxyInstances" :key="index" :class="$style['drop-down__bd']">
+                <span :class="$style['drop-down__ind']"
+                  :style="selectStatuseForAutoGroups(i.LifecycleState ? i.LifecycleState : '')"></span>
+                <p :class="$style['desc']" @click="() => open(i.InstanceId)">
+                  {{ i.InstanceId ? i.InstanceId : 'Proxy instanse' }}
+                </p>
+              </div>
             </div>
           </div>
         </template>
-        <MyButton
-          v-if="!isConnectedToWebRTC && proxyInstances.length > 0"
-          text="WebRTC Connect"
-          :disabled="isConnection || !LifecycleState"
-          @click="connectToDB"
-          :classAssign="$style['btn-classes']"
-        />
+        <MyButton v-if="!isConnectedToWebRTC && proxyInstances.length > 0" text="WebRTC Connect"
+          :disabled="isConnection || !LifecycleState" @click="connectToDB" :classAssign="$style['btn-classes']" />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, Ref, ref } from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, Ref, ref } from 'vue';
 
 import MyButton from '~/components/shared/button.vue';
 import Loader from '~/components/shared/loader.vue';
@@ -316,9 +286,23 @@ export default defineComponent({
   border-radius: 50px;
   display: flex;
 }
+
 .btn-classes {
-  width: 15rem;
+  width: 20rem;
   height: 35px;
+}
+
+.drop-down__ind {
+  margin: 0px !important;
+}
+
+.drop-down__first-part {
+  border: 1px solid;
+  padding: 5px;
+}
+
+.space {
+  margin-left: 18px;
 }
 
 .drop-down {
@@ -329,8 +313,7 @@ export default defineComponent({
   box-shadow: 0 4px 24px rgb(0 0 0 / 5%);
   border: 1px solid rgba(181, 190, 203, 0.28);
   border-radius: 10px;
-
-  width: 300px;
+  width: 400px;
   z-index: 100;
 
   &__box {
@@ -361,6 +344,7 @@ export default defineComponent({
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-left: 7px;
     }
 
     button {
@@ -372,11 +356,12 @@ export default defineComponent({
     display: flex;
     justify-content: start;
     align-items: center;
-    margin: 5px 0;
+    margin: 5px 8px;
+
   }
 
   &__ind {
-    margin: 0 20px;
+    margin: 0 25px;
     width: 20px;
     height: 20px;
     border-radius: 50px;
@@ -389,14 +374,15 @@ export default defineComponent({
     justify-content: space-between;
     align-items: center;
     padding: 5px;
-    border: 1px solid black;
+    border: 1px solid #1a1b20;
 
     &__title {
       display: flex;
       justify-content: start;
       align-items: center;
+
       span {
-        margin: 0 20px;
+        margin: 0 14px;
       }
     }
   }
@@ -404,10 +390,11 @@ export default defineComponent({
   &__counter {
     margin: 5px 0;
     display: flex;
-    justify-content: end;
-    align-items: center;
+    // justify-content: center;
+    flex-direction: column;
+    // align-items: center;
     padding: 5px;
-    border: 1px solid black;
+    border: 1px solid #1a1b20;
 
     span {
       margin: 0 10px;
@@ -416,28 +403,32 @@ export default defineComponent({
 
     &__self {
       display: flex;
-      justify-content: end;
+      justify-content: space-between;
       align-items: center;
-      width: 200px;
+      margin-left: 3px;
 
       &__flex {
         display: flex;
-        justify-content: start;
         align-items: center;
         cursor: pointer;
+
       }
     }
 
     &__left {
       display: flex;
       justify-content: start;
+      flex-direction: row;
       align-items: center;
     }
   }
 }
+
 .desc {
   cursor: pointer;
+  margin-left: 20px;
 }
+
 .box {
   position: relative;
 }

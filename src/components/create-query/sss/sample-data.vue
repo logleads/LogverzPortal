@@ -2,7 +2,7 @@
   <div :class="$style['fields-container']">
     <Icon name="arrow-down" :width="12" :height="7.7" />
     <button type="button" @click="onTriger">
-      <p>{{ triger ? 'Close sample data' : 'Open sample data' }}</p>
+      <p style="margin-left: 5px">{{ triger ? 'Close sample data' : 'Open sample data' }}</p>
     </button>
     <template v-if="triger">
       <template v-if="isSample">
@@ -39,8 +39,8 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from '@vue/composition-api';
 import { DxDataGrid, DxHeaderFilter } from 'devextreme-vue/data-grid';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from 'vue';
 
 import Icon from '~/components/shared/icon.vue';
 import { DataCollectionModule } from '~/store/modules/data-collection';
@@ -73,9 +73,9 @@ export default defineComponent({
         },
       );
 
-      const s = DataCollectionModule.sampleData.replaceAll('     ', ' ');
-      const f = s.replaceAll('  ', ' ');
-      const g = f.replaceAll('\n', ' ');
+      const s = DataCollectionModule.sampleData?.replaceAll('     ', ' ');
+      const f = s?.replaceAll('  ', ' ');
+      const g = f?.replaceAll('\n', ' ');
       let res: {
         Rows: string[];
         Info: string;
@@ -112,7 +112,7 @@ export default defineComponent({
           }
 
           const str = dataBuffer?.reduce((acc, it) => {
-            return acc.replaceAll(it, '');
+            return acc?.replaceAll(it, '');
           }, item);
 
           let i = 0;
@@ -155,9 +155,9 @@ export default defineComponent({
       if (sampleData === 'Non') {
         return false;
       }
-      const s = sampleData.replaceAll('     ', ' ');
-      const f = s.replaceAll('  ', ' ');
-      const g = f.replaceAll('\n', ' ');
+      const s = sampleData?.replaceAll('     ', ' ');
+      const f = s?.replaceAll('  ', ' ');
+      const g = f?.replaceAll('\n', ' ');
       let res: {
         Rows: string[];
         Info: string;
@@ -184,9 +184,9 @@ export default defineComponent({
       if (sampleData === 'Non') {
         return '#';
       }
-      const s = sampleData.replaceAll('     ', ' ');
-      const f = s.replaceAll('  ', ' ');
-      const g = f.replaceAll('\n', ' ');
+      const s = sampleData?.replaceAll('     ', ' ');
+      const f = s?.replaceAll('  ', ' ');
+      const g = f?.replaceAll('\n', ' ');
       let res: {
         Rows: string[];
         Info: string;

@@ -3,7 +3,8 @@
     type="button"
     :class="[$style['button'], classAssign]"
     :disabled="disabled"
-    @click="$emit('click', $event)"
+    
+
   >
     <template v-if="disabled">
       <template v-if="noLoad">{{ text }}</template>
@@ -14,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent } from 'vue';
 
 import Loader from '~/components/shared/loader.vue';
 export default defineComponent({
@@ -47,7 +48,7 @@ export default defineComponent({
   border-radius: 5px;
   font-weight: bold;
   color: #fff;
-  height: 55px;
+  // height: 55px;
   display: flex;
   align-items: center;
   justify-content: center;

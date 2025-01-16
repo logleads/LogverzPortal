@@ -1,39 +1,17 @@
 <template>
   <div>
-    <Tabs
-      btn-rigth-text="OR"
-      btn-left-text="AND"
-      :state-b-t-n="isAnd"
-      :class="$style['mb5']"
-      @change-table-content="handleIsAnd"
-    />
+    <Tabs btn-rigth-text="OR" btn-left-text="AND" :state-b-t-n="isAnd" :class="$style['mb5']"
+      @change-table-content="handleIsAnd" />
     <label>
-      <span>Available Fields</span>
+      <p :class="$style['customLabel']">Available Fields</p>
     </label>
-    <div
-      v-for="(item, index) in lineWithRules"
-      :key="item"
-      :class="[$style['query-bilder'], $style['mb5']]"
-    >
-      <DropDownSimple
-        :content="query[index].field"
-        :items="fieldsLabel"
-        name="field"
-        @select-value="e => handleFields(e.item, index)"
-      />
-      <DropDownSimple
-        :content="query[index].role"
-        :items="getRules(index)"
-        name="rules"
-        @select-value="e => handleRules(e.item, index)"
-      />
-      <Input
-        :class="$style['query-bilder__input']"
-        :value="query[index].value"
-        :disabled="disabledValue(index)"
-        :from-query-builder="true"
-        @input="e => handleInput(e, index)"
-      />
+    <div v-for="(item, index) in lineWithRules" :key="item" :class="[$style['query-bilder'], $style['mb5']]">
+      <DropDownSimple :content="query[index].field" :items="fieldsLabel" name="field"
+        @select-value="e => handleFields(e.item, index)" />
+      <DropDownSimple :content="query[index].role" :items="getRules(index)" name="rules"
+        @select-value="e => handleRules(e.item, index)" />
+      <Input :class="$style['query-bilder__input']" v-model="query[index].value" :disabled="disabledValue(index)"
+        :from-query-builder="true" />
       <div v-if="index == 0" :class="$style['hover']" @click="add">
         <Icon name="plus" :height="30" :width="30" />
       </div>
@@ -43,25 +21,15 @@
     </div>
     <div :class="[$style['query-bilder__limit'], $style['mb5']]">
       <label>
-        <span>Batch start</span>
+        <p :class="$style['customLabel']">Batch start</p>
       </label>
-      <Input
-        :value="batchStart"
-        :type="'number'"
-        :class="$style['query-bilder__input']"
-        @input="handlebatchStart"
-      />
+      <Input :value="batchStart" :type="'number'" :class="$style['query-bilder__input']" @input="handlebatchStart" />
     </div>
     <div :class="$style['mb5']">
       <label>
-        <span>Batch size</span>
+        <p :class="$style['customLabel']">Batch size</p>
       </label>
-      <Input
-        :value="batchSize"
-        :type="'number'"
-        :class="$style['query-bilder__input']"
-        @input="handlebatchSize"
-      />
+      <Input :value="batchSize" :type="'number'" :class="$style['query-bilder__input']" @input="handlebatchSize" />
     </div>
     <div :class="[$style['query-bilder__limit'], $style['mb5']]">
       <div :class="$style['colection__item__inputs']">
@@ -71,41 +39,26 @@
         </div>
         <br />
         <!-- :value="customQuery.replaceAll('\\', '')" -->
-        <textarea
-          v-if="isCustomRules"
-          :value="customQuery.replaceAll('\\', '')"
-          :class="[{ [$style['disabled']]: !isCustomRules }]"
-          :disabled="!isCustomRules"
-          :placeholder="placeholder"
-          rows="5"
-          @input="handleCustomQuery"
-        >
+        <textarea v-if="isCustomRules" :value="customQuery.replaceAll('\\', '')"
+          :class="[{ [$style['disabled']]: !isCustomRules }]" :disabled="!isCustomRules" :placeholder="placeholder"
+          rows="5" @input="handleCustomQuery">
         </textarea>
-        <highlight-code v-else lang="sql">
-          {{ customQuery ? customQuery.replaceAll('\\', '') : placeholder }}
-        </highlight-code>
+        <pre v-else
+          v-highlightjs="customQuery ? customQuery.replaceAll('\\', '') : placeholder"><code class="sql"></code></pre>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  ComputedRef,
-  defineComponent,
-  onMounted,
-  PropType,
-  Ref,
-  ref,
-  watch,
-} from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, onMounted, PropType, Ref, ref, watch } from 'vue';
 
 import DropDownSimple from '~/components/shared/drop-down-simple.vue';
 import Icon from '~/components/shared/icon.vue';
 import Input from '~/components/shared/input.vue';
 import Tabs from '~/components/shared/tabs.vue';
 import { MSSQL_PREFIX } from '~/constants';
+import { QueryBuilderModule } from '~/store/modules/query-builder';
 import { DataI, SaveSettingModule } from '~/store/modules/save-setting';
 import { DataBaseTypes } from '~/types/data-base-type';
 import { parsePostgreSQLQueryByCustomFileterWithLimit } from '~/utils/parseQueryBuilder';
@@ -242,12 +195,10 @@ export default defineComponent({
         } else if (props.typeDataBase === DataBaseTypes.MSSQL) {
           // eslint-disable-next-line no-console
           console.log('5');
-          customQuery.value = `SELECT * FROM ${MSSQL_PREFIX}.${
-            props.curentTable
-          } WHERE id BETWEEN ${batchStart.value} AND ${+batchSize.value + +batchStart.value}`;
+          customQuery.value = `SELECT * FROM ${MSSQL_PREFIX}.${props.curentTable
+            } WHERE id BETWEEN ${batchStart.value} AND ${+batchSize.value + +batchStart.value}`;
           updateQuery(
-            `SELECT * FROM ${MSSQL_PREFIX}.${props.curentTable} WHERE id BETWEEN ${
-              batchStart.value
+            `SELECT * FROM ${MSSQL_PREFIX}.${props.curentTable} WHERE id BETWEEN ${batchStart.value
             } AND ${+batchSize.value + +batchStart.value}`,
           );
         } else {
@@ -298,13 +249,11 @@ export default defineComponent({
       } else if (props.typeDataBase === DataBaseTypes.MSSQL) {
         console.log(
           'ph mssql =',
-          `SELECT * FROM ${MSSQL_PREFIX}.${props.curentTable} WHERE id BETWEEN ${
-            batchStart.value
+          `SELECT * FROM ${MSSQL_PREFIX}.${props.curentTable} WHERE id BETWEEN ${batchStart.value
           } AND ${+batchSize.value + +batchStart.value}`,
         );
-        return `SELECT * FROM ${MSSQL_PREFIX}.${props.curentTable} WHERE id BETWEEN ${
-          batchStart.value
-        } AND ${+batchSize.value + +batchStart.value}`;
+        return `SELECT * FROM ${MSSQL_PREFIX}.${props.curentTable} WHERE id BETWEEN ${batchStart.value
+          } AND ${+batchSize.value + +batchStart.value}`;
       } else {
         console.log(
           'mysql',
@@ -334,6 +283,22 @@ export default defineComponent({
       SaveSettingModule.setIsCustomQuery({ key: props.dataNumber, val: isCustomRules.value });
       // this.genereteQuery();
     });
+    const DataType: ComputedRef<string> = computed(() => {
+      return QueryBuilderModule.DataSet;
+    });
+
+    watch(DataType, () => {
+      query.value = [
+        {
+          role: '',
+          field: '',
+          typeField: '',
+          value: '',
+        },
+      ]
+      lineWithRules.value = ([1]);
+
+    });
 
     function handleRules(role: string, index: number): void {
       const newQuery = query.value;
@@ -350,15 +315,15 @@ export default defineComponent({
       return checkRulesByTypeJSON(query.value[index].typeField)
         ? ['like', 'not like', 'is empty', 'is not empty']
         : [
-            'equals',
-            'does not equal',
-            'like',
-            'not like',
-            'smaller',
-            'bigger',
-            'is empty',
-            'is not empty',
-          ];
+          'equals',
+          'does not equal',
+          'like',
+          'not like',
+          'smaller',
+          'bigger',
+          'is empty',
+          'is not empty',
+        ];
     }
 
     function handleIsAnd(): void {
@@ -384,21 +349,26 @@ export default defineComponent({
     function handleFields(field: string, index: number): void {
       const newQuery = query.value;
       newQuery[index].field = field;
-      newQuery[index].typeField = props.fields.filter((item: any) => item.label === field)[0].type;
+      newQuery[index].typeField = props.fields.filter((item: any) => item.label === field)[0]?.type;
       query.value = [...newQuery];
       SaveSettingModule.setQuerySettingsField({ key: props.dataNumber, id: index, val: field });
       // this.$forceUpdate()
     }
 
     function handleInput(value: string, index: number): void {
-      const newQuery = query.value;
-      newQuery[index].value = value;
-      query.value = [...newQuery];
+      // const newQuery = query.value;
+      // newQuery[index].value = value;
+      // query.value = [...newQuery];
+      query.value[index] = {
+        ...query.value[index], // Spread existing properties
+        value, // Update only the value field
+      };
+
       SaveSettingModule.setQuerySettingsVal({ key: props.dataNumber, id: index, val: value });
     }
 
-    function handlebatchSize(value: string): void {
-      batchSize.value = value;
+    function handlebatchSize(value: any): void {
+      batchSize.value = value.target.value;
       genereteQuery();
       SaveSettingModule.setBatch({
         key: props.dataNumber,
@@ -409,8 +379,8 @@ export default defineComponent({
       });
     }
 
-    function handlebatchStart(value: string): void {
-      batchStart.value = value;
+    function handlebatchStart(value: any): void {
+      batchStart.value = value.target.value;
       genereteQuery();
       SaveSettingModule.setBatch({
         key: props.dataNumber,
@@ -508,6 +478,7 @@ export default defineComponent({
   color: #bdbdbd;
   border: 3px solid #cacaca;
 }
+
 .mb5 {
   margin-bottom: 5px;
 }
@@ -517,11 +488,13 @@ export default defineComponent({
   margin-bottom: 25px;
   margin-left: 2px;
 }
+
 textarea {
   width: 100%;
   border: 3px solid green;
   padding: 2px;
 }
+
 code {
   height: 150px;
   width: 100%;
@@ -532,7 +505,12 @@ code {
 pre {
   white-space: pre-wrap;
 }
-.query-bilder > .container {
+
+.query-bilder>.container {
   margin-bottom: 25px;
+}
+
+.customLabel {
+  margin-bottom: 7px !important;
 }
 </style>

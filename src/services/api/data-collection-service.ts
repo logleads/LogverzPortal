@@ -248,7 +248,7 @@ export class DataCollectionService {
   static async getSameData(schemasName: string): Promise<string> {
     try {
       const Parameters: ParametersType = {
-        Name: `/Logverz/Engine/SchemaSamples/${schemasName}`,
+        Name: `/Logverz/Engine/Samples/${schemasName}`,
         WithDecryption: false,
       };
       const parameterEncode = encodeURI(JSON.stringify(Parameters));

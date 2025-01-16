@@ -1,25 +1,27 @@
+<!-- eslint-disable vue/no-multiple-template-root -->
 <template>
   <Draggable
     v-model="items"
     :class="$style['tabs']"
+    item-key="index"
     @start="dragging = true"
     @end="dragging = false"
   >
-    <TabItem
-      v-for="(window, index) in items"
-      :key="index"
-      :index="index"
-      :key-c="window.index"
-      :item="window"
-      :dragging="dragging"
-    >
-      {{ window.name }}
-    </TabItem>
+    <template #item="{ element }">
+      <TabItem
+        :key="element.index"
+        :index="element.index"
+        :key-c="element.index"
+        :item="element"
+        :dragging="dragging"
+      >
+        {{ element.name }}
+      </TabItem>
+    </template>
   </Draggable>
 </template>
-
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, Ref, ref, watch } from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, Ref, ref, watchEffect } from 'vue';
 import Draggable from 'vuedraggable';
 
 import { WindowData, WindowsModule } from '~/store/modules/windows';
@@ -29,7 +31,10 @@ import TabItem from './tab-item.vue';
 export default defineComponent({
   // eslint-disable-next-line vue/multi-word-component-names, vue/no-reserved-component-names
   name: 'Header',
-  components: { Draggable, TabItem },
+  components: {
+    Draggable,
+    TabItem,
+  },
   setup() {
     const items: Ref<WindowData[]> = ref([]);
     const dragging: Ref<boolean> = ref(false);
@@ -38,11 +43,10 @@ export default defineComponent({
       return WindowsModule.activeWindows;
     });
 
-    watch(activeWindows, () => {
-      items.value = activeWindows.value;
-      // console.table(items.value);
-      // });
+    watchEffect(() => {
+      items.value = [...WindowsModule.activeWindows];
     });
+
     return {
       items,
       dragging,

@@ -4,8 +4,8 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 //const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const { VueLoaderPlugin } = require('vue-loader')
-const CopyPlugin = require("copy-webpack-plugin");
+const { VueLoaderPlugin } = require('vue-loader');
+const CopyPlugin = require('copy-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const ESLintPlugin = require('eslint-webpack-plugin');
@@ -15,10 +15,10 @@ const myEslintOptions = {
   exclude: [`node_modules`],
 };
 
-
 const DEVELOPMENT_MODE = 'development';
 const PRODUCTION_MODE = 'production';
-const isProduction = process.argv.indexOf('production') >= 0 || process.env.NODE_ENV === PRODUCTION_MODE;
+const isProduction =
+  process.argv.indexOf('production') >= 0 || process.env.NODE_ENV === PRODUCTION_MODE;
 
 const SRC_PATH = path.join(__dirname, './src');
 const DIST_PATH = path.join(__dirname, './build');
@@ -37,6 +37,7 @@ module.exports = {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
     mainFields: ['module', 'browser', 'main'],
     alias: {
+      vue: '@vue/runtime-dom',
       '~': path.resolve(__dirname, SRC_PATH),
     },
     fallback: {
@@ -50,8 +51,8 @@ module.exports = {
         use: 'vue-loader',
       },
       {
-        test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
+        test: /\.css$/,
+        use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
       },
       {
         test: /\.ts$/,
@@ -94,7 +95,7 @@ module.exports = {
         type: 'asset/resource',
         generator: {
           filename: 'images/[hash][ext]',
-        }
+        },
       },
       {
         test: /\.(woff(2)?|eot|ttf|otf|svg|)$/,
@@ -107,7 +108,7 @@ module.exports = {
     splitChunks: {
       chunks: 'all',
       maxInitialRequests: Infinity,
-      minSize: 1 * 1024 *1024,
+      minSize: 1 * 1024 * 1024,
       cacheGroups: {
         vendor: {
           test: /[\\/]node_modules[\\/]/,
@@ -130,7 +131,7 @@ module.exports = {
     new BundleAnalyzerPlugin({
       analyzerMode: 'disabled',
       generateStatsFile: false,
-      statsOptions: { source: false }
+      statsOptions: { source: false },
     }),
     new CleanWebpackPlugin(),
     // new webpack.DefinePlugin({
@@ -145,9 +146,7 @@ module.exports = {
       filename: 'index.html',
     }),
     new CopyPlugin({
-      patterns: [
-        { from: "./assets/images/favicon.ico", to: "images/favicon.ico" }
-      ],
+      patterns: [{ from: './assets/images/favicon.ico', to: 'images/favicon.ico' }],
     }),
     new VueLoaderPlugin(),
     new Dotenv({

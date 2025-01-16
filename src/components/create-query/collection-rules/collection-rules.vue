@@ -4,7 +4,6 @@
       <div v-show="!isCustomRules">
         <CollectionRulesItem :class="$style['collection__item']" @update-query="handleUpdate" />
       </div>
-      <SampleDataCollection />
 
       <div :class="$style['collection__item']">
         <div :class="$style['collection__item__inputs']">
@@ -12,30 +11,29 @@
             <label :class="$style['input-item-text']"> Custom rules editor field </label>
             <input v-model="isCustomRules" type="checkbox" />
           </div>
-          <Input
-            v-if="isCustomRules"
-            slot="input"
-            v-model="QueryFromState"
-            :disabled="!isCustomRules"
+          <Input v-if="isCustomRules" v-model="customQuery" :disabled="!isCustomRules"
             placeholder="Type custom rules here"
-            :class="[$style['input-border'], { [$style['disabled']]: !isCustomRules }]"
-          />
+            :class="[$style['input-border'], { [$style['disabled']]: !isCustomRules }]" />
           <div v-else>
             <!-- <div :class="$style['input-item-text']">Generated rules query display field</div> -->
             <div :class="$style['generated-query']">
-              <highlight-code lang="sql">
+              <!-- <highlight-code lang="sql">
                 {{ QueryFromState }}
-              </highlight-code>
-              <div
-                v-if="submitted && v$.QueryFromState.required.$invalid"
-                :class="$style['validation-text']"
-              >
+              </highlight-code> -->
+              <pre v-highlightjs="QueryFromState"><code class="sql"></code></pre>
+
+              <div v-if="
+                submitted
+                //  && v$.QueryFromState.required.$invalid
+              " :class="$style['validation-text']">
                 Query string is required
               </div>
             </div>
           </div>
         </div>
       </div>
+      <SampleDataCollection />
+
     </template>
 
     <template v-else>
@@ -45,17 +43,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  ComputedRef,
-  defineComponent,
-  onMounted,
-  Ref,
-  ref,
-  watch,
-} from '@vue/composition-api';
-import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref, watch } from 'vue';
 
 import CollectionRulesItem from '~/components/create-query/collection-rules/collection-rules-item.vue';
 import SampleDataCollection from '~/components/create-query/sss/sample-data.vue';
@@ -67,20 +55,10 @@ import { QueryBuilderRule } from '~/types/models/query-builder-types';
 import { parseQueryObject } from '~/utils/parseQueryObject';
 import { parseToSequelize } from '~/utils/sequelize-query';
 
-// @Component({
-//   name: 'CollectionRules',
-//   components: { Loader, CollectionRulesItem, InputContainer, Input, SampleDataCollection },
-//   mixins: [validationMixin],
-//   validations: {
-//     QueryFromState: { required },
-//   },
-// })
 export default defineComponent({
   name: 'CollectionRules',
   // eslint-disable-next-line vue/no-reserved-component-names
   components: { Loader, CollectionRulesItem, Input, SampleDataCollection },
-  // @Prop({ required: false, type: Boolean }) readonly submitted!: boolean;
-  // @Prop({ required: false, type: Boolean }) readonly isFetching!: boolean;
   props: {
     submitted: {
       type: Boolean,
@@ -119,6 +97,10 @@ export default defineComponent({
     const items: Ref<Array<{ id: number }>> = ref([{ id: 1 }, { id: 2 }]);
 
     watch(isCustomRules, (value: boolean) => {
+      console.log('IS CUSTOME RULE', value);
+      if (value) {
+        customQuery.value = QueryString.value;
+      }
       DataCollectionModule.setInputValue({
         label: 'QueryString',
         value: parserQuery(
@@ -132,10 +114,13 @@ export default defineComponent({
     });
 
     const QueryFromState: ComputedRef<string> = computed(() => {
-      console.log('DataCollectionModule.queryString', DataCollectionModule.queryString);
-      return DataCollectionModule.queryString.replaceAll('.undefined', ' ');
-    });
+      if (DataCollectionModule.queryString) {
 
+        return DataCollectionModule.queryString?.replaceAll('._undefined', ' ');
+      } else {
+        return `SELECT * FROM ${DataCollectionModule.DatasetName ? DataCollectionModule.DatasetName + ' AS tbl' : ''} `;
+      }
+    });
     const rules: ComputedRef<Array<QueryBuilderRule>> = computed(() => {
       return DataCollectionModule.rules;
     });
@@ -147,18 +132,24 @@ export default defineComponent({
     const CsvHeaderInfo: ComputedRef<string> = computed(() => {
       return DataCollectionModule.csvHeader;
     });
-    watch(customQuery, (value: string) => {
-      if (isCustomRules.value) {
-        DataCollectionModule.setInputValue({ label: 'QueryString', value });
-      }
-    });
-    watch(rules, () => {
-      query.value = {
-        logicalOperator: logicalOperatorType.OR,
-        children: [],
-      };
-    });
+    // watch(customQuery, (value: string) => {
+    //   if (isCustomRules.value) {
+    //     console.log('customQuery', value);
+    //     // DataCollectionModule.setInputValue({ label: 'QueryString', value });
+    //     DataCollectionModule.setInputValue({
+    //       label: 'QueryString',
+    //       value: value,
+    //     });
+    //   }
+    // });
+    // watch(rules, () => {
+    //   query.value = {
+    //     logicalOperator: logicalOperatorType.OR,
+    //     children: [],
+    //   };
+    // });
     watch(QueryString, (value: string) => {
+
       if (!isCustomRules.value) {
         DataCollectionModule.setInputValue({
           label: 'QueryString',
@@ -196,14 +187,14 @@ export default defineComponent({
     function sqlToSequelize(query: MainQuery): string {
       return parseToSequelize(query);
     }
-    const validationRules = {
-      QueryFromState: { required },
-    };
-    const v$ = useVuelidate(validationRules, {
-      QueryFromState,
-    });
+    // const validationRules = {
+    //   QueryFromState: { required },
+    // };
+    // const v$ = useVuelidate(validationRules, {
+    //   QueryFromState,
+    // });
     onMounted(async () => {
-      emit('validate', v$);
+      // emit('validate', v$);
       query.value = {
         logicalOperator: logicalOperatorType.OR,
         children: [],
@@ -225,7 +216,7 @@ export default defineComponent({
       textarea,
       query,
       isCustomRules,
-      v$,
+      // v$,
     };
   },
 });
@@ -274,11 +265,12 @@ export default defineComponent({
   align-items: center;
   font-size: 14px;
   margin-right: 10px;
-  color: var(--secondary-text-color);
+  // color: var(--secondary-text-color);
 }
 
 .generated-query {
   margin-top: 10px;
+
   &__text-area {
     width: 100%;
     resize: none;
@@ -288,15 +280,18 @@ export default defineComponent({
       width: 3px;
       height: 18px;
     }
+
     /* Track */
     &::-webkit-scrollbar-track {
       background: #f1f1f1;
     }
+
     /* Handle */
     &::-webkit-scrollbar-thumb {
       background: var(--accent-color);
       border-radius: 31px;
     }
+
     /* Handle on hover */
     &::-webkit-scrollbar-thumb:hover {
       background: var(--accent-color);
@@ -309,6 +304,7 @@ export default defineComponent({
   font-size: 14px;
   margin-top: 10px;
 }
+
 code {
   height: 95px !important;
   width: 100%;
@@ -319,6 +315,7 @@ code {
 pre {
   white-space: pre-wrap;
 }
+
 .input-border {
   border: 1px solid #45e799;
   margin-top: 2px;

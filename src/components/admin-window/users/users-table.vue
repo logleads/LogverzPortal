@@ -22,12 +22,9 @@
             v-model="Name1"
             name="name"
             :placeholder="'Specify username'"
-            :error="submitted && !v$.Name1.$invalid && v$.Name1.$dirty"
+            :error="submitted && v$.Name1.$error"
           />
-          <div
-            v-if="submitted && !v$.Name1.$invalid && v$.Name1.$dirty"
-            :class="$style['validation-text']"
-          >
+          <div v-if="submitted && v$.Name1.$error" :class="$style['validation-text']">
             Name is required
           </div>
         </div>
@@ -44,10 +41,7 @@
             name="Type"
             @select-value="handleTypeSelect"
           />
-          <div
-            v-if="submitted && !v$.Type.$invalid && v$.Type.$dirty"
-            :class="$style['validation-text']"
-          >
+          <div v-if="submitted && v$.Type.$error" :class="$style['validation-text']">
             Type is required
           </div>
         </div>
@@ -68,14 +62,11 @@
             label="name"
             track-by="name"
             :class="{
-              invalid: submitted && !v$.chosenGroup.$invalid && v$.chosenPolicies.$dirty,
+              invalid: submitted && v$.chosenGroup.$error,
             }"
           />
         </div>
-        <div
-          v-if="submitted && !v$.chosenGroup.$invalid && v$.chosenPolicies.$dirty"
-          :class="$style['validation-text']"
-        >
+        <div v-if="submitted && v$.chosenGroup.$error" :class="$style['validation-text']">
           Policies and Groups are required
         </div>
         <div :class="$style['input-wrapper__multi']">
@@ -95,13 +86,10 @@
             label="name"
             track-by="name"
             :class="{
-              invalid: submitted && !v$.chosenGroup.$invalid && v$.chosenPolicies.$dirty,
+              invalid: submitted && v$.chosenGroup.$error,
             }"
           />
-          <div
-            v-if="submitted && !v$.chosenGroup.$invalid && v$.chosenPolicies.$dirty"
-            :class="$style['validation-text']"
-          >
+          <div v-if="submitted && !v$.chosenGroup.$error" :class="$style['validation-text']">
             Policies and Groups are required
           </div>
         </div>
@@ -110,9 +98,9 @@
             text="Save"
             :disabled="
               submitted ||
-              (v$.chosenGroup.$invalid && v$.chosenPolicies.$invalid) ||
-              v$.Type.$invalid ||
-              v$.Name1.$invalid
+              (v$.chosenGroup.$error && v$.chosenPolicies.$error) ||
+              v$.Type.$error ||
+              v$.Name1.$error
             "
             no-load
             @click="handleSubmit"
@@ -176,10 +164,8 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from '@vue/composition-api';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
-// import { required } from '@vuelidate/validators';
 import {
   DxColumn,
   DxDataGrid,
@@ -188,6 +174,7 @@ import {
   DxHeaderFilter,
   DxMasterDetail,
 } from 'devextreme-vue/data-grid';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from 'vue';
 import Multiselect from 'vue-multiselect';
 
 import MasterDetailedUsers from '~/components/admin-window/users/master-detailed-users.vue';
@@ -302,7 +289,7 @@ export default defineComponent({
         return extractPolicy(accumulator) + ', ' + extractPolicy(currentValue);
       };
 
-      return data.map(i => {
+      return data?.map(i => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let addedProperty: any = {};
         if (i['IAMPolicies']?.length) {
@@ -364,11 +351,12 @@ export default defineComponent({
 
     function handleSubmit(): void {
       submitted.value = true;
+      v$.value.$touch();
       if (
         submitted.value ||
-        (!v$.value.chosenGroup.$invalid && !v$.value.chosenPolicies.$invalid) ||
-        !v$.value.Type.$invalid ||
-        !v$.value.Name1.$invalid
+        (!v$.value.chosenGroup.$error && !v$.value.chosenPolicies.$error) ||
+        !v$.value.Type.$error ||
+        !v$.value.Name1.$error
       ) {
         const IAMGroups = chosenGroup.value.map(i => i.name);
         const IAMPolicies = chosenPolicies.value.map(i => i.name);
@@ -471,7 +459,7 @@ export default defineComponent({
 </script>
 
 <style module lang="scss">
-@import '../styles';
+@use '../styles';
 
 .search {
   display: flex;
@@ -583,12 +571,14 @@ export default defineComponent({
 }
 </style>
 
-<style>
-#gridContainer2 {
+<style scoped>
+#gridContainer3 {
   height: 700px;
+  font-family: 'Roboto', sans-serif;
+
 }
 
-#gridContainer2 .dx-command-edit a {
+#gridContainer3 .dx-command-edit a {
   color: white;
   text-decoration: none;
   background-color: var(--accent-color);
@@ -596,5 +586,6 @@ export default defineComponent({
   padding: 5px 10px;
   font-weight: 500;
   font-size: 14px;
+  font-family: r;
 }
 </style>

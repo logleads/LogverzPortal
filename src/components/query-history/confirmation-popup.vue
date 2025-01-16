@@ -6,15 +6,14 @@
       </div>
       <div :class="[$style['container__footer']]">
         <Button text="No" @click="close" />
-        <Button text="YES" @click="save" />
+        <Button text="YESsa" @click="save" />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-// import { maxLength, required } from 'vuelidate/lib/validators';
-import { defineComponent, Ref, ref } from '@vue/composition-api';
+import { defineComponent, Ref, ref } from 'vue';
 
 import Button from '~/components/shared/button.vue';
 

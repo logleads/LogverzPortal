@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { reservedKeywordsList } from '~/reservedKeywordsList';
+import { DataCollectionModule } from '~/store/modules/data-collection';
 import { MainQuery, QueryBuilderGroup, QueryBuilderRule } from '~/types/common';
 
 // const getOperator = (operator: string, value: string | null): string | boolean => {
@@ -48,6 +49,7 @@ import { MainQuery, QueryBuilderGroup, QueryBuilderRule } from '~/types/common';
 //   }
 //   return moderatedQuery;
 // };
+const regex = /[ :]/;
 
 const convertType = (castType: string | object | null, value: string) => {
   if (castType === 'int') {
@@ -65,9 +67,14 @@ const getOperator = (
   castType: string | object | null,
 ): string | boolean => {
   switch (operator) {
-    case 'equals':
+    case '=':
       return !value ? false : ` = ${convertType(castType, value)}`;
-    case 'does not equal':
+    case '>=':
+      return !value ? false : ` >= ${convertType(castType, value)}`;
+    case '<=':
+      return !value ? false : ` <= ${convertType(castType, value)}`;
+
+    case '<>':
       return !value ? false : ` != ${convertType(castType, value)}`;
     case 'contains':
       return !value ? false : ` CONTAINS ${convertType(castType, value)}`;
@@ -79,11 +86,15 @@ const getOperator = (
       return ` IS NOT NULL`;
     case 'like':
       return !value ? false : ` LIKE '%${value}%'`;
+    case 'startswith':
+      return !value ? false : ` LIKE '%${value}%'`;
+    case 'endswith':
+      return !value ? false : ` LIKE '%${value}%'`;
     case 'not like':
       return !value ? false : ` NOT LIKE '%${value}%'`;
-    case 'smaller':
+    case '<':
       return !value ? false : ` < ${convertType(castType, value)}`;
-    case 'bigger':
+    case '>':
       return !value ? false : ` > ${convertType(castType, value)}`;
     default:
       return false;
@@ -101,23 +112,23 @@ const generateOneRawFromWhereQuery = (
 ): string => {
   const selectedField = field;
   console.log('children Index', typeof castType);
-  if (format === 'CSV' && header === 'NONE') {
-    if (castType && typeof castType !== 'object') {
-      return `CAST(s._${index} as ${castType}) ${getOperator(role, value, castType)}`;
-    }
-    return `s._${index} ${getOperator(role, value, castType)}`;
-  } else if (castType && typeof castType !== 'object') {
-    return `CAST(s.${checkForReservedKeyWord(selectedField)} as ${castType}) ${getOperator(
-      role,
-      value,
-      castType,
-    )}`;
-  }
-  return `s.${checkForReservedKeyWord(selectedField)} ${getOperator(role, value, castType)}`;
+  // if (format === 'CSV' && header === 'NONE') {
+  //   if (castType && typeof castType !== 'object') {
+  //     return `CAST(s._${index} as ${castType}) ${getOperator(role, value, castType)}`;
+  //   }
+  //   return `s._${index} ${getOperator(role, value, castType)}`;
+  // } else if (castType && typeof castType !== 'object') {
+  //   return `CAST(s.${checkForReservedKeyWord(selectedField)} as ${castType}) ${getOperator(
+  //     role,
+  //     value,
+  //     castType,
+  //   )}`;
+  // }
+  return ` tbl.${checkForReservedKeyWord(selectedField)} ${getOperator(role, value, castType)}`;
 };
 
 const checkForReservedKeyWord = (selectedField: string) => {
-  if (reservedKeywordsList.includes(selectedField)) {
+  if (reservedKeywordsList.includes(selectedField)||regex.test(selectedField)) {
     return `"${selectedField}"`;
   } else {
     return selectedField;
@@ -151,7 +162,7 @@ const parseChildren = (
       });
 
     if (!queryArray.length) return '';
-    const newQuery = `WHERE ${queryArray.join(` ${logicalOperator} `)}`;
+    const newQuery = ` AS tbl WHERE ${queryArray.join(` ${logicalOperator} `)}`;
 
     return newQuery;
   }
@@ -164,36 +175,37 @@ export const parseQueryObject = (
   rootJSON: string = 'Records',
   csvHeader: string,
 ): string => {
-  if (!obj.children.length) {
+  if (!obj.children?.length) {
     return '';
   }
   const elements = '*';
   let additionalQuery = '';
   let query = '';
-  if (format === 'JSON') {
-    // console.log('json HEADER INFO', csvHeader);
-    additionalQuery = parseChildren(
-      obj.children,
-      obj.logicalOperator,
-      additionalQuery,
-      format,
-      csvHeader,
-    );
-    query = `SELECT ${elements} FROM S3Object[*].${rootJSON}[*] s ${additionalQuery}`;
-  }
-  if (format === 'CSV') {
-    // console.log('obj', obj);
-    // console.log('CSV HEADER INFO', csvHeader);
-    additionalQuery = parseChildren(
-      obj.children,
-      obj.logicalOperator,
-      additionalQuery,
-      format,
-      csvHeader,
-    );
-    // console.log(additionalQuery, 'additionalQuery');
-    query = `SELECT ${elements} FROM s3object s ${additionalQuery}`;
-  }
+  additionalQuery = parseChildren(
+    obj.children,
+    obj.logicalOperator,
+    additionalQuery,
+    format,
+    csvHeader,
+  );
+  query = `SELECT ${elements} FROM ${DataCollectionModule.DatasetName} ${additionalQuery}`;
+  // if (format === 'JSON') {
+  //   // console.log('json HEADER INFO', csvHeader);
+
+  // }
+  // if (format === 'CSV') {
+  //   // console.log('obj', obj);
+  //   // console.log('CSV HEADER INFO', csvHeader);
+  //   additionalQuery = parseChildren(
+  //     obj.children,
+  //     obj.logicalOperator,
+  //     additionalQuery,
+  //     format,
+  //     csvHeader,
+  //   );
+  //   // console.log(additionalQuery, 'additionalQuery');
+  //   query = `SELECT ${elements} FROM ${DataCollectionModule.DatasetName} ${additionalQuery}`;
+  // }
   // // eslint-disable-next-line no-console
   // console.log(query, 'parseQueryObject');
   return query;

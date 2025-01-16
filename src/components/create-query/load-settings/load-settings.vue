@@ -5,81 +5,62 @@
         <label :class="$style['range-label']"><b> Range</b>:</label>
         <TimerFilter @clear="clear" @unix-time-change="timeFilter" />
 
-        <Tabs
-          btn-rigth-text="Shared"
-          btn-left-text="My"
-          :state-b-t-n="tableMode"
-          text-before-btn="Scope"
-          @change-table-content="changeTableMode"
-        />
-        <Tabs
-          btn-rigth-text="All"
-          btn-left-text="Current"
-          text-before-btn="Version"
-          :state-b-t-n="filterContent"
-          @change-table-content="applyVersionFilter"
-        />
+        <Tabs btn-rigth-text="Shared" btn-left-text="My" :state-b-t-n="tableMode" text-before-btn="Scope"
+          @change-table-content="changeTableMode" />
+        <Tabs btn-rigth-text="All" btn-left-text="Current" text-before-btn="Version" :state-b-t-n="filterContent"
+          @change-table-content="applyVersionFilter" />
         <div :class="$style['tooltip-margin']">
           <ToolTip :tip="DCH_QUERY_HISTORY_local" />
         </div>
       </div>
+
       <div :class="$style['table-h']">
         <Loader v-if="isSettingsFetch" accent />
-        <DxDataGrid
-          v-else
-          id="gridSettings"
-          :show-borders="true"
-          :data-source="tableData"
-          :show-column-lines="true"
-          :show-row-lines="true"
-          :allow-column-reordering="true"
-          :column-auto-width="true"
-        >
+        <DxDataGrid v-else id="gridSettings" :show-borders="true" :data-source="tableData" :show-column-lines="true"
+          :show-row-lines="true" :allow-column-reordering="true" :column-auto-width="true">
           <DxHeaderFilter :visible="true" />
           <DxFilterRow :visible="true" />
-          <DxColumn type="buttons" :width="150" caption="Action" data-field="id">
-            <DxButton>
-              <template #default="{ data }">
-                <SimpleBtn
-                  btn-text="Load configuration"
-                  @clicked.stop="loadConfiguration(data, $event)"
-                />
-              </template>
-            </DxButton>
-          </DxColumn>
-          <DxColumn caption="Creator" data-field="UsersQuery" />
-          <DxColumn
-            caption="Time"
-            data-field="UnixTimeNormalFormat"
-            cell-template="cellTemplate"
-            :class="$style['cell-template']"
-          />
+
+          <!-- Action Column with a custom button -->
+          <!-- <DxColumn type="buttons" :width="150" caption="Action" data-field="id">
+            <template #cellTemplate="{ data }" >
+              <DxButton >
+                <SimpleBtn btn-text="Load configuration" @clicked.stop="loadConfiguration(data, $event)" />
+              </DxButton>
+            </template>
+</DxColumn> -->
+          <DxColumn type="buttons" :width="150" caption="Action" data-field="id" cell-template="cellTemplate" />
+          <!-- Using Vue's template for custom cell content -->
+
           <template #cellTemplate="{ data }">
-            <TimeFields
-              :unix-time-nomal-format="data.data.UnixTimeNormalFormat"
-              :time-local-format="data.data.TimeLocalFormat"
-            />
+            <!-- Directly use SimpleBtn or a native button for custom actions -->
+            <SimpleBtn btn-text="Load configuration" @clicked.stop="loadConfiguration(data, $event)" />
           </template>
+
+          <!-- </DxColumn> -->
+
+          <!-- Creator Column -->
+          <DxColumn caption="Creator" data-field="UsersQuery" />
+
+          <!-- Time Column with custom cell content -->
+          <DxColumn caption="Time" data-field="UnixTimeNormalFormat" cell-template="TimeFields" />
+          <template #TimeFields="{ data }">
+            <TimeFields :unix-time-nomal-format="data.UnixTimeNormalFormat" :time-local-format="data.TimeLocalFormat" />
+          </template>
+          <!-- </DxColumn> -->
+
+          <!-- Other Columns -->
           <DxColumn caption="Dataset Name" data-field="DatasetName" />
           <DxColumn caption="Description" data-field="Description" />
           <DxColumn caption="Source" data-field="S3Folders" />
-          <DxMasterDetail :enabled="true" template="masterDetailedLoadSettings" />
-          <template #masterDetailedLoadSettings="{ data }">
-            <MasterDetailedSettings :data="data" />
-          </template>
-        </DxDataGrid>
 
-        <!-- <div :class="$style['additional-settings']">
-          <input
-            id="reuseDatasetName"
-            v-model="reuseDatasetName"
-            :class="$style['additional-settings__checkbox']"
-            type="checkbox"
-          />
-          <p :class="$style['additional-settings__label']" for="reuseDatasetName">
-            Reuse table Name (overwrites existing data)
-          </p>
-        </div> -->
+          <!-- Master Detail Template -->
+          <DxMasterDetail :enabled="true">
+            <template #template="{ data }">
+              <MasterDetailedSettings :data="data" />
+            </template>
+          </DxMasterDetail>
+        </DxDataGrid>
       </div>
     </div>
   </div>
@@ -88,15 +69,6 @@
 <script lang="ts">
 import 'devextreme/dist/css/dx.light.css';
 
-import {
-  computed,
-  ComputedRef,
-  defineComponent,
-  onMounted,
-  Ref,
-  ref,
-  watch,
-} from '@vue/composition-api';
 import DxDataGrid, {
   DxButton,
   DxColumn,
@@ -104,6 +76,7 @@ import DxDataGrid, {
   DxHeaderFilter,
   DxMasterDetail,
 } from 'devextreme-vue/data-grid';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref, watch } from 'vue';
 
 import SimpleBtn from '~/components/shared/btn-simple.vue';
 import Loader from '~/components/shared/loader.vue';
@@ -148,7 +121,7 @@ export default defineComponent({
     });
 
     const savedSettings: ComputedRef<any> = computed(() => {
-      let response = DataCollectionModule.savedSettings.map(i => {
+      let response = DataCollectionModule.savedSettings?.map(i => {
         const obj = parseObj(i);
         //delete obj.DataType;
         return {
@@ -166,18 +139,19 @@ export default defineComponent({
       const filteredData = implementActiveFIlter(value);
       // return filteredData;
       let modifyData = FIxTableNameToDatasetName(filteredData);
-      tableData.value = modifyData;
+      // tableData.value = modifyData;
     });
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     function FIxTableNameToDatasetName(data: any) {
-      return data.map((filtered: any) => {
+
+      return data.length > 0 ? data?.map((filtered: any) => {
         if (filtered['TableName']) {
           filtered['DatasetName'] = filtered['TableName'];
           delete filtered['TableName'];
         }
         return filtered;
-      });
+      }) : [];
     }
 
     function changeTableMode(value: boolean): void {
@@ -190,7 +164,7 @@ export default defineComponent({
       filterContent.value = value;
       if (value) {
         const data = implementActiveFIlter(tableData.value);
-        tableData.value = FIxTableNameToDatasetName(data);
+        tableData.value = data ? FIxTableNameToDatasetName(data) : [];
       } else {
         tableData.value = FIxTableNameToDatasetName(savedSettings);
       }
@@ -201,12 +175,12 @@ export default defineComponent({
     });
 
     function implementActiveFIlter(data: any[]): any {
-      let list = JSON.parse(JSON.stringify(data));
+      // let list = JSON.parse(JSON.stringify(data));
       if (filterContent.value) {
-        let result = list.filter((item: any) => item.Active === true);
+        let result = data.filter((item: any) => item.Active === true);
         return result;
       } else {
-        return list;
+        return data;
       }
     }
 
@@ -262,7 +236,26 @@ export default defineComponent({
     function clear(): void {
       // DataCollectionModule.getSettings(!this.tableMode, this.unix);
     }
+    function cellRenderer({ data }) {
+      console.log("data=======", data);
+
+      return {
+        render(createElement) {
+          return createElement(SimpleBtn, {
+            props: {
+              btnText: "Load configuration",
+              rowData: data
+            },
+            on: {
+              clicked: (event) => loadConfiguration(data, event)
+            }
+          });
+        }
+      };
+    }
+
     return {
+      cellRenderer,
       clear,
       timeFilter,
       loadConfiguration,
@@ -311,6 +304,7 @@ export default defineComponent({
   align-items: center;
   justify-content: space-between;
 }
+
 .popup {
   position: fixed;
   left: 50%;
@@ -351,11 +345,13 @@ export default defineComponent({
     color: var(--ink-color);
   }
 }
+
 .range-label {
   margin-top: 6px;
   padding-top: 4px;
   padding-left: 4px;
 }
+
 .table {
   display: flex;
   width: 100%;
@@ -373,7 +369,7 @@ export default defineComponent({
     font-size: 14px;
     color: var(--blue-text-color);
 
-    > div {
+    >div {
       display: flex;
       align-items: center;
       // padding-right: 19px;
@@ -385,6 +381,7 @@ export default defineComponent({
   height: 85%;
   width: 95%;
 }
+
 .tooltip-margin {
   margin-top: 6px;
 }

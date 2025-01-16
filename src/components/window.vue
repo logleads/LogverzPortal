@@ -41,7 +41,7 @@
         </button>
       </div>
     </div>
-    <div
+    <template
       v-for="side in resizeSides"
       :key="side"
       :class="[
@@ -50,7 +50,7 @@
         { [$style['resize-side--off']]: fullscreen },
       ]"
       @mousedown="handleResizeStart($event, side)"
-    ></div>
+    ></template>
     <div :class="$style['content']">
       <slot />
     </div>
@@ -58,15 +58,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  ComputedRef,
-  defineComponent,
-  onMounted,
-  Ref,
-  ref,
-  watch,
-} from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref, watch } from 'vue';
 
 import Icon from '~/components/shared/icon.vue';
 import { UserModule } from '~/store/modules/user';
@@ -177,7 +169,7 @@ export default defineComponent({
 
     function resizeInput() {
       pHideElement.value.innerText = title.value;
-      windowName.value.style.width = pHideElement.value.clientWidth + 22 + 'px';
+      windowName.value.style.width = pHideElement.value?.clientWidth + 22 + 'px';
     }
 
     const resizeSides: ComputedRef<ResizeSide[]> = computed(() => {

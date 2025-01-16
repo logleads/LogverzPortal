@@ -21,7 +21,7 @@
 <script lang="ts">
 import 'devextreme/dist/css/dx.light.css';
 
-import { defineComponent, onMounted, ref } from '@vue/composition-api';
+import { defineComponent, onMounted, ref } from 'vue';
 
 export default defineComponent({
   name: 'collectionTypes',

@@ -3,35 +3,28 @@
     <template v-if="!isFetching">
       <div v-for="input in inputs" :key="input.label" :class="$style['advanced__inputs']">
         <InputContainer :label="input.label">
-          <ToolTip slot="icon" :tip="input.tip" />
-          <Input
-            slot="input"
-            v-model="input.content"
-            :name="input.label"
-            :error="submitted && v$[input.label].$invalid"
-            @input="handleInput({ value: $event, label: input.label })"
-          />
+          <template #icon>
+            <ToolTip :tip="input.tip" />
+          </template>
+          <template #input>
+            <Input
+              v-model="input.content"
+              :name="input.label"
+              :error="submitted && v$[input.label].$error"
+              @input="handleInput({ value: $event, label: input.label })"
+            />
+          </template>
         </InputContainer>
-        <div
-          v-if="submitted && v$[input.label].required.$invalid"
-          :class="$style['validation-text']"
-        >
+        <div v-if="submitted && v$[input.label].$error" :class="$style['validation-text']">
           {{ input.label }} is required
         </div>
-        <div
-          v-if="submitted && v$[input.label].between && v$[input.label].between.$invalid"
-          :class="$style['validation-text']"
-        >
-          {{ input.label }} Must be between {{ v$[input.label].between.$params.min }} -
+
+        <div v-if="submitted && v$[input.label].between" :class="$style['validation-text']">
+          {{ input.label }} Must be between
+          {{ v$[input.label].between.$params.min }}
+          -
           {{ v$[input.label].between.$params.max }}
         </div>
-        <!-- <div
-          v-if="submitted && $v[input.label].$params.between && !$v[input.label].between"
-          :class="$style['validation-text']"
-        >
-          {{ input.label }} Must be between {{ $v[input.label].$params.between.min }} -
-          {{ $v[input.label].$params.between.max }}
-        </div> -->
       </div>
       <div :class="$style['advanced__inputs']">
         <label :class="$style['label']">
@@ -53,16 +46,9 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  onMounted,
-  Ref,
-  ref,
-  WritableComputedRef,
-} from '@vue/composition-api';
 import { useVuelidate } from '@vuelidate/core';
 import { between, required } from '@vuelidate/validators';
+import { computed, defineComponent, onMounted, Ref, ref, WritableComputedRef } from 'vue';
 
 import DropDownSimple from '~/components/shared/drop-down-simple.vue';
 import Input from '~/components/shared/input.vue';
@@ -99,11 +85,11 @@ export default defineComponent({
       AllocationStrategy: { required },
     };
 
-    const S3EnumerationDepth: WritableComputedRef<string> = computed(() => {
+    const S3EnumerationDepth = computed(() => {
       return DataCollectionModule.s3EnumerationDepth;
     });
 
-    const PreferedWorkerNumber: WritableComputedRef<string> = computed(() => {
+    const PreferedWorkerNumber = computed(() => {
       return DataCollectionModule.preferedWorkerNumber;
     });
 
@@ -131,16 +117,18 @@ export default defineComponent({
     });
 
     onMounted(() => {
-      emit('validate', v$);
+      // emit('validate', v$);
     });
 
     function handleInput(payload: { value: string; label: string }): void {
       DataCollectionModule.setInputValue(payload);
+      v$.value.$touch();
       emit('validate', v$);
     }
 
     function handleInputSelect(payload: { item: string; content: string }): void {
       DataCollectionModule.setSelectValue({ label: 'AllocationStrategy', value: payload.item });
+      v$.value.$touch();
       emit('validate', v$);
     }
     return {
@@ -167,6 +155,9 @@ export default defineComponent({
 
   &__inputs {
     max-width: 99%;
+    input {
+      height: 42px;
+    }
 
     > div {
       margin-bottom: 20px;
@@ -188,8 +179,9 @@ export default defineComponent({
   align-content: center;
 
   &__text {
-    font-size: 12px;
-    color: var(--secondary-text-color);
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 10px;
     margin-right: 7px;
   }
 

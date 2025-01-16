@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'TimeFields',
@@ -36,7 +36,7 @@ export default defineComponent({
     visibility: hidden;
     width: 100%;
     padding: 0 10px 0 10px;
-    background-color: black;
+    background-color: #1a1b20;
     color: #fff;
     text-align: center;
     border-radius: 6px;

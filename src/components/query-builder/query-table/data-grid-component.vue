@@ -17,8 +17,8 @@
 import 'devextreme/dist/css/dx.common.css';
 import 'devextreme/dist/css/dx.greenmist.css';
 
-import { computed, ComputedRef, defineComponent, Ref, ref } from '@vue/composition-api';
 import { json2csv } from 'json-2-csv';
+import { computed, ComputedRef, defineComponent, Ref, ref } from 'vue';
 
 import { QueryBuilderModule } from '~/store/modules/query-builder';
 import { CloudTrailDataResponse } from '~/types/models/query-builder-types';
@@ -61,13 +61,13 @@ export default defineComponent({
 
     const items: ComputedRef<CloudTrailDataResponse[] | null> = computed(() => {
       const data = QueryBuilderModule.dataForAllWindows[props.dataNumber as number]
-        ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].data.map(
+        ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].data?.map(
             (i: Record<string, unknown>) => i,
           )
         : [];
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       rawItems.value = data;
-      const sortedBySelectedColum = data.map((item: Record<string, unknown>) => {
+      const sortedBySelectedColum = data?.map((item: Record<string, unknown>) => {
         const obj: Record<string, unknown> = {};
         Object.keys(item)
           .filter((it: string) => {
@@ -80,16 +80,23 @@ export default defineComponent({
         return obj;
       });
       const json2csvCallback = (err: unknown, csv: string | undefined) => {
-        if (err) throw err;
+        
+        if (err){
+          console.log("err---");
+          throw err;
+        }
+          
         if (csv) {
+
           const tmp = csv as string;
           const arr = tmp.split('\n');
           headers.value = arr[0].split(',').map((item: any) => {
             return item.replaceAll('.', '-').toLowerCase();
           });
+
         }
       };
-
+      
       json2csv(sortedBySelectedColum as CloudTrailDataResponse[], json2csvCallback);
       return sortedBySelectedColum;
     });

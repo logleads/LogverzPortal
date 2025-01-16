@@ -10,30 +10,27 @@
         { [$style['input__error']]: error },
         { [$style['height-44']]: fromQueryBuilder },
       ]"
-      :value="value"
+      :value="modelValue"
       :min="min"
       :name="name"
       :disabled="disabled"
       :placeholder="placeholder"
-      @input="handleInputChange($event.target.value)"
+      @input="handleInputChange"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent } from 'vue';
 
 import Icon from './icon.vue';
 
-// @Component({
-
-// })
 export default defineComponent({
   // eslint-disable-next-line vue/no-reserved-component-names, vue/multi-word-component-names
   name: 'Input',
   components: { Icon },
   props: {
-    value: {
+    modelValue: {
       type: String,
       required: false,
     },
@@ -69,8 +66,10 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    function handleInputChange(value: string) {
-      emit('input', value);
+    function handleInputChange(e: Event) {
+      const input = e.target as HTMLInputElement;
+      console.log('Input', input.value);
+      emit('update:modelValue', input.value);
     }
     return {
       handleInputChange,
@@ -105,10 +104,9 @@ $iconSize: 16px;
   background: #ffffff;
   border: 1px solid var(--border-color);
   border-radius: 5px;
-  font-size: 12px;
-  font-weight: 500;
   padding: 0 $inputPadding;
   width: 100%;
+  margin-top: 5px;
   height: 30px;
   transition: background 0.1s linear;
   &__error {

@@ -78,7 +78,6 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from '@vue/composition-api';
 import { exportWidgets } from 'devextreme/viz/export';
 import {
   DxAdaptiveLayout,
@@ -94,6 +93,7 @@ import {
 } from 'devextreme-vue/chart';
 import { DxFieldChooser, DxPivotGrid } from 'devextreme-vue/pivot-grid';
 import { json2csv } from 'json-2-csv';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from 'vue';
 
 import { QueryBuilderModule } from '~/store/modules/query-builder';
 import { CloudTrailDataResponse } from '~/types/models/query-builder-types';
@@ -194,12 +194,12 @@ export default defineComponent({
 
     const items: ComputedRef<CloudTrailDataResponse[] | null> = computed(() => {
       const data = QueryBuilderModule.dataForAllWindows[props.dataNumber as number]
-        ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].data.map(
+        ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].data?.map(
             (i: Record<string, unknown>) => i,
           )
         : [];
 
-      const sortedBySelectedColum = data.map((item: Record<string, unknown>) => {
+      const sortedBySelectedColum = data?.map((item: Record<string, unknown>) => {
         const obj: Record<string, unknown> = {};
         Object.keys(item).map((key: string) => {
           obj[key] = item[key];

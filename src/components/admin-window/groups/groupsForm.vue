@@ -5,7 +5,7 @@
         <Loader accent />
       </template>
       <template v-else>
-        <h1>Add or remove external users</h1>
+        <h3>Add or remove external users</h3>
         <div :class="$style['input-wrapper__multi']">
           <template v-if="usersOfGroupFetching">
             <Loader accent />
@@ -35,15 +35,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  ComputedRef,
-  defineComponent,
-  onMounted,
-  Ref,
-  ref,
-  watch,
-} from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref, watch } from 'vue';
 import Multiselect from 'vue-multiselect';
 
 import MyButton from '~/components/shared/button.vue';

@@ -7,7 +7,7 @@
     @click="toggleShow"
   >
     <label contenteditable="false">
-      <input type="text" :value="content" :placeholder="placeholder" disabled />
+      <input type="text" :value="content" :placeholder="placeholder"/>
       <div>
         <Icon
           v-if="!scopeExpanded"
@@ -27,7 +27,7 @@
     </label>
     <div v-show="scopeExpanded" :class="$style['input-unwrapped']">
       <div
-        v-for="item in items"
+        v-for="item in $props.items"
         :key="item + Math.random() * 1000"
         :class="$style['input-unwrapped__item']"
         contenteditable="false"
@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, Ref, ref, watch } from '@vue/composition-api';
+import { defineComponent, PropType, Ref, ref, watch } from 'vue';
 
 import Icon from '~/components/shared/icon.vue';
 
@@ -85,10 +85,12 @@ export default defineComponent({
     }
 
     watch(scopeExpanded, (value: boolean) => {
+      console.log('asdad', props.items);
+
       if (value) {
-        select.value.focus();
+        select.value?.focus();
       } else {
-        select.value.blur();
+        select.value?.blur();
       }
     });
 
@@ -109,13 +111,13 @@ export default defineComponent({
   position: relative;
 
   & input {
-    font-weight: 500;
+    // font-weight: 500;
     margin: 0px 0 0 0;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1;
     width: 100%;
     height: 44px;
-    padding-left: 18px;
+    padding-left: 16px;
     border-radius: 5px;
     border: 1px solid rgba(159, 166, 177, 0.22);
     background-color: white;

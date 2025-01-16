@@ -6,7 +6,7 @@
         :class="$style['user-icon']"
         alt="user-icon"
       />
-      <span :class="$style['user-block_text']">{{ userName || 'userName' }}</span>
+      <span :class="$style['user-block_text']">{{userName}}</span>
       <img :src="require('~/assets/images/vector.svg')" alt="user-vector" />
     </div>
     <div v-if="isOpen" :class="$style['user-dropdown']">
@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, Ref, ref } from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, Ref, ref } from 'vue';
 
 import { AdminModule } from '~/store/modules/admin';
 import { UserModule } from '~/store/modules/user';

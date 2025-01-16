@@ -1,5 +1,4 @@
 <template>
-  <div>
     <div :class="$style['table__header__buttons']">
       <b v-if="textBeforeBtn !== ''" :class="$style['before-btn-text']"> {{ textBeforeBtn }} </b>
       <button
@@ -24,11 +23,10 @@
       </button>
       <b v-if="textAfterBtn !== ''" :class="$style['btn-text']"> {{ textAfterBtn }} </b>
     </div>
-  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref } from '@vue/composition-api';
+import { defineComponent, Ref, ref } from 'vue';
 
 export default defineComponent({
   // eslint-disable-next-line vue/multi-word-component-names
@@ -103,7 +101,7 @@ export default defineComponent({
       display: flex;
       align-items: center;
       margin-right: 18px;
-      width: 133px;
+      width: 180px;
       height: 30px;
       // background-color: rgba(136, 196, 190, 0.1);
       // border-radius: 5px;
@@ -112,7 +110,7 @@ export default defineComponent({
         width: 111px;
         height: 27px;
         font-weight: 500;
-        font-size: 12px;
+        font-size: 14px;
         color: #242222;
         background-color: #ffffff;
         box-shadow: 0 4px 4px rgba(0, 0, 0, 0.03);
@@ -120,7 +118,7 @@ export default defineComponent({
         &.active {
           background-color: #88c4be;
           font-weight: 500;
-          font-size: 12px;
+          font-size: 14px;
           color: white;
           box-shadow: none;
         }
@@ -156,7 +154,8 @@ export default defineComponent({
   justify-content: center;
   height: 100%;
 }
-// .table__header__buttons{
-//   margin-right: 5px;
-// }
+.table__header__buttons{
+// background-color: red;
+// width: 240px;
+}
 </style>

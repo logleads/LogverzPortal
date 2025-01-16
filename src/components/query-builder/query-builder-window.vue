@@ -90,7 +90,7 @@ import {
   Ref,
   ref,
   watch,
-} from '@vue/composition-api';
+} from 'vue';
 
 import QueryBuilder from '~/components/query-builder/query-builder.vue';
 import QueryDialogSaveSetting from '~/components/query-builder/query-dialog-save-setting.vue';
@@ -200,7 +200,7 @@ export default defineComponent({
       const dataWithKey = await QueryBuilderModule.dataForAllWindows[props.dataNumber as number];
       const data = dataWithKey
         ? dataWithKey.data
-          ? dataWithKey.data.map((i: Record<string, unknown>) => i)
+          ? dataWithKey.data?.map((i: Record<string, unknown>) => i)
           : []
         : [];
       console.log('querybuilder window mount function', props.dataNumber);
@@ -253,7 +253,7 @@ export default defineComponent({
       /**
        * TODO: handle refs here
        */
-      const procent = blockHeigth.value.clientWidth / 100;
+      const procent = blockHeigth.value?.clientWidth / 100;
       const ofset = e.movementX / procent;
 
       // 3 is left margin; 97 is right margin
@@ -292,7 +292,7 @@ export default defineComponent({
       /**
        * TODO: handle ref here
        */
-      if (blockHeigth.value.clientWidth > 900) {
+      if (blockHeigth.value?.clientWidth > 900) {
         setHeigthidtchForTextEditor(95, 20);
       } else {
         setHeigthidtchForTextEditor(98, 20);
@@ -313,7 +313,7 @@ export default defineComponent({
       /**
        * TODO: handle ref
        */
-      if (blockHeigth.value.clientWidth > 700) {
+      if (blockHeigth.value?.clientWidth > 700) {
         setWidthForSideBar(20, 99);
       } else {
         setWidthForSideBar(20, 99);

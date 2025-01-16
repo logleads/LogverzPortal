@@ -4,6 +4,7 @@
     ref="treeList"
     :data-source="listFolder"
     :show-row-lines="true"
+    height="800"
     :allow-column-reordering="true"
     :allow-column-resizing="true"
     :show-borders="true"
@@ -13,6 +14,8 @@
     @row-expanding="log"
     @selection-changed="onSelectionChanged"
   >
+    <DxScrolling mode="standard" />
+    <!-- or "virtual" | "infinite" -->
     <DxSelection :recursive="recursive" mode="multiple" />
     <DxColumn data-field="name" />
     <DxColumn data-field="BucketName" />
@@ -22,18 +25,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from '@vue/composition-api';
-import { DxColumn, DxSelection, DxTreeList } from 'devextreme-vue/tree-list';
+import { DxColumn, DxScrolling, DxSelection, DxTreeList } from 'devextreme-vue/tree-list';
+import { defineComponent, ref } from 'vue';
 
 import { DataCollectionService } from '~/services/api/data-collection-service';
 import { DataCollectionModule } from '~/store/modules/data-collection';
 import { isObject } from '~/utils/checkIsItObj';
+
 export default defineComponent({
   name: 'TreeList',
   components: {
     DxTreeList,
     DxColumn,
     DxSelection,
+    DxScrolling,
   },
   props: {
     listFolder: {
@@ -41,24 +46,18 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props, { emit }) {
+  setup(props) {
     const expandedRowKeys = ref([1, 2]);
     const selectedRowKeys = ref([]);
     const recursive = ref(false);
 
     function onSelectionChanged(e: any): void {
-      const currentSelectedRowKeys = e.currentSelectedRowKeys;
-      const currentDeselectedRowKeys = e.currentDeselectedRowKeys;
-      const allSelectedRowKeys = e.selectedRowKeys;
-      const allSelectedRowsData = e.selectedRowsData;
-
       const selectedData = e.component.getSelectedRowsData('all');
-      // eslint-disable-next-line no-console
       console.log(
-        selectedData.map((item: any) => item.value),
+        selectedData?.map((item: any) => item.value),
         'selectedData',
       );
-      DataCollectionModule.setFoldersPathHard(selectedData.map((item: any) => item.value));
+      DataCollectionModule.setFoldersPathHard(selectedData?.map((item: any) => item.value));
     }
 
     function log({ component, key }: any): void {
@@ -88,4 +87,31 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss"></style>
+<style scoped>
+.tree-list-container {
+  width: 100%;
+  overflow-y: auto;
+  /* Enable horizontal scrolling if content overflows */
+  height: 500px;
+  font-family: 'Roboto', sans-serif !important;
+}
+:deep(.dx-treelist) {
+  font-family: 'Roboto', sans-serif !important;
+  color: var(--ink-color) !important;
+}
+
+/* Or target specific elements */
+:deep(.dx-treelist-headers) {
+  font-family: 'Roboto', sans-serif !important;
+  color: var(--ink-color) !important;
+}
+
+:deep(.dx-treelist-rowsview) {
+  font-family: 'Roboto', sans-serif !important;
+  color: var(--ink-color) !important;
+}
+
+:global(.dx-virtual-row) {
+  display: none !important;
+}
+</style>

@@ -1,22 +1,15 @@
 <template>
   <div>
-    <div v-if="rawitems && Object.keys(rawitems).length > 0 && format === 'json'">
+    <div v-if="rawitems && Object.keys(customizedData).length > 0 && format === 'json'">
       <json-viewer-custom :value="customizedData" />
     </div>
-    <div v-else>
-      // eslint-disable-next-line vue/no-lone-template
-      <template>
-        <DxDataGrid
-          :columns="csvHeader"
-          :show-borders="true"
-          :column-auto-width="true"
-          :column-resizing-mode="currentMode"
-          :data-source="[{ ...customizedData }]"
-          word-wrap-enabled="true"
-        >
-          <DxHeaderFilter :visible="true" />
-        </DxDataGrid>
-      </template>
+    <div v-else-if="Object.keys(customizedData).length">
+      <!-- <template> -->
+      <DxDataGrid :columns="csvHeader" :show-borders="true" :column-auto-width="true"
+        :column-resizing-mode="currentMode" :data-source="[{ ...customizedData }]" word-wrap-enabled="true">
+        <DxHeaderFilter :visible="true" />
+      </DxDataGrid>
+      <!-- </template> -->
       <!-- <template v-for="item in Object.keys(customizedData)">
         <div
           v-if="
@@ -40,8 +33,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, Ref, ref } from '@vue/composition-api';
 import { DxDataGrid, DxHeaderFilter } from 'devextreme-vue/data-grid';
+import { defineComponent, onMounted, Ref, ref } from 'vue';
+
+import JsonViewerCustom from '~/components/shared/json-viewer.vue';
 
 // @Component({
 //   name: 'MasterDetailedSettings',
@@ -52,7 +47,7 @@ export default defineComponent({
   // @Prop({ required: false }) readonly rawitems!: any;
   // @Prop({ required: false }) readonly format!: any;
   name: 'MasterDetailedSettings',
-  components: { DxDataGrid, DxHeaderFilter },
+  components: { DxDataGrid, DxHeaderFilter, JsonViewerCustom },
   props: {
     data: {
       type: Object,
@@ -67,23 +62,30 @@ export default defineComponent({
       required: false,
     },
   },
+
   setup(props) {
     const customizedData: Ref<any> = ref({});
     const csvHeader: Ref<any> = ref([]);
     const columnsData = ref([]);
     const resizingModes = ref(['nextColumn', 'widget']);
     const currentMode = ref('nextColumn');
+
+
+
     onMounted(() => {
+      console.log('props.rawitems', props.rawitems);
+      console.log('props.data', props.data.data);
       if (props.rawitems) {
-        if (Object.keys(props.data.data.length > 0)) {
-          customizedData.value = props.rawitems[props.data.data.rawindex];
+        if (Object.keys(props.data.length > 0)) {
+          customizedData.value = props.rawitems[0];
+
         } else {
           customizedData.value = {};
         }
       } else {
         customizedData.value = props.data.data;
       }
-      if (customizedData.value['TableName']) {
+      if (customizedData.value?.TableName) {
         customizedData.value['DatasetName'] = customizedData.value['TableName'];
         delete customizedData.value['TableName'];
       }
@@ -99,11 +101,16 @@ export default defineComponent({
           '4',
           'Archive',
           'rawindex',
+          // 'requestParameters',
+          // 'resources',
+          // 'responseElements',
+          // 'userIdentity'
           // 'S3Folders',
         ];
         let csvkeys = Object.keys(customizedData.value);
         // eslint-disable-next-line no-console
         // console.log("CSVKEYS", csvkeys);
+
         csvkeys.forEach((e1, idx, arr) => {
           if (blackList.includes(e1) || e1 === '1') {
             arr.splice(idx, 1);
@@ -111,11 +118,10 @@ export default defineComponent({
         });
         csvHeader.value = csvkeys;
         // csvkeys.map(({ '0','1','2','Archive', 'rawindex', ...rest }) => rest)
-        // eslint-disable-next-line no-console
-        console.log('CSV header: ', csvHeader.value);
+        //   // eslint-disable-next-line no-console
       }
-      // eslint-disable-next-line no-console
-      console.log('customizedData', customizedData.value);
+      // // eslint-disable-next-line no-console
+      // console.log('customizedData', customizedData.value);
     });
     return {
       currentMode,

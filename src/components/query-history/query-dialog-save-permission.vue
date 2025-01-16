@@ -66,7 +66,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, Ref, ref, watch } from '@vue/composition-api';
+import { computed, defineComponent, Ref, ref, watch } from 'vue';
 import Multiselect from 'vue-multiselect';
 
 import MyButton from '~/components/shared/button.vue';
@@ -103,7 +103,7 @@ export default defineComponent({
 
     const validOwner: Ref<{ $invalid: boolean } | null> = ref(null);
 
-    const SavedQuery: ComputedRef = computed(() => {
+    const SavedQuery = computed(() => {
       let data = SaveSettingModule.savedData;
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       unixTime.value = data.UnixTime;
@@ -117,30 +117,30 @@ export default defineComponent({
     });
 
     function reArrangetheMultiSelectData(data: any): Array<{ name: string }> {
-      return data.map((item: any) => {
+      return data?.map((item: any) => {
         return { name: item };
       });
       // .filter(item => item.name !== '');
     }
 
-    const isOpenPermissionDialog: ComputedRef<boolean> = computed(() => {
+    const isOpenPermissionDialog = computed(() => {
       return SaveSettingModule.isOpenSavePermissionDialog;
     });
 
-    const Owners: ComputedRef = computed({
+    const Owners = computed({
       get: () => SaveSettingModule.Owners,
       set: (value: Array<{ name: string }>) => {
         SaveSettingModule.setOwnersDATA(value);
       },
     });
-    const Access: ComputedRef = computed({
+    const Access = computed({
       get: () => SaveSettingModule.Access,
       set: (value: Array<{ name: string }>) => {
         SaveSettingModule.setAccessDATA(value);
       },
     });
 
-    const TableOptions: ComputedRef<Array<{ name: string }>> = computed(() => {
+    const TableOptions = computed(() => {
       return DataCollectionModule.tableOptions;
     });
 

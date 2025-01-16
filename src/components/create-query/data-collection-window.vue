@@ -7,73 +7,47 @@
         <div :class="$style['data__creation__line']" />
         <div v-for="item in setupArray" :key="item.id" :class="$style['data__creation__item']">
           <span :class="$style['data__creation__item__numbers']">{{ item.id + 1 }} </span>
-          <!-- <p v-if="item.id === 3" :class="$style['data__creation__item__hide-line']" /> -->
-          <DropDownCreate :label="item.label">
+          <p v-if="item.id === 3" :class="$style['data__creation__item__hide-line']" />
+
+          <DropDownCreate :label="item.label" @onPress="toggleExpanded">
             <template v-if="item.id === 0">
-              <StandardSettings
-                :submitted="submitted"
-                :is-fetching="isFetching"
-                @validate="handleValidate($event, 'standard')"
-              />
+              <StandardSettings :submitted="submitted" :is-fetching="isFetching"
+                @validate="handleValidate($event, 'standard')" />
             </template>
             <template v-if="item.id === 1">
-              <AdvancedSettings
-                :submitted="submitted"
-                :is-fetching="isFetching"
-                @validate="handleValidate($event, 'advanced')"
-              />
+              <AdvancedSettings :submitted="submitted" :is-fetching="isFetching"
+                @validate="handleValidate($event, 'advanced')" />
             </template>
             <template v-if="item.id === 2">
-              <CollectionRules
-                :submitted="submitted"
-                :is-fetching="isFetching"
-                @validate="handleValidate($event, 'collection')"
-              />
+              <CollectionRules :submitted="submitted" :is-fetching="isFetching"
+                @validate="handleValidate($event, 'collection')" />
             </template>
             <template v-if="item.id === 3">
-              <Review />
+              <Review :review-expend="isReviewExpanded" />
             </template>
           </DropDownCreate>
         </div>
       </div>
       <div :class="$style['additional-settings']">
         <p :class="$style['additional-settings__label']">Check progress of data collection</p>
-        <input
-          id="withRedirect"
-          v-model="withRedirect"
-          :class="$style['additional-settings__checkbox']"
-          type="checkbox"
-        />
+        <input id="withRedirect" v-model="withRedirect" :class="$style['additional-settings__checkbox']"
+          type="checkbox" />
       </div>
       <div :class="$style['data__body__footer']">
-        <div>
           <button :class="$style['data__body__footer__btn']" @click="toggleLoadSettings(true)">
             Load Configuration
           </button>
-        </div>
 
-        <MyButton
-          text="Submit"
-          :class="$style['_btn-submit']"
-          :disabled="isFetching || !isDatatypeDefined || !DBinstanse"
-          :no-load="!isDatatypeDefined || !DBinstanse"
-          @click="handleSubmit($event)"
-        />
+        <MyButton text="Submit" :classAssign="$style['_btn-submit']"
+          :disabled="isFetching || !isDatatypeDefined || !DBinstanse" :no-load="!isDatatypeDefined || !DBinstanse"
+          @click="handleSubmit($event)" />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  ComputedRef,
-  defineComponent,
-  onMounted,
-  Ref,
-  ref,
-  watch,
-} from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref, watch } from 'vue';
 
 import AdvancedSettings from '~/components/create-query/advanced-settings.vue';
 import CollectionRules from '~/components/create-query/collection-rules/collection-rules.vue';
@@ -105,6 +79,8 @@ export default defineComponent({
     const validCollection: Ref<any> = ref(null);
     const withRedirect = ref(false);
     const submitted = ref(false);
+    const isReviewExpanded = ref(false);
+
     const isDatatypeDefined = ref(false);
     const showLoadSettings = ref(false);
     const setupArray: Ref<Array<{ id: number; label: string }>> = ref([
@@ -179,13 +155,17 @@ export default defineComponent({
         DatasetAccess,
       };
     });
+    const toggleExpanded = (expend: boolean) => {
+      isReviewExpanded.value = expend;
 
+    }
     function handleSubmit(e: Event): void {
       e.stopPropagation();
       submitted.value = true;
-      console.log('standard', validStandard.value);
+      // console.log('standard', validStandard.value);
+      // validAdvanced.value.$touch();
       console.log('advance', validAdvanced.value);
-      console.log('collection', validCollection.value);
+      // console.log('collection', validCollection.value);
       if (
         !validStandard.value?.$invalid &&
         !validAdvanced.value?.$invalid &&
@@ -197,10 +177,14 @@ export default defineComponent({
     const DataType: ComputedRef<string> = computed(() => {
       return DataCollectionModule.DataType;
     });
+
     const DBinstanse: ComputedRef<any> = computed(() => {
-      // return
-      let resp: any = ConnectionIndecatoreModule.DBinstanse;
-      return resp[0].DBInstanceStatus === 'available' ? true : false;
+      // Find the active database instance
+      const activeDBInstanse = ConnectionIndecatoreModule.DBinstanse?.find(
+        (item) => item.name === startJobBody?.value?.DatabaseParameters
+      );
+      // Ensure that activeDBInstanse has DBInstanceStatus property
+      return activeDBInstanse && 'DBInstanceStatus' in activeDBInstanse && activeDBInstanse.DBInstanceStatus === 'available';
     });
 
     watch(DataType, (value: string) => {
@@ -227,6 +211,8 @@ export default defineComponent({
       isDatatypeDefined,
       showLoadSettings,
       setupArray,
+      toggleExpanded,
+      isReviewExpanded
     };
   },
 });
@@ -236,6 +222,15 @@ export default defineComponent({
   width: 100%;
   height: 100%;
 }
+
+._btn-submit {
+  width: 158px;
+  height: 45px;
+  padding: 0px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
 .data {
   &__window {
     width: 90%;
@@ -265,6 +260,7 @@ export default defineComponent({
     //fixing blurred text
     -webkit-transform: translate3d(0, 0, 0) !important;
     transform: translate3d(0, 0, 0) !important;
+
     &__footer {
       display: flex;
       justify-content: space-between;
@@ -272,7 +268,7 @@ export default defineComponent({
       margin-left: 76px;
       align-items: center;
 
-      &__btn-submit {
+      &_btn-submit {
         width: 158px;
         height: 45px;
       }
@@ -305,21 +301,26 @@ export default defineComponent({
     }
 
     &::-webkit-scrollbar {
-      width: 3px;
+      width: 10px;
       height: 18px;
     }
+
     /* Track */
     &::-webkit-scrollbar-track {
       background: #f1f1f1;
     }
+
     /* Handle */
     &::-webkit-scrollbar-thumb {
       background: var(--accent-color);
       border-radius: 31px;
     }
+
     /* Handle on hover */
     &::-webkit-scrollbar-thumb:hover {
-      background: var(--accent-color);
+      // background: var(--accent-color);
+  background: #555; 
+
     }
   }
 
@@ -355,7 +356,7 @@ export default defineComponent({
         z-index: 1;
       }
 
-      > div {
+      >div {
         width: 90%;
       }
 
@@ -392,7 +393,7 @@ export default defineComponent({
   display: flex;
   align-items: center;
 
-  > span {
+  >span {
     transform: rotate(90deg) translateY(-13px);
   }
 }
@@ -410,11 +411,12 @@ export default defineComponent({
   }
 
   &__label {
-    font-weight: 500;
+    font-weight: bold;
     font-size: 15px;
     color: var(--ink-color);
   }
 }
+
 .warning-text {
   float: left;
   color: #e2c36b;

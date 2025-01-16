@@ -3,7 +3,7 @@
     <div v-if="isFinishConnected" :class="$style['query-options']">
       <div :class="$style['query-options__item']">
         <label>
-          <span>Sql servers</span>
+          <p :class="$style['customLabel']">Sql servers</p>
         </label>
         <DropDownSimple
           :content="dataBaseCurrentAlias"
@@ -15,7 +15,7 @@
       <div :class="$style['query-options__item']">
         <template v-if="availableTables.length">
           <label>
-            <span>Available DataSets</span>
+            <p :class="$style['customLabel']">Available DataSets</p>
           </label>
           <DropDownSimple
             :content="currentAvailableTable"
@@ -72,14 +72,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  ComputedRef,
-  defineComponent,
-  onMounted,
-  ref,
-  watch,
-} from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, onMounted, ref, watch } from 'vue';
 
 import QueryItem from '~/components/query-builder/query-item.vue';
 import MyButton from '~/components/shared/button.vue';
@@ -308,7 +301,9 @@ export default defineComponent({
     border-radius: 31px;
   }
 }
-
+.customLabel{
+  margin-bottom: 10px !important;
+}
 .query-arrow {
   background-color: var(--background-color);
   height: 19px;

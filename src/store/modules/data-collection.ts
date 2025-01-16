@@ -74,7 +74,7 @@ class DataCollection extends VuexModule {
 
   DatasetAccess: Array<{ name: string }> = [];
 
-  queryString = 'select * from S3Object[*].Records[*] s Where s.errorMessage!=\u0027null\u0027';
+  queryString = 'select * from  Where errorMessage!=\u0027null\u0027';
 
   isCustomRules = false;
   jobCreated = false;
@@ -274,8 +274,9 @@ class DataCollection extends VuexModule {
   private SET_INPUT_VALUE(payload: { label: string; value: string }): void {
     switch (payload.label) {
       case 'DatasetName':
-        console.log('check payload', payload);
         this.DatasetName = payload.value;
+        this.queryString = ` SELECT * FROM ${payload.value ? payload.value + ' AS tbl' : ''}`;
+
         break;
       case 'DatasetDescription':
         this.DatasetDescription = payload.value;
@@ -307,7 +308,7 @@ class DataCollection extends VuexModule {
     this.DataType = items
       .filter(item => !notShowDatatypeSelector.includes(item))
       .reduce((acc: string[], i: string) => {
-        if (i.toLowerCase().includes('set')) {
+        if (i?.toLowerCase().includes('set')) {
           return [i, ...acc];
         } else {
           return [...acc, i];
@@ -438,10 +439,7 @@ class DataCollection extends VuexModule {
         .map((item: any) => item[item.length - 1]);
       this.SET_QUERY_TYPE_ITEMS(queryTypes);
       this.SET_INPUT_VALUE({
-        value:
-          this.tableTypes[this.DataType] == 'CSV'
-            ? `Select * FROM S3Object[*].${this.rootsForJSON[this.DataType]} s`
-            : `SELECT * FROM s3object s`,
+        value: `SELECT * FROM ${this.DatasetName ? this.DatasetName + ' AS tbl' : ''}`,
         label: 'QueryString',
       });
     } catch (e: any) {
@@ -489,29 +487,25 @@ class DataCollection extends VuexModule {
       let CSVFileHeader: string = '';
       // console.log('console coming here ', schema);
       const response = await DataCollectionService.getTableKeys(schema);
-      console.log('response', response.data);
       this.getSampleData(schema);
       try {
-        const { S3SelectParameters } = JSON.parse(response.data.Parameter.Value);
-        // console.log(S3SelectParameters, 'S3SelectParameters');
-        this.SET_DATA_SET_S3_SELECT(S3SelectParameters ? S3SelectParameters.IO : {});
-        tableTypes = { [schema]: S3SelectParameters.IO.InputSerialization.CSV ? 'CSV' : 'JSON' };
-        rootsForJSON = { [schema]: S3SelectParameters.IO.InputSerialization.RootElement };
-        if (S3SelectParameters.IO.InputSerialization.CSV) {
-          CSVFileHeader = S3SelectParameters.IO.InputSerialization.CSV.FileHeaderInfo;
+        const { StgSelectParameters } = JSON.parse(response.data.Parameter.Value);
+        // console.log(StgSelectParameters, 'StgSelectParameters');
+        this.SET_DATA_SET_S3_SELECT(StgSelectParameters ? StgSelectParameters.IO : {});
+        tableTypes = { [schema]: StgSelectParameters.IO.InputSerialization.CSV ? 'CSV' : 'JSON' };
+        rootsForJSON = { [schema]: StgSelectParameters.IO.InputSerialization.RootElement };
+        if (StgSelectParameters.IO.InputSerialization.CSV) {
+          CSVFileHeader = StgSelectParameters.IO.InputSerialization.CSV.FileHeaderInfo;
         }
         console.log('this.tableTypes = ', tableTypes);
         console.log('this.rootsForJSON = ', rootsForJSON);
         console.log('this.DataType = ', schema);
         this.SET_INPUT_VALUE({
-          value:
-            tableTypes[schema] == 'CSV'
-              ? `SELECT * FROM s3object s`
-              : `Select * FROM S3Object[*].${rootsForJSON[schema] ? rootsForJSON[schema] : ''} s`,
+          value: `SELECT * FROM ${this.DatasetName ? this.DatasetName + ' AS tbl' : ''}`,
           label: 'QueryString',
         });
-        if (S3SelectParameters.Cast) {
-          this.SET_CAST_FOR_PARAMETERS(S3SelectParameters.Cast);
+        if (StgSelectParameters.Cast) {
+          this.SET_CAST_FOR_PARAMETERS(StgSelectParameters.Cast);
         }
         this.SET_ROOTS_FOR_JSON(rootsForJSON);
         this.SET_TABLE_TYPE(tableTypes);
@@ -559,7 +553,7 @@ class DataCollection extends VuexModule {
     this.SET_BUCKET_FETCH_STATUS(true);
     try {
       const response = await DataCollectionService.getBuckets();
-      const buckets = response.data.map(i => i.BucketName);
+      const buckets = response.data?.map(i => i.BucketName);
       this.SET_SELECT_VALUE({ label: 'CurrentBucket', value: buckets[0] });
       this.SET_BUCKETS(buckets);
     } catch (e: any) {
@@ -644,7 +638,7 @@ class DataCollection extends VuexModule {
           return item.value.data;
         });
       console.log('DATA', data);
-      const newListFolder = data.map((item: any) => {
+      const newListFolder = data?.map((item: any) => {
         return filteredListFolder.filter((it: any) => it.BucketName === Object.keys(item)[0])[0];
       });
       console.log('new Folder List', newListFolder);
@@ -709,49 +703,49 @@ class DataCollection extends VuexModule {
     DatasetWarnings: string;
     // TableName: string;
   }) {
-    this.HARD_SET_S3_FOLDERS(data.S3Folders);
-    this.HARD_SET_TABLE_DESCRIPRION(data.Description);
-    // console.log('GRAB DATA', data);
-    this.SET_INPUT_VALUE({
-      value: data.DatasetWarnings,
-      label: 'DatasetWarning',
-    });
-    this.SET_INPUT_VALUE({
-      value: data.DatasetName,
-      label: 'DatasetName',
-    });
-    this.SET_INPUT_VALUE({
-      value: data.QueryString,
-      label: 'QueryString',
-    });
-    this.SET_INPUT_VALUE({
-      value: data.DatabaseName,
-      label: 'DBServerAlias',
-    });
-    this.SET_INPUT_VALUE({
-      value: data.DataType,
-      label: 'DatatypeSelector',
-    });
+    console.log('data: ', data);
 
-    //data.UsersQuery was using here before changes [{ name: data.UsersQuery }]
-    const dataOwners = data.Owners.split(' ').map(i => {
-      // if (i) {
-      return { name: i };
-      // }
-    });
-    this.SET_MULTI_SELECT({
-      label: 'DatasetOwners',
-      value: dataOwners.filter(owners => owners.name),
-    });
-    const DatasetAccess = data.Access.split(' ').map(i => {
-      return { name: i };
-    });
-    this.SET_MULTI_SELECT({
-      label: 'DatasetAccess',
-      value: DatasetAccess.filter(dbAccess => dbAccess.name),
-    });
+    // this.HARD_SET_S3_FOLDERS(data.S3Folders);
+    // this.HARD_SET_TABLE_DESCRIPRION(data.Description);
+    // // console.log('GRAB DATA', data);
+    // this.SET_INPUT_VALUE({
+    //   value: data.DatasetWarnings,
+    //   label: 'DatasetWarning',
+    // });
+    // this.SET_INPUT_VALUE({
+    //   value: data.DatasetName,
+    //   label: 'DatasetName',
+    // });
+    // this.SET_INPUT_VALUE({
+    //   value: data.QueryString,
+    //   label: 'QueryString',
+    // });
+    // this.SET_INPUT_VALUE({
+    //   value: data.DatabaseName,
+    //   label: 'DBServerAlias',
+    // });
+    // this.SET_INPUT_VALUE({
+    //   value: data.DataType,
+    //   label: 'DatatypeSelector',
+    // });
 
-    this.SET_LOAD_CONFIGURATION(true);
+    // //data.UsersQuery was using here before changes [{ name: data.UsersQuery }]
+    // const dataOwners = data.Owners?.split(' ').map(i => {
+    //   return { name: i };
+    // });
+    // this.SET_MULTI_SELECT({
+    //   label: 'DatasetOwners',
+    //   value: dataOwners,
+    // });
+    // const DatasetAccess = data.Access?.split(' ').map(i => {
+    //   return { name: i };
+    // });
+    // this.SET_MULTI_SELECT({
+    //   label: 'DatasetAccess',
+    //   value: DatasetAccess,
+    // });
+
+    // this.SET_LOAD_CONFIGURATION(true);
   }
 
   @Action

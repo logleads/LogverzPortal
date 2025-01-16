@@ -127,7 +127,7 @@ class QueryBuilder extends VuexModule {
   data: CloudTrailDataResponse[] | null = null;
 
   togglingExport = false;
-
+  DataSet:string = 'null'; //
   @Mutation
   private SET_SHOW_COLLUMS(value: [string]) {
     this.dataForAllWindows = {
@@ -176,6 +176,10 @@ class QueryBuilder extends VuexModule {
 
   @Mutation
   private TOGGLE_FOR_EXPORT() {
+    console.log(
+      'Mutating togglingExport',
+      this.dataForAllWindows[this.key as number].togglingExport,
+    );
     this.dataForAllWindows = {
       ...this.dataForAllWindows,
       [this.key as number]: {
@@ -320,6 +324,7 @@ class QueryBuilder extends VuexModule {
 
   @Mutation
   private SET_CURRENT_AVAILABLE_TABLE(value: string) {
+    this.DataSet=value;    
     this.dataForAllWindows = {
       ...this.dataForAllWindows,
       [this.key as number]: {
@@ -354,6 +359,7 @@ class QueryBuilder extends VuexModule {
 
   @Action
   public setData(value: string): void {
+    console.log('SETTING DATA', value);
     const response = JSON.parse(value);
 
     if (response.status === 'Deny') {
@@ -370,6 +376,7 @@ class QueryBuilder extends VuexModule {
     this.SET_KEY_FOR_WINDOW(key);
     this.SET_CURRENT_AVAILABLE_TABLE(value);
     this.SET_DATA(null);
+
     await this.getTableDataType({
       databaseName: this.dataForAllWindows[key as number].dataBaseCurrentAlias,
       DatasetName: value,
@@ -396,6 +403,7 @@ class QueryBuilder extends VuexModule {
   @Action
   public setAvailableTables(value: string[]) {
     this.SET_AVAILABLE_TABLES(value);
+    
   }
 
   @Action
@@ -410,12 +418,16 @@ class QueryBuilder extends VuexModule {
       this.COMMON_SET_FETCHING({ label: 'isFetching', value: true });
       const response = await QueryBuilderService.getTableParametersList(dataType);
       const rules = parseParametersList(response.data.Parameter.Value);
-      const tableDataFormat = JSON.parse(response.data.Parameter.Value)?.S3SelectParameters?.IO
+      const tableDataFormat = JSON.parse(response.data.Parameter.Value)?.StgSelectParameters?.IO
         ?.InputSerialization;
       const data = JSON.parse(response.data.Parameter.Value).Views.reduce((acc: any, item: any) => {
         return { ...acc, ...item };
       }, {});
-      tableDataFormat.CSV ? this.SET_TABLE_DATA_FORMAT('csv') : this.SET_TABLE_DATA_FORMAT('json');
+      if (tableDataFormat.CSV) {
+        this.SET_TABLE_DATA_FORMAT('csv');
+      } else {
+        this.SET_TABLE_DATA_FORMAT('json');
+      }
       this.SET_VIEWS(data);
       this.SET_SHOW_COLLUMS(data.Default);
       this.SET_SELECTED_VIEWS_NAME('Default');

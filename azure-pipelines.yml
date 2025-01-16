@@ -17,7 +17,7 @@ pool: #'Default'
 steps:
 - task: NodeTool@0
   inputs:
-    versionSpec: '16.x'
+    versionSpec: '20.x'
   displayName: 'Install Node.js'
 
 - task: DownloadSecureFile@1

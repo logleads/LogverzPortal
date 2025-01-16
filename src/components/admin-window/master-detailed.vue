@@ -5,7 +5,7 @@
         v-if="typeof data?.data[item] === 'object' && !Array.isArray(data.data[item])"
         :key="item + Math.random() * 10000"
       >
-        <div v-for="(k, i) in data.data[item]" :key="i + Math.random() * 10000">
+        <template v-for="(k, i) in data.data[item]" :key="i + Math.random() * 10000">
           <template v-if="typeof k === 'object'">
             <ParseObject :obj="k" :label="i" />
           </template>
@@ -15,18 +15,18 @@
               <div :class="$style['container__value']">{{ k }}</div>
             </div>
           </template>
-        </div>
+        </template>
       </div>
       <div v-if="Array.isArray(data?.data[item])" :key="item + Math.random() * 10000">
         <div :class="$style['container']">
           <span :class="$style['container__key']">{{ item }}: </span>
-          <div
+          <template
             v-for="(arrItem, index) in data?.data[item]"
             :key="arrItem + Math.random() * 10000"
             :class="$style['container__value']"
           >
             {{ arrItem }}{{ data?.data[item].length - 1 !== index ? ',' : '' }}
-          </div>
+          </template>
         </div>
       </div>
       <div v-if="data?.data[item] === 'null'" :key="item + Math.random() * 10000">
@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from '@vue/composition-api';
+import { defineComponent, onMounted } from 'vue';
 
 import ParseObject from '~/components/shared/parseObject.vue';
 

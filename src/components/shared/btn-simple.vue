@@ -1,21 +1,17 @@
 <template>
   <div :class="$style['buttons']">
-    <button
-      :class="[
-        $style['buttons__btn'],
-        $style['border-radius'],
-        disable ? $style['disable'] : $style['active'],
-      ]"
-      :disabled="disable"
-      @click.stop="e => clicked(e)"
-    >
+    <button :class="[
+      $style['buttons__btn'],
+      $style['border-radius'],
+      disable ? $style['disable'] : $style['active'],
+    ]" :disabled="disable" @click.stop="e => clicked(e)">
       {{ btnText }}
     </button>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'SimpleBtn',
   props: {
@@ -52,16 +48,18 @@ export default defineComponent({
   height: 35px;
 
   &__btn {
-    width: 111px;
+    width: 130px;
     height: 27px;
     font-weight: 500;
     font-size: 12px;
     color: #242222;
     background-color: #ffffff;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.03);
+    padding: 5px;
 
     &.active {
       background-color: #88c4be;
+      padding: 5px;
       font-weight: 500;
       font-size: 12px;
       color: white;

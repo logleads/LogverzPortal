@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, Ref, ref, watch } from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, Ref, ref, watch } from 'vue';
 
 import QueryGenerator from '~/components/query-builder/query-slots/query-generator.vue';
 import Loader from '~/components/shared/loader.vue';

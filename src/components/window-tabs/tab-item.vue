@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, getCurrentInstance } from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, getCurrentInstance } from 'vue';
 
 import Icon from '~/components/shared/icon.vue';
 import { WindowName, WindowsModule } from '~/store/modules/windows';
@@ -50,10 +50,10 @@ export default defineComponent({
       required: true,
     },
   },
-  setup() {
+  setup(props) {
     const instance = getCurrentInstance();
     const key = instance?.vnode.key;
-
+    console.log('INSIDE TAB_ITEM: ', props.item);
     const focusedWindow: ComputedRef<Nullable<WindowName>> = computed(() => {
       return WindowsModule.focusedWindow;
     });

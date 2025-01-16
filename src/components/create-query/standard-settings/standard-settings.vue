@@ -2,25 +2,6 @@
   <div :class="$style['standard']">
     <template v-if="!isFetching">
       <template v-if="!IsFetchingQuery">
-        <!-- <div :class="$style['standard__select-single']">
-          <template v-if="!isBucketsFetching">
-            <div>
-              <label>
-                <span>Available buckets</span>
-                <ToolTip :tip="DCH_AVAILABLE_BUCKETS" />
-              </label>
-              <DropDownSimple
-                :content="CurrentBucket"
-                :items="Buckets"
-                name="CurrentBucket"
-                @select-value="handleBucketsSelect"
-              />
-            </div>
-          </template>
-          <template v-else>
-            <Loader accent />
-          </template>
-        </div> -->
         <template v-if="!listLoader">
           <TreeList :list-folder="listFolder" />
         </template>
@@ -29,27 +10,57 @@
             <Loader accent />
           </div>
         </template>
-        <label for="s3folder" :class="$style['standard__file-label']"
+        <div v-for="input in S3FoldersValue" :key="input.label" :class="$style['customeClass']">
+          <InputContainer :label="input.label">
+            <template #icon>
+              <ToolTip :tip="input.hint" />
+            </template>
+            <template #input>
+              <Input
+                v-model="input.content"
+                :name="input.label"
+                :error="submitted && v$[input.label]?.$error"
+                :class="$style['standard__add-file__input']"
+                @input="handleInput({ value: $event.target.value, label: input.label })"
+              />
+            </template>
+          </InputContainer>
+          <div v-if="submitted && v$[input.label]?.$error" :class="$style['validation-text']">
+            {{ input.label }} is required
+          </div>
+          <div
+            v-if="
+              submitted &&
+              (v$[input.label].maxLength.$invalid || v$[input.label].maxLength.$invalid)
+            "
+          >
+            {{ v$[input.label].maxLength.$message }}
+          </div>
+        </div>
+        <!-- <label for="s3folder" :class="$style['standard__file-label']"
           >S3Folders
           <span>
             <ToolTip :tip="DCH_S3_FOLDERS_Local" />
           </span>
-        </label>
-        <div
+        </label> -->
+        <!-- <div
           :class="[
             $style['standard__add-file'],
-            { [$style['error']]: submitted && v$.S3Folders.$invalid },
+            {
+              [$style['error']]: submitted && v$.S3Folders?.$error,
+            },
           ]"
         >
           <Input
             id="s3folder"
-            v-model="S3Folders"
+            v-model="S3FoldersValue"
             name="S3Folders"
             :class="$style['standard__add-file__input']"
             @input="handleInput({ value: $event, label: 'S3Folders' })"
           />
-        </div>
-        <div v-if="submitted && v$.S3Folders.required.$invalid" :class="$style['validation-text']">
+           @input="data => handleInput({ value: data, label: 'S3Folders' })"
+        </div> -->
+        <!-- <div v-if="submitted && v$.S3Folders?.$error" :class="$style['validation-text']">
           S3Folders is required
         </div>
         <div
@@ -62,7 +73,7 @@
           <template v-if="v$.S3Folders.maxLength.$invalid"
             >{{ v$.S3Folders.maxLength.$message }}
           </template>
-        </div>
+        </div> -->
         <div v-if="isFilesBrowses">
           <div :class="$style['standard__sites']">
             <SiteItem :path="Path" :deep="1" :root-folder-fetching="rootFolderFetching" />
@@ -71,7 +82,7 @@
 
         <div :class="$style['standard__inputs']">
           <div v-for="select in selects" :key="select.label">
-            <label>
+            <label :class="$style['customLabel']">
               <span>{{ select.label }}</span>
               <ToolTip :tip="select.hint" />
             </label>
@@ -84,19 +95,20 @@
           </div>
           <div v-for="input in inputs" :key="input.label">
             <InputContainer :label="input.label">
-              <ToolTip slot="icon" :tip="input.hint" />
-              <Input
-                slot="input"
-                v-model="input.content"
-                :name="input.label"
-                :error="submitted && v$[input.label].$invalid"
-                @input="handleInput({ value: $event, label: input.label })"
-              />
+              <template #icon>
+                <ToolTip :tip="input.hint" />
+              </template>
+              <template #input>
+                <Input
+                  v-model="input.content"
+                  :name="input.label"
+                  :error="submitted && v$[input.label]?.$error"
+                  :class="$style['standard__add-file__input']"
+                  @input="handleInput({ value: $event.target.value, label: input.label })"
+                />
+              </template>
             </InputContainer>
-            <div
-              v-if="submitted && v$[input.label].required.$invalid"
-              :class="$style['validation-text']"
-            >
+            <div v-if="submitted && v$[input.label]?.$error" :class="$style['validation-text']">
               {{ input.label }} is required
             </div>
             <div
@@ -105,14 +117,14 @@
                 (v$[input.label].maxLength.$invalid || v$[input.label].maxLength.$invalid)
               "
             >
-              :class="$style['validation-text']" >
               {{ v$[input.label].maxLength.$message }}
             </div>
           </div>
           <div>
             <label :class="$style['multiselect-label']">
               <span> Dataset Owners </span>
-              <!-- <ToolTip :tip="DCH_TABLE_OWNERS_Local" /> -->
+              
+              <ToolTip :tip="DCH_TABLE_OWNERS_Local" />
             </label>
             <div>
               <multiselect
@@ -127,14 +139,14 @@
                 label="name"
                 track-by="name"
                 :preselect-first="true"
+                :class="{
+                  [$style['invalid']]: submitted && v$.DatasetOwners?.$error,
+                  [$style['multiselect']]: true,
+                }"
               />
-              <!-- :class="{ invalid: submitted && v$.DatasetOwners.$invalid }" -->
             </div>
 
-            <div
-              v-if="submitted && v$.DatasetOwners.required.$invalid"
-              :class="$style['validation-text']"
-            >
+            <div v-if="submitted && v$.DatasetOwners?.$error" :class="$style['validation-text']">
               DatasetOwners is required
             </div>
           </div>
@@ -195,6 +207,8 @@ import { InputContent } from '~/types/models/data-collection-types';
 import { employees } from './data';
 import TreeList from './tree-list.vue';
 const emptySelectedText = 'Nobody has been selected';
+import { useVuelidate } from '@vuelidate/core';
+import { maxLength, minLength, required } from '@vuelidate/validators';
 import {
   computed,
   ComputedRef,
@@ -204,35 +218,8 @@ import {
   ref,
   watch,
   WritableComputedRef,
-} from '@vue/composition-api';
-import { useVuelidate } from '@vuelidate/core';
-import { maxLength, minLength, required } from '@vuelidate/validators';
+} from 'vue';
 
-// @Component({
-//   name: 'StandardSettings',
-//   components: {
-//     ToolTip,
-//     Loader,
-//     DropDownSimple,
-//     SiteItem,
-//     InputContainer,
-//     Input,
-//     Multiselect,
-//     TreeList,
-//   },
-//   mixins: [validationMixin],
-//   validations: {
-//     CurrentBucket: { required },
-//     DBServerAlias: { required },
-//     S3Folders: { required, minLength: minLength(6), maxLength: maxLength(2000) },
-//     LogVolume: { required },
-//     DatatypeSelector: { required },
-//     DatasetName: { required, minLength: minLength(1), maxLength: maxLength(63) },
-//     DatasetDescription: { required, maxLength: maxLength(500) },
-//     DatasetOwners: { required, maxLength: maxLength(500) },
-//     // DatasetAccess: { required },
-//   },
-// })
 export default defineComponent({
   name: 'StandardSettings',
   components: {
@@ -256,8 +243,6 @@ export default defineComponent({
       required: false,
     },
   },
-  // @Prop({ required: false, type: Boolean }) readonly submitted!: boolean;
-  // @Prop({ required: false, type: Boolean }) readonly isFetching!: boolean;
   setup(props, { emit }) {
     const employees1 = ref(employees);
     const expandedRowKeys = ref([1, 2]);
@@ -368,7 +353,7 @@ export default defineComponent({
       return DataCollectionModule.DatasetName;
     });
 
-    const S3Folders: ComputedRef<string> = computed(() => {
+    const S3Folders = computed(() => {
       return DataCollectionModule.s3Folders;
     });
 
@@ -438,10 +423,8 @@ export default defineComponent({
       DataCollectionModule.getQueryType();
       DataCollectionModule.getDBAlias();
       DataCollectionModule.getBuckets();
-      /**
-       * TODO: this V$ thing
-       */
-      emit('validate', v$);
+
+      // emit('validate', v$);
     });
     watch(CurrentBucket, async (value: string) => {
       DataCollectionModule.rootFolderFetch(true);
@@ -523,8 +506,17 @@ export default defineComponent({
         },
       ];
     });
+    const S3FoldersValue = computed(() => {
+      return [
+        {
+          label: 'S3Folders',
+          content: S3Folders.value,
+          hint: DCH_S3_FOLDERS_Local.value,
+        },
+      ];
+    });
 
-    const inputs: WritableComputedRef<Array<InputContent>> = computed(() => {
+    const inputs = computed(() => {
       return [
         { label: 'DatasetName', content: DatasetName.value, hint: DCH_TABLE_NAME_Local.value },
         {
@@ -565,25 +557,27 @@ export default defineComponent({
           hint: DCH_DB_SERVER_ALIAS_Local.value,
         },
       ];
-      /**
-       * TODO: handle this emit part later
-       */
+      verifyValidation();
       emit('validate', v$);
+    }
+
+    function verifyValidation() {
+      v$.value.$touch();
+      console.log(v$.value);
     }
 
     function handleBucketsSelect(payload: { item: string; content: string }): void {
       DataCollectionModule.setSelectValue({ label: 'CurrentBucket', value: payload.item });
     }
 
-    function handleInput(payload: { label: string; value: string }): void {
+    function handleInput(payload): void {
+      console.log('Standard Setting', payload);
       if (payload.label == 'DatasetName') {
         DataCollectionModule.setInputValue({ label: 'DatasetWarning', value: '' });
       }
       // console.log('first', payload);
       DataCollectionModule.setInputValue(payload);
-      /**
-       * TODO: handle this part later
-       */
+      verifyValidation();
       emit('validate', v$);
     }
 
@@ -634,6 +628,7 @@ export default defineComponent({
       DCH_TABLE_OWNERS_Local,
       DCH_TABLE_ACCESS_Local,
       v$,
+      S3FoldersValue,
     };
   },
 });
@@ -643,7 +638,10 @@ export default defineComponent({
 .selected-site {
   color: #4b75ed;
 }
-
+.customeClass {
+  margin-top: 10px;
+  padding-right: 9px !important;
+}
 .standard {
   margin-top: 23px;
   background-color: var(--gray-background);
@@ -664,14 +662,20 @@ export default defineComponent({
       margin-left: 6px;
     }
   }
-
+  .customLabel {
+    margin-bottom: 5px;
+    color: #1a1b20;
+    font-size: 14px;
+    font-weight: bold;
+  }
   &__inputs {
     // margin-top: 49px;
     max-width: 99%;
     padding-bottom: 59px;
 
     > div {
-      margin-bottom: 29px;
+      // margin-bottom: 29px;
+      margin-top: 10px;
     }
   }
 
@@ -708,7 +712,7 @@ export default defineComponent({
     align-items: center;
     justify-content: space-between;
     margin-top: 9px;
-    margin-bottom: 29px;
+    // margin-bottom: 29px;
 
     &__button {
       width: 107px;
@@ -725,18 +729,17 @@ export default defineComponent({
     &__input {
       width: 100%;
       input {
-        border: none;
         height: 42px;
       }
     }
   }
 
   label {
-    font-size: 12px;
+    font-size: 14px;
     line-height: 100%;
     display: flex;
     align-items: center;
-    color: var(--secondary-text-color);
+    color: var(--ink-color);
 
     > span {
       margin-right: 6px;
@@ -757,7 +760,13 @@ export default defineComponent({
   margin: 10px auto;
 }
 .multiselect-label {
-  margin-bottom: 9px;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #1a1b20 !important;
+}
+
+.multiselect {
+  height: 47px !important;
 }
 
 :global(.multiselect__tag) {

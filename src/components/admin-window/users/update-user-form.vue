@@ -2,19 +2,19 @@
   <div :class="$style['form']" @click="handleShowForm($event, false)">
     <div :class="$style['form__body']" @click="handleBodyClick($event)">
       <div :class="$style['container']">
-        <span :class="$style['container__key']">Name:</span>
+        <span :class="$style['container__key']">Name: </span>
         <span :class="$style['container__value']">
           {{ name }}
         </span>
       </div>
       <div :class="$style['container']">
-        <span :class="$style['container__key']">Type:</span>
+        <span :class="$style['container__key']">Type: </span>
         <span :class="$style['container__value']">
           {{ type }}
         </span>
       </div>
       <div :class="$style['select-container']">
-        <h1>Groups</h1>
+        <h3 :class="$style['label-heading']">Groups</h3>
         <multiselect
           v-model="chosenGroup"
           name="chosenGroup"
@@ -27,11 +27,11 @@
           open-direction="bottom"
           label="name"
           track-by="name"
-          :class="{ invalid: submitted && v$.chosenGroup.$invalid }"
+          :class="{ invalid: submitted && v$.chosenGroup.$error }"
         />
       </div>
       <div :class="$style['select-container']">
-        <h1>Policies</h1>
+        <h3 :class="$style['label-heading']">Policies</h3>
         <multiselect
           v-model="chosenPolicies"
           name="chosenPolicies"
@@ -44,7 +44,7 @@
           open-direction="bottom"
           label="name"
           track-by="name"
-          :class="{ invalid: submitted && v$.chosenGroup.$invalid }"
+          :class="{ invalid: submitted && v$.chosenGroup.$error }"
         />
       </div>
       <div :class="$style['button-container']">
@@ -55,21 +55,13 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, Ref, ref } from '@vue/composition-api';
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import { computed, ComputedRef, defineComponent, Ref, ref } from 'vue';
 import Multiselect from 'vue-multiselect';
 
 import Button from '~/components/shared/button.vue';
 import { AdminModule } from '~/store/modules/admin';
-
-// @Component({
-//   name: 'UpdateUserForm',
-//   components: {
-//     Button,
-//     Multiselect,
-//   },
-// })
 
 export default defineComponent({
   name: 'UpdateUserForm',
@@ -95,17 +87,12 @@ export default defineComponent({
       required: true,
     },
   },
-
-  // @Prop({ required: true, type: String }) readonly type!: string;
-  // @Prop({ required: true, type: Array }) readonly prevGroups!: Array<{ name: string }>;
-  // @Prop({ required: true, type: Array }) readonly prevPolicies!: Array<{ name: string }>;
   setup(props, { emit }) {
     const submitted: Ref<boolean> = ref(false);
     const chosenGroup = ref(props.prevGroups);
     const chosenPolicies = ref(props.prevPolicies);
     const rules = {
       chosenGroup: { required },
-      // chosenPolicies: { required },
     };
     const v$ = useVuelidate(rules, { chosenGroup });
 
@@ -118,13 +105,16 @@ export default defineComponent({
 
     function handleSubmit(): void {
       submitted.value = true;
-      emit('toggleForm', false);
-      AdminModule.updateUser({
-        Name: props.name,
-        type: props.type,
-        IAMGroups: chosenGroup.value.map((i: any) => i.name),
-        IAMPolicies: chosenPolicies.value.map((i: any) => i.name),
-      });
+      v$.value.$touch();
+      if (!v$.value.chosenGroup.$error) {
+        emit('toggleForm', false);
+        AdminModule.updateUser({
+          Name: props.name,
+          type: props.type,
+          IAMGroups: chosenGroup.value.map((i: any) => i.name),
+          IAMPolicies: chosenPolicies.value.map((i: any) => i.name),
+        });
+      }
     }
 
     function handleBodyClick(e: Event): void {
@@ -175,6 +165,9 @@ export default defineComponent({
     background-color: var(--gray-background);
   }
 }
+.label-heading{
+  margin-bottom: 5px;
+}
 .container {
   margin: 15px 0;
 
@@ -196,5 +189,9 @@ export default defineComponent({
 .button-container {
   display: flex;
   justify-content: flex-end;
+}
+.container__key {
+  color: #000000;
+  font-weight: 700;
 }
 </style>

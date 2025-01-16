@@ -230,7 +230,7 @@ class ConnectionIndecatore extends VuexModule {
     try {
       const data = await ConnectionIndecatoreService.getDataBaseRegistry();
       this.SET_DATA_BASE_REGISTRY(
-        data.map((item: any) => ({ ...item, instanceName: parseLogverzDBEndpointName(item) })),
+        data?.map((item: any) => ({ ...item, instanceName: parseLogverzDBEndpointName(item) })),
       );
       this.getRTCStatuse();
     } catch ({ message }) {

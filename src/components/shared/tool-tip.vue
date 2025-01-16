@@ -7,8 +7,9 @@
   </div>
 </template>
 
+
 <script lang="ts">
-import { defineComponent } from '@vue/composition-api';
+import { defineComponent } from 'vue';
 
 import Icon from '~/components/shared/icon.vue';
 
@@ -34,30 +35,44 @@ export default defineComponent({
   color: var(--accent-color);
 }
 
-/* Tooltip container */
 .tooltip {
   position: relative;
   display: inline-block;
 }
 
-/* Tooltip text */
 .tooltip .tooltiptext {
   visibility: hidden;
   background-color: white;
-  width: 320px;
   color: var(--blue-text-color);
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
   text-align: center;
-  padding: 5px;
+  padding: 10px;
   border-radius: 6px;
+  font-family: 'Roboto', sans-serif;
+  width: 320px;
 
-  /* Position the tooltip text - see examples below! */
+  /* Positioning */
   position: absolute;
+  bottom: 125%; /* Adjust as needed */
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 1;
+
+  /* Arrow styling */
+  &:after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 10px;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+  }
 }
 
-/* Show the tooltip text when you mouse over the tooltip container */
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
+
 </style>

@@ -13,11 +13,14 @@
   "extends": [
     "plugin:vue/recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier"
+    "prettier",
+    "plugin:vue/vue3-essential",
+    "eslint:recommended"
   ],
   "plugins": ["@typescript-eslint", "prettier", "unused-imports", "simple-import-sort"],
   "rules": {
     "vue/require-default-prop": "off",
+    "vue/no-deprecated-slot-attribute": "off",
     "no-restricted-imports": [
       "error",
       {
@@ -32,6 +35,9 @@
     "@typescript-eslint/camelcase": "off",
     "no-console": "off",
     "no-undef": "off",
-    "@typescript-eslint/no-explicit-any": "off"
+    "@typescript-eslint/no-explicit-any": "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars-experimental": "off"
   }
 }

@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, onMounted } from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, onMounted } from 'vue';
 
 import Button from '~/components/shared/button.vue';
 import { AdminModule } from '~/store/modules/admin';
@@ -112,7 +112,7 @@ export default defineComponent({
   &_tooltiptext {
     visibility: hidden;
     width: 320px;
-    background-color: black;
+    background-color: #1a1b20;
     color: #fff;
     text-align: center;
     border-radius: 6px;

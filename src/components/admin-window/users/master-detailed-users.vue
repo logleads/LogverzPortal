@@ -2,13 +2,13 @@
   <div>
     <h1>Policies</h1>
     <!-- <div>{{plainItems}}</div> -->
-    <template v-for="(item, key) in Object.keys(data.data)">
-      <div :key="key">
+    <template v-for="(item, key) in Object.keys(data?.data)" :key="key">
+      <div>
         <div
-          v-if="typeof data.data[item] === 'object' && !Array.isArray(data.data[item])"
+          v-if="typeof data?.data[item] === 'object' && !Array.isArray(data.data[item])"
           :key="item + Math.random() * 10000"
         >
-          <div v-for="(k, i) in data.data[item]" :key="i + Math.random() * 10000">
+          <template v-for="(k, i) in data?.data[item]" :key="i + Math.random() * 10000">
             <template v-if="typeof k === 'object'">
               <ParseUserObject :obj="k" :label="i" />
             </template>
@@ -23,7 +23,7 @@
                     <div>
                       <span :class="$style['container__key']">Policy name: </span>
                       <span :class="$style['container__value']">{{
-                        filterPlainItems(plainItems, data.data.Name).PolicyName
+                        filterPlainItems(plainItems, data?.data.Name).PolicyName
                       }}</span>
                     </div>
                     <div>
@@ -46,9 +46,9 @@
                 </template>
               </div>
             </template>
-          </div>
+          </template>
         </div>
-        <div v-if="Array.isArray(data.data[item])" :key="item + Math.random() * 10000">
+        <div v-if="Array.isArray(data?.data[item])" :key="item + Math.random() * 10000">
           <div :class="$style['container']">
             <span :class="$style['container__key']">{{ item }}: </span>
             <span
@@ -59,7 +59,7 @@
             >
           </div>
         </div>
-        <div v-if="data.data[item] === 'null'" :key="item + Math.random() * 10000">
+        <div v-if="data?.data[item] === 'null'" :key="item + Math.random() * 10000">
           <div :class="$style['container']">
             <span :class="$style['container__key']">{{ item }}: </span>
             <span :class="$style['container__value']">{{ data.data[item] }}</span>
@@ -70,18 +70,18 @@
     <div :class="$style['container-flex']">
       <h1>Groups</h1>
       <div :class="$style['container__value']">
-        <p v-for="(item, key) in data.data.IAMGroups.split(',')" :key="key">{{ item }}</p>
+        <p v-for="(item, key) in data?.data.IAMGroups.split(',')" :key="key">{{ item }}</p>
       </div>
     </div>
     <div :class="$style['container']">
       <span :class="$style['container__key']">JSON view: </span>
-      <json-viewer :value="data.data" :expand-depth="5" copyable boxed sort></json-viewer>
+      <json-viewer :value="data?.data" :expand-depth="5" copyable boxed sort></json-viewer>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref } from '@vue/composition-api';
+import { defineComponent, Ref, ref } from 'vue';
 
 import ParseUserObject from '~/components/admin-window/users/parse-user-object.vue';
 import { userResponse } from '~/types/models/admin-window-types';
@@ -96,13 +96,14 @@ export default defineComponent({
       required: false,
     },
     plainItems: {
-      type: Array,
+      type: Array || null,
       required: false,
     },
   },
+
   // @Prop({ required: false, type: Object }) readonly data!: Record<string, unknown>;
   // @Prop({ required: false, type: Array }) readonly plainItems!: userResponse[];
-  setup() {
+  setup(props) {
     const showMoreInline: Ref<boolean> = ref(false);
 
     function filterPlainItems(
@@ -138,7 +139,7 @@ export default defineComponent({
 </script>
 
 <style module lang="scss">
-@import '../styles';
+@use '../styles';
 
 .container {
   margin: 15px 0;
@@ -164,6 +165,7 @@ export default defineComponent({
     color: #000000;
   }
 }
+
 .document {
   margin-top: 10px;
   font-size: 13px;

@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref } from '@vue/composition-api';
+import { defineComponent, Ref, ref } from 'vue';
 
 import Icon from '~/components/shared/icon.vue';
 import Loader from '~/components/shared/loader.vue';
@@ -82,7 +82,7 @@ export default defineComponent({
           MenuModule.openMenu();
         }
       }, 5000);
-      test();
+      // test();
       setTimeout(() => {
         isLoad.value = false;
         MenuModule.openMenu();

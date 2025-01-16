@@ -157,7 +157,7 @@ class ServerConnection extends VuexModule {
   public getTablesAfterConnect() {
     this.SET_BUSY_STREAM_STATUS(true);
     this.SET_WAITED_STATUS(false);
-    const timeout = setTimeout(() => {
+    const timeout = setTimeout(() => {      
       this.SET_WAITED_STATUS(true);
       // this.getTables();
       // eslint-disable-next-line no-console
@@ -212,11 +212,11 @@ class ServerConnection extends VuexModule {
       this.SET_SELECT_VALUE({ label: 'turnServerPassword', value: response.data.Parameter.Value });
     } catch (e: any) {
       ErrorsModule.showErrorMessage(e.message);
-    } finally {
-    }
+    } finally { /* empty */ }
   }
 
-  @Action setFlagIsConnectedToWebRTC(value: boolean) {
+  @Action
+   setFlagIsConnectedToWebRTC(value: boolean) {
     this.SET_IS_CONNECTED_TO_WEB_RTC(value);
   }
 
@@ -298,7 +298,7 @@ class ServerConnection extends VuexModule {
   @Action
   public setDataToTables(data: any): void {
     if (RTCServiceObj.isQueryForInfo && this.isFinishConnected) {
-      // console.log('finish connection', data);
+      console.log('finish connection', data);
       QueryBuilderModule.setData(data);
       this.SET_IS_WAITING_FOR_DATA(false);
       this.SET_BUSY_STREAM_STATUS(false);

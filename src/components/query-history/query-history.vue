@@ -3,30 +3,25 @@
     <!-- <div > -->
 
     <!-- </div> -->
-    <div :class="$style['table']">
-      <label :class="$style['range-label']"><b> Range</b>:</label>
+    <div :class="$style['table']" >
+      <label :class="$style['range-label']"><b> Range</b></label>
       <TimerFilter @clear="clear" @unix-time-change="timeFilter" />
-      <label :class="$style['range-label']"><b> Collection</b>:</label>
-      <collectionTypes @collection-filter-change="changeTableContent" />
+      <label :class="$style['range-label']"><b> Type</b></label>
+      <CollectionTypes @collection-filter-change="changeTableContent" />
       <!-- <div :class="$style['tab-padding']">
-        <Tabs
-          btn-rigth-text="Collection"
-          btn-left-text="Analysis"
-          text-before-btn="Type"
-          :state-b-t-n="tableContent"
-          @change-table-content="changeTableContent"
-        />
+        <Tabs btn-rigth-text="Collection" btn-left-text="Analysis" text-before-btn="Type" :state-b-t-n="tableContent"
+          @change-table-content="changeTableContent" />
       </div> -->
-      <div :class="$style['tab-padding']">
+      <!-- <div :class="$style['tab-padding']" style="width: 30%; background-color: brown;"> -->
         <Tabs
-          btn-rigth-text="Shared"
-          btn-left-text="My"
+          btn-rigth-text="Others"
+          btn-left-text="Me"
           :state-b-t-n="tableMode"
-          text-before-btn="Scope"
+          text-before-btn="Owned by"
           @change-table-content="changeTableMode"
         />
-      </div>
-      <div :class="$style['tab-padding']">
+      <!-- </div> -->
+      <!-- <div :class="$style['tab-padding']" style="width: 100%;"> -->
         <Tabs
           btn-rigth-text="All"
           btn-left-text="Current"
@@ -34,7 +29,7 @@
           :state-b-t-n="filterContent"
           @change-table-content="applyVersionFilter"
         />
-      </div>
+      <!-- </div> -->
 
       <div :class="$style['tooltip-margin']">
         <ToolTip :tip="local_DCH_QUERY_HISTORY" />
@@ -57,54 +52,71 @@
         <DxHeaderFilter :visible="true" />
         <DxFilterRow :visible="true" />
 
-        <DxColumn type="buttons" caption="Actions" data-field="id">
-          <DxButton v-if="tableContent === 'A'">
-            <template #default="{ data }">
-              <div v-if="data.data.Active === false" width="150">
-                <div :class="$style['text-1']">Underlying data was deleted</div>
-                <div :class="$style['text-2']">or have been overwritten</div>
-              </div>
-              <SimpleBtn
-                v-else
-                :disable="exportV"
-                btn-text="Load configuration"
-                @clicked.stop="loadConfiguration(data.data)"
-              />
-            </template>
-          </DxButton>
-          <DxButton>
-            <template #default="{ data }">
-              <SimpleBtn
-                v-if="data.data.displayButton"
-                btn-text="Change Permissions"
-                @clicked.stop="openChangePermissionModal(data)"
-              />
-            </template>
-          </DxButton>
-          <DxButton>
-            <template #default="{ data }">
-              <SimpleBtn
-                v-if="data.data.displayButton"
-                btn-text="Delete Record"
-                @clicked.stop="openDeleteRecordModal(data)"
-              />
-            </template>
-          </DxButton>
-        </DxColumn>
+        <DxColumn type="buttons" caption="Actions" data-field="id" cell-template="cellTemplate" />
+        <DxButton v-if="tableContent === 'A'">
+          <template #cellTemplate="{ data }">
+            <pre>{{ data }}</pre>
+            <div v-if="data && data.Active === false" width="150">
+              {{ console.log('dadkahdlakjhd') }}
+              <div :class="$style['text-1']">Underlying data was deleted</div>
+              <div :class="$style['text-2']">or have been overwritten</div>
+            </div>
+            <!-- <SimpleBtn
+              :disable="exportV"
+              btn-text="Load configuration"
+              @clicked.stop="loadConfiguration(data)"
+            /> -->
+          </template>
+        </DxButton>
+        <!-- <DxButton> -->
+        <template #cellTemplate="{ data }">
+          <!-- <pre>{{ data }}</pre> -->
+          <SimpleBtn
+            v-if="tableContent === 'A'"
+            :disable="exportV"
+            btn-text="Load configuration"
+            @clicked.stop="loadConfiguration(data)"
+          />
+          <SimpleBtn
+            v-if="data && !data.displayButton"
+            btn-text="Change Permissions"
+            @clicked.stop="openChangePermissionModal(data)"
+          />
+
+          <SimpleBtn
+            v-if="data && !data.displayButton"
+            btn-text="Delete Record"
+            @clicked.stop="openDeleteRecordModal(data)"
+          />
+          <div v-else>
+            <span>No data available</span>
+          </div>
+        </template>
+        <!-- </DxButton> -->
+        <!-- <DxButton>
+          <template #cellTemplate="{ row = {} }">
+            <pre>{{ row.data }}</pre>
+            <SimpleBtn v-if="row.data && row.data.displayButton" btn-text="Delete Record"
+              @clicked.stop="openDeleteRecordModal(row.data)" />
+            <div v-else>
+              <span>No data available 3</span>
+            </div>
+          </template>
+        </DxButton> -->
 
         <DxColumn caption="Creator" data-field="UsersQuery" />
         <DxColumn
           caption="UnixTime"
           data-field="tm"
           format="dd/MM/yyyy"
-          cell-template="cellTemplate"
+          cell-template="span"
           :width="200"
         />
-        <template #cellTemplate="{ data }">
+        <template #span="{ data = {} }">
           <p :class="$style['tooltip']">
-            UTC time: {{ data.data.UnixTimeNormalFormat }}
+            UTC time: {{ data.UnixTimeNormalFormat }}
             <span :class="$style['tooltip_tooltiptext']"
-              >Local time: {{ data.data.TimeLocalFormat || '...' }}</span
+              >Local time: {{ data.TimeLocalFormat || '...' }}</span
             >
           </p>
         </template>
@@ -119,11 +131,12 @@
         <DxColumn caption="Database Name" data-field="DatabaseName" />
 
         <DxMasterDetail :enabled="true" template="queryHistorySettings" />
-        <template #queryHistorySettings="{ data }">
-          <QueryHistorySettings :data="data.data" />
+        <template #queryHistorySettings="{ data = {} }">
+          <QueryHistorySettings :data="data" />
         </template>
       </DxDataGrid>
     </template>
+
     <QueryHistoryPermission
       v-if="isOpenPermissionDialog"
       :is-analysis="tableContent === 'A'"
@@ -136,7 +149,6 @@
 <script lang="ts">
 import 'devextreme/dist/css/dx.light.css';
 
-import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from '@vue/composition-api';
 import {
   DxButton,
   DxColumn,
@@ -145,12 +157,13 @@ import {
   DxHeaderFilter,
   DxMasterDetail,
 } from 'devextreme-vue/data-grid';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from 'vue';
 
 import QueryHistoryDeleteRecord from '~/components/query-history/query-dialog-delete-record.vue';
 import QueryHistoryPermission from '~/components/query-history/query-dialog-save-permission.vue';
 import QueryHistorySettings from '~/components/query-history/query-history-settings.vue';
 import SimpleBtn from '~/components/shared/btn-simple.vue';
-import collectionTypes from '~/components/shared/collection-types.vue';
+import CollectionTypes from '~/components/shared/collection-types.vue';
 import Loader from '~/components/shared/loader.vue';
 import Tabs from '~/components/shared/tabs.vue';
 import TimerFilter from '~/components/shared/time-filter.vue';
@@ -178,7 +191,7 @@ export default defineComponent({
     DxDataGrid,
     DxHeaderFilter,
     DxFilterRow,
-    collectionTypes,
+    CollectionTypes,
     DxMasterDetail,
     Tabs,
     TimerFilter,
@@ -195,6 +208,9 @@ export default defineComponent({
     const savedSettingOrigin: Ref<Array<any>> = ref([]);
     const backupSavedSettingsQH: Ref<Array<any>> = ref([]);
     const backupSavedSettingOrigin: Ref<Array<any>> = ref([]);
+
+    // or your initial data
+
     const unix: Ref<number> = ref(0);
     const local_DCH_QUERY_HISTORY = ref(DCH_QUERY_HISTORY);
     const usersPermission: Ref<PermissionsTypes> = ref({
@@ -212,6 +228,18 @@ export default defineComponent({
     });
     function parseQueryTipe(shortName: string) {
       return shortName == 'A' ? 'Analysis' : 'Collection';
+    }
+    function deepCloneWithoutCircularReferences(obj, hash = new WeakMap()) {
+      console.log('obj', obj);
+
+      if (Object(obj) !== obj) return obj; // If not an object, return itself
+      if (hash.has(obj)) return hash.get(obj); // If circular reference, return the cache
+      const result = Array.isArray(obj) ? [] : {};
+      hash.set(obj, result);
+      Object.keys(obj).forEach(key => {
+        result[key] = deepCloneWithoutCircularReferences(obj[key], hash);
+      });
+      return result;
     }
 
     function transformSavedSettings(data: Array<any>): Array<any> {
@@ -242,8 +270,9 @@ export default defineComponent({
           displayAccess: i.Access?.length ? i.Access.join(' ') : '',
         };
       });
+
       // eslint-disable-next-line no-console
-      // console.log("TEE", resp)
+      console.log('Response time', resp);
       return resp;
     }
 
@@ -288,7 +317,9 @@ export default defineComponent({
       }
     }
     function implementActiveFIlter(data: any[]): any {
-      let list = JSON.parse(JSON.stringify(data));
+      // let list=JSON.parse(JSON.stringify(data))
+
+      let list = data;
       if (filterContent.value) {
         let result = list.filter((item: any) => item.Active === true);
         return result;
@@ -356,6 +387,11 @@ export default defineComponent({
       // this.savedSettingsQH = this.transformSavedSettings(data);
       backupSavedSettingOrigin.value = transformSettings(data);
       backupSavedSettingsQH.value = transformSavedSettings(data);
+      console.log(
+        'implementActiveFIlter(transformSettings(data))',
+        implementActiveFIlter(transformSettings(data)),
+      );
+
       savedSettingOrigin.value = implementActiveFIlter(transformSettings(data));
       savedSettingsQH.value = implementActiveFIlter(transformSavedSettings(data));
     }
@@ -424,6 +460,7 @@ export default defineComponent({
       changeTableMode,
       transformSettings,
       transformSavedSettings,
+      deepCloneWithoutCircularReferences,
       parseQueryTipe,
       AdminPermissions,
       reuseTableName,
@@ -599,7 +636,7 @@ export default defineComponent({
   &_tooltiptext {
     visibility: hidden;
     width: 100%;
-    background-color: black;
+    background-color: #1a1b20;
     color: #fff;
     text-align: center;
     border-radius: 6px;
@@ -617,25 +654,46 @@ export default defineComponent({
   visibility: visible;
 }
 
-// .tab-padding {
-//   padding-right: 5px;
-// }
+.tab-padding {
+  // padding-right: 5px;
+  // width: 100%;
+}
 .range-label {
   margin-top: 6px;
   padding-top: 4px;
 }
+
 .tooltip-margin {
   margin-top: 6px;
 }
+
 .columnWidth {
   display: flex;
-  background-color: red;
 }
 </style>
-<style>
+<style scoped>
 #gridSettings {
   max-width: 100%;
   width: 100%;
   height: 85%;
+  font-family: 'Roboto', sans-serif;
+
+}
+:deep(.dx-datagrid) {
+  font-family: 'Roboto', sans-serif !important;
+}
+
+/* Target specific parts if needed */
+:deep(.dx-datagrid-headers) {
+  font-family: 'Roboto', sans-serif !important;
+}
+
+:deep(.dx-datagrid-rowsview) {
+  font-family: 'Roboto', sans-serif !important;
+}
+
+/* For text inside cells */
+:deep(.dx-datagrid-text-content) {
+  font-family: 'Roboto', sans-serif !important;
 }
 </style>

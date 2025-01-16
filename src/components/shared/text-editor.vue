@@ -1,113 +1,72 @@
 <template>
-  <editor
-    ref="editor"
-    initial-edit-type="markdown"
-    :initial-value="editorText"
-    height="100%"
-    :style="$style['editor']"
-    :options="defaultOptions"
-    @load="onEditorLoad"
-    @focus="onEditorFocus"
-    @change="onEditorChange"
-  />
+  <div>
+    <div ref="editorEl" :style="$style['editor']" />
+  </div>
 </template>
 
 <script lang="ts">
-import 'codemirror/lib/codemirror.css';
 import '@toast-ui/editor/dist/toastui-editor.css';
 
-import { Editor } from '@toast-ui/vue-editor';
-import { computed, ComputedRef, defineComponent, Ref, ref } from '@vue/composition-api';
-
-import { SaveSettingModule } from '~/store/modules/save-setting';
+import Editor from '@toast-ui/editor';
+import { defineComponent, onMounted, ref, watch } from 'vue';
 
 export default defineComponent({
   name: 'TextEditor',
-  components: {
-    Editor,
-  },
   props: {
-    curentKey: {
-      type: Number,
-      required: true,
-    },
-    dataNumber: {
-      type: Number,
-      required: true,
+    editorText: {
+      type: String,
+      default: '',
     },
   },
-  setup(props) {
-    const content: Ref<string> = ref('sdf');
-    const editor: Ref<any> = ref('');
-    const defaultOptions = ref({
-      language: 'en-US',
+  emits: ['change', 'load', 'focus'],
+  setup(props, { emit }) {
+    const editorEl = ref<HTMLElement | null>(null);
+    let editorInstance: Editor | null = null;
+
+    const defaultOptions = {
+      // your editor options here
+      minHeight: '200px',
+      language: 'en',
       useCommandShortcut: true,
-      useDefaultHTMLSanitizer: true,
-      usageStatistics: true,
-      hideModeSwitch: false,
-      toolbarItems: [
-        'heading',
-        'bold',
-        'italic',
-        'strike',
-        'divider',
-        'hr',
-        'quote',
-        'divider',
-        'ul',
-        'ol',
-        'task',
-        'indent',
-        'outdent',
-        'divider',
-        'table',
-        // 'image',
-        'link',
-        'divider',
-        'code',
-        'codeblock',
-      ],
-    });
+    };
 
-    function onEditorChange(editor: any): void {
-      const text = editor?.innerText.replace('MarkdownWYSIWYG', '');
-      // const text = editor.$refs.toastuiEditor.innerText.replace('MarkdownWYSIWYG', '');
-      const textS = text.split('\n\n');
-      textS.pop();
+    onMounted(() => {
+      if (!editorEl.value) return;
 
-      for (let i = 0; i < textS.length / 2; i++) {
-        textS.pop();
-      }
-      // eslint-disable-next-line no-console
-      console.log(textS.join('\n\n'), 'textS');
-      SaveSettingModule.setTextEditor({
-        data: textS.join('\n\n'),
-        key: props.dataNumber,
+      editorInstance = new Editor({
+        el: editorEl.value,
+        initialEditType: 'markdown',
+        initialValue: props.editorText,
+        height: '100%',
+        ...defaultOptions,
       });
-    }
 
-    function onEditorFocus(editor: InputEvent): void {
-      // eslint-disable-next-line no-console
-      console.log('editor focus!', editor);
-    }
+      // Handle events
+      editorInstance.on('load', () => {
+        emit('load', editorInstance);
+      });
 
-    function onEditorLoad(editor: InputEvent): void {
-      // eslint-disable-next-line no-console
-      console.log('editor ready!', editor);
-    }
+      editorInstance.on('change', () => {
+        emit('change', editorInstance?.getMarkdown());
+      });
 
-    const editorText: ComputedRef<string> = computed(() => {
-      return SaveSettingModule.dataT[props.dataNumber].textEditor;
+      editorInstance.on('focus', () => {
+        emit('focus', editorInstance);
+      });
     });
+
+    // Watch for external value changes
+    watch(
+      () => props.editorText,
+      newValue => {
+        if (editorInstance && newValue !== editorInstance.getMarkdown()) {
+          editorInstance.setMarkdown(newValue);
+        }
+      },
+    );
 
     return {
-      editorText,
-      onEditorChange,
-      onEditorLoad,
-      onEditorFocus,
-      content,
-      editor,
-      defaultOptions,
+      editorEl,
     };
   },
 });

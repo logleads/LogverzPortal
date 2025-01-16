@@ -1,7 +1,10 @@
 <template>
   <div :class="$style['table-query-history']">
     <div :class="$style['table']">
+      <label :class="$style['range-label']"><b> Range</b></label>
       <TimerFilter @clear="clear" @unix-time-change="timeFilter" />
+      <label :class="$style['range-label']"><b> Type</b></label>
+
       <div :class="$style['table__header__buttons']">
         <button
           :class="[
@@ -38,7 +41,9 @@
             'Clear',
           ]"
         /> -->
-        <select v-model="searchMode" name="searchMode" class="searchMode">
+      <label :class="$style['range-label']"><b> Refine results</b></label>
+
+        <select v-model="searchMode" name="searchMode" :class="$style['searchMode']">
           <optgroup label="Category">
             <option value="Category:User">User</option>
             <option value="Category:Infra">Infra</option>
@@ -62,7 +67,7 @@
             name="actionsValue"
             :placeholder="'Type Action'"
             :type="'string'"
-            @input="handleInputAction({ value: $event, label: 'actionsValue' })"
+            @input="handleInputAction({ value: $event.target.value, label: 'actionsValue' })"
           />
           <div :class="$style['btn-place']">
             <button :class="$style['btn']" @click="getActions">Apply</button>
@@ -89,6 +94,13 @@
           <h2>Error</h2>
           <EventTable :searce="error" />
         </div>
+        <div :class="$style['event-window']">
+          <h1>Type</h1>
+          <h2>Api</h2>
+          <EventTable :searce="API" />
+          <h2>SQL</h2>
+          <EventTable :searce="SQL" />
+        </div>
       </template>
       <template v-if="canvas === 'Specific events'">
         <div>
@@ -110,7 +122,7 @@
 <script lang="ts">
 import 'devextreme/dist/css/dx.light.css';
 
-import { defineComponent, Ref, ref, watch } from '@vue/composition-api';
+import { defineComponent, Ref, ref, watch } from 'vue';
 
 import EventTable from '~/components/events-window/event-tible.vue';
 import Input from '~/components/shared/input.vue';
@@ -143,6 +155,8 @@ export default defineComponent({
     const user: Ref<any> = ref([]);
     const infra: Ref<any> = ref([]);
     const info: Ref<any> = ref([]);
+    const API: Ref<any> = ref([]);
+    const SQL: Ref<any> = ref([]);
     const error: Ref<any> = ref([]);
     const searchMode: Ref<string> = ref('');
     const conditional: Ref<boolean> = ref(true);
@@ -360,6 +374,8 @@ export default defineComponent({
       user,
       infra,
       info,
+      API,
+      SQL,
       error,
       searchMode,
       conditional,
@@ -509,7 +525,7 @@ h2 {
         width: 111px;
         height: 27px;
         font-weight: 500;
-        font-size: 12px;
+        font-size: 14px;
         color: #242222;
         background-color: #ffffff;
         box-shadow: 0 4px 4px rgba(0, 0, 0, 0.03);
@@ -517,7 +533,7 @@ h2 {
         &.active {
           background-color: #88c4be;
           font-weight: 500;
-          font-size: 12px;
+          font-size: 14px;
           color: white;
           box-shadow: none;
         }
@@ -538,8 +554,15 @@ h2 {
 .searchMode {
   margin-top: 3px;
   padding: 2px;
-  width: 120px;
+  font-family: 'Roboto', sans-serif !important;
   border-top: 1px solid gray;
+  width: 20% !important;
+  border-radius: 5px;
+  background-color: #fff !important;
+}
+.range-label {
+  margin-top: 6px;
+  padding-top: 4px;
 }
 </style>
 <style>

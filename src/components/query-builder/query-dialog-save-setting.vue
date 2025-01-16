@@ -4,13 +4,14 @@
       <div :class="[$style['container__body']]">
         <div v-for="(item, key) in dataT" :key="key" :class="[$style['container__input']]">
           <label>{{ key }}</label>
-          <Input :value="transformValue(item)" disabled />
+          <Input :model-value="transformValue(item)" disabled />
         </div>
         <div :class="[$style['container__input']]">
           <label>Analysis name</label>
           <Input slot="input" v-model="Name" name="name" :placeholder="'Analysis name'" />
         </div>
       </div>
+
       <div :class="[$style['container__footer']]">
         <Button text="Cancel" @click="close" />
         <Button text="Save" @click="save" />
@@ -20,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, Ref, ref } from '@vue/composition-api';
+import { computed, ComputedRef, defineComponent, Ref, ref } from 'vue';
 
 import Button from '~/components/shared/button.vue';
 import Input from '~/components/shared/input.vue';
@@ -53,6 +54,7 @@ export default defineComponent({
     });
 
     const dataT = computed(() => {
+      console.log('Setting', SaveSettingModule.dataT, props.dataNumber);
       return {
         DataBaseName: SaveSettingModule.dataT[props.dataNumber].DataBaseName,
         DatasetName: SaveSettingModule.dataT[props.dataNumber].TableName,
@@ -60,21 +62,24 @@ export default defineComponent({
       };
     });
 
-    function close(): void {
+    function close(): void {      
       SaveSettingModule.closeDialogWindow();
     }
 
-    function save(): void {
-      SaveSettingModule.saveSetting({ key: props.dataNumber, name: Name.value });
-      close();
+    function save(): void {      
+      if(Name.value){
+        SaveSettingModule.saveSetting({ key: props.dataNumber, name: Name.value });
+        close();
+      }
     }
 
-    function transformValue(obj: any): void {
+    function transformValue(obj: any) {
+      console.log('Transform', obj, Array.isArray(obj));
       return Array.isArray(obj)
         ? obj.map(item => JSON.stringify(item)).join(' ')
         : typeof obj === 'object'
-        ? JSON.stringify(obj)
-        : obj;
+          ? JSON.stringify(obj)
+          : obj;
     }
     return {
       transformValue,
@@ -143,6 +148,7 @@ export default defineComponent({
 
   &__input {
     margin: 10px 0;
+    padding: 10px;
   }
 }
 </style>
