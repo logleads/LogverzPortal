@@ -92,8 +92,8 @@ import {
   DxValueAxis,
 } from 'devextreme-vue/chart';
 import { DxFieldChooser, DxPivotGrid } from 'devextreme-vue/pivot-grid';
-import { json2csv } from 'json-2-csv';
-import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from 'vue';
+import { json2csv } from 'json-2-csv';  // Using the new promise-based API
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref, watchEffect } from 'vue';
 
 import { QueryBuilderModule } from '~/store/modules/query-builder';
 import { CloudTrailDataResponse } from '~/types/models/query-builder-types';
@@ -157,10 +157,6 @@ export default defineComponent({
       });
     }
 
-    // customizeText({ valueText }: any): any {
-    //   return `${valueText}&#176F`;
-    // }
-
     function contentReady(): void {
       setTimeout(() => {
         uploadData.value = chartRef.value.instance.getDataSource()._items.map((item: any) => {
@@ -192,6 +188,7 @@ export default defineComponent({
       grid.value.instance.updateDimensions();
     }
 
+    // Refactor to use async/await and avoid using a callback
     const items: ComputedRef<CloudTrailDataResponse[] | null> = computed(() => {
       const data = QueryBuilderModule.dataForAllWindows[props.dataNumber as number]
         ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].data?.map(
@@ -207,19 +204,24 @@ export default defineComponent({
 
         return obj;
       });
-      const json2csvCallback = (err: unknown, csv: string | undefined) => {
-        if (err) throw err;
-        if (csv) {
+
+      return sortedBySelectedColum;
+    });
+
+    // Watch the items for changes and process CSV outside of computed property
+    watchEffect(async () => {
+      if (items.value) {
+        try {
+          const csv = await json2csv(items.value as CloudTrailDataResponse[]);
           const tmp = csv as string;
           const arr = tmp.split('\n');
           headers.value = arr[0].split(',').map((item: any) => {
             return item.replaceAll('.', '-').toLowerCase();
           });
+        } catch (err) {
+          console.error("Error while converting to CSV:", err);
         }
-      };
-
-      json2csv(sortedBySelectedColum as CloudTrailDataResponse[], json2csvCallback);
-      return sortedBySelectedColum;
+      }
     });
 
     const dataSource: ComputedRef<Array<unknown>> = computed(() => {
@@ -241,6 +243,7 @@ export default defineComponent({
 
       return data;
     });
+
     return {
       dataSource,
       items,
@@ -262,6 +265,7 @@ export default defineComponent({
   },
 });
 </script>
+
 <style module lang="scss">
 .container {
   overflow: scroll;

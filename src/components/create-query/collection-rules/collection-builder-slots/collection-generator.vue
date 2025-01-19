@@ -3,6 +3,7 @@
     <div class="filter-container">
       <DxFilterBuilder v-if="shouldRenderFilterBuilder" v-model:value="filterValue" :fields="formattedFields"
         :group-operations="groupOperations" :max-group-level="0" 
+        class="test"
          />
       <div class="dx-clearfix" />
     </div>
@@ -207,14 +208,15 @@ function removeOddIndexes(array: any[]) {
   padding: 5px;
   width: 80%;
   margin: 24px;
+  
 }
 
 .dx-filterbuilder {
   background-color: transparent;
   padding: 10px;
 }
-.dx-filter-builder-group-operation {
-  background-color: #4caf50; /* Green background /
+.test .dx-filter-builder-group-operation {
+  background-color: #4caf50 !important; /* Green background /
   color: #ffffff; / White text /
   border-radius: 5px; / Rounded corners */
 }
@@ -226,4 +228,16 @@ function removeOddIndexes(array: any[]) {
 .dx-filterbuilder .dx-numberbox {
   width: 80px;
 }
+.filter-container .test{
+  font-family: 'Roboto', sans-serif;
+
+  
+}
+/* .test .dx-filterbuilder-group-operation{
+  background-color: red !important;
+}
+.test .dx-filterbuilder .dx-filterbuilder-group .dx-filterbuilder-text.dx-filterbuilder-group-operation{
+  background-color: rgba(0, 0, 0, 0.12) !important;
+
+} */
 </style>

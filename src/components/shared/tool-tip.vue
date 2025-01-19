@@ -50,7 +50,7 @@ export default defineComponent({
   border-radius: 6px;
   font-family: 'Roboto', sans-serif;
   width: 320px;
-
+font-weight: bold;
   /* Positioning */
   position: absolute;
   bottom: 125%; /* Adjust as needed */
