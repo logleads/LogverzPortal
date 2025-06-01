@@ -1,14 +1,10 @@
 <template>
-  <button
-    type="button"
-    :class="[$style['button'], classAssign]"
-    :disabled="disabled"
-    
-
-  >
+  <button type="button" :class="['button', classAssign]" :disabled="disabled">
     <template v-if="disabled">
       <template v-if="noLoad">{{ text }}</template>
-      <template v-else><Loader /></template>
+      <template v-else>
+        <Loader />
+      </template>
     </template>
     <template v-if="!disabled">{{ text }}</template>
   </button>
@@ -42,7 +38,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .button {
   background-color: var(--accent-color);
   border-radius: 5px;

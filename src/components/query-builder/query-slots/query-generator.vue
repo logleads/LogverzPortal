@@ -1,47 +1,47 @@
 <template>
   <div>
-    <Tabs btn-rigth-text="OR" btn-left-text="AND" :state-b-t-n="isAnd" :class="$style['mb5']"
+    <Tabs btn-rigth-text="OR" btn-left-text="AND" :state-b-t-n="isAnd" class="mb5"
       @change-table-content="handleIsAnd" />
     <label>
-      <p :class="$style['customLabel']">Available Fields</p>
+      <p class="customLabel">Available Fields</p>
     </label>
-    <div v-for="(item, index) in lineWithRules" :key="item" :class="[$style['query-bilder'], $style['mb5']]">
+    <div v-for="(item, index) in lineWithRules" :key="item" :class="['query-bilder', 'mb5']">
       <DropDownSimple :content="query[index].field" :items="fieldsLabel" name="field"
         @select-value="e => handleFields(e.item, index)" />
       <DropDownSimple :content="query[index].role" :items="getRules(index)" name="rules"
         @select-value="e => handleRules(e.item, index)" />
-      <Input :class="$style['query-bilder__input']" v-model="query[index].value" :disabled="disabledValue(index)"
+      <Input class="query-bilder__input" v-model="query[index].value" :disabled="disabledValue(index)"
         :from-query-builder="true" />
-      <div v-if="index == 0" :class="$style['hover']" @click="add">
+      <div v-if="index == 0" class="hover" @click="add">
         <Icon name="plus" :height="30" :width="30" />
       </div>
-      <div v-else :class="$style['hover']" @click="close(index)">
+      <div v-else class="hover" @click="close(index)">
         <Icon name="x-mark" :width="30" :height="30" />
       </div>
     </div>
-    <div :class="[$style['query-bilder__limit'], $style['mb5']]">
+    <div :class="['query-bilder__limit', 'mb5']">
       <label>
-        <p :class="$style['customLabel']">Batch start</p>
+        <p class="customLabel">Batch start</p>
       </label>
-      <Input :value="batchStart" :type="'number'" :class="$style['query-bilder__input']" @input="handlebatchStart" />
+      <Input v-model="batchStart" :type="'number'" class="query-bilder__input" @input="handlebatchStart"/>
     </div>
-    <div :class="$style['mb5']">
+    <div class="mb5">
       <label>
-        <p :class="$style['customLabel']">Batch size</p>
+        <p class="customLabel">Batch size</p>
       </label>
-      <Input :value="batchSize" :type="'number'" :class="$style['query-bilder__input']" @input="handlebatchSize" />
+      <Input v-model="batchSize" :type="'number'" class="query-bilder__input" @input="handlebatchSize" />
     </div>
-    <div :class="[$style['query-bilder__limit'], $style['mb5']]">
-      <div :class="$style['colection__item__inputs']">
-        <div :class="$style['checkbox-label']">
-          <label :class="$style['input-item-text']"> Modify query </label>
+    <div :class="['query-bilder__limit', 'mb5']">
+      <div class="colection__item__inputs">
+        <div class="checkbox-label">
+          <label class="input-item-text"> Modify query </label>
           <input v-model="isCustomRules" type="checkbox" />
         </div>
         <br />
         <!-- :value="customQuery.replaceAll('\\', '')" -->
         <textarea v-if="isCustomRules" :value="customQuery.replaceAll('\\', '')"
-          :class="[{ [$style['disabled']]: !isCustomRules }]" :disabled="!isCustomRules" :placeholder="placeholder"
-          rows="5" @input="handleCustomQuery">
+          :class="[{ 'disabled': !isCustomRules }]" :disabled="!isCustomRules" :placeholder="placeholder" rows="5"
+          @input="handleCustomQuery">
         </textarea>
         <pre v-else
           v-highlightjs="customQuery ? customQuery.replaceAll('\\', '') : placeholder"><code class="sql"></code></pre>
@@ -286,7 +286,10 @@ export default defineComponent({
     const DataType: ComputedRef<string> = computed(() => {
       return QueryBuilderModule.DataSet;
     });
-
+    watch(batchStart, (newValue, oldValue) => {
+      console.log('batchStart changed from', oldValue, 'to', newValue)
+      // You can call your backend or run logic here
+    })
     watch(DataType, () => {
       query.value = [
         {
@@ -368,7 +371,9 @@ export default defineComponent({
     }
 
     function handlebatchSize(value: any): void {
-      batchSize.value = value.target.value;
+      // batchSize.value = value.target.value;
+      // console.log("----->",batchStart.value);
+      
       genereteQuery();
       SaveSettingModule.setBatch({
         key: props.dataNumber,
@@ -380,7 +385,8 @@ export default defineComponent({
     }
 
     function handlebatchStart(value: any): void {
-      batchStart.value = value.target.value;
+      // console.log(batchStart.value);
+      // batchStart.value = value.target.value;
       genereteQuery();
       SaveSettingModule.setBatch({
         key: props.dataNumber,
@@ -465,7 +471,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .query-bilder {
   display: flex;
   justify-content: space-between;

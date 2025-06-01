@@ -1,11 +1,11 @@
 <template>
-  <div v-if="isOpenPermissionDialog" :class="[$style['container']]" @click.self="close">
-    <div :class="[$style['container__window']]">
-      <div :class="[$style['container__body']]">
+  <div v-if="isOpenPermissionDialog" class="container" @click.self="close">
+    <div class="container__window">
+      <div class="container__body">
         <h4>Change Permissions</h4>
         <br />
         <div>
-          <label :class="$style['multiselect-label']">
+          <label class="multiselect-label">
             <span> {{ isAnalysis ? 'Analysis Owners' : 'Dataset Owners' }} </span>
             <ToolTip :tip="local_DCH_TABLE_OWNERS" />
           </label>
@@ -27,12 +27,12 @@
             <!-- :class="{ invalid: submitted && !$v.DatasetOwners.required }" -->
           </div>
 
-          <!-- <div v-if="submitted && !$v.DatasetOwners.required" :class="$style['validation-text']">
+          <!-- <div v-if="submitted && !$v.DatasetOwners.required" class="validation-text">
               DatasetOwners is required
             </div> -->
         </div>
         <div>
-          <label :class="$style['multiselect-label']">
+          <label class="multiselect-label">
             <span> {{ isAnalysis ? 'Analysis Access' : 'Dataset Access' }} </span>
             <ToolTip :tip="local_DCH_TABLE_ACCESS" />
           </label>
@@ -52,12 +52,12 @@
             />
           </div>
 
-          <!-- <div v-if="submitted && !$v.DatasetAccess.required" :class="$style['validation-text']">
+          <!-- <div v-if="submitted && !$v.DatasetAccess.required" class="validation-text">
               DatasetAccess is required
             </div> -->
         </div>
       </div>
-      <div :class="[$style['container__footer']]">
+      <div class="container__footer">
         <MyButton text="Cancel" @click="close" />
         <MyButton text="Save" @click="save" />
       </div>
@@ -191,7 +191,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .container {
   width: 100%;
   height: 100%;

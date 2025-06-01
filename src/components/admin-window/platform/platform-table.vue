@@ -1,32 +1,33 @@
 <template>
-  <div :class="$style['container']">
-    <div :class="$style['management']">
-      <fieldset :class="$style['management__fieldset']">
+  <div class="container">
+    <div class="management">
+      <fieldset class="management__fieldset">
         <legend>Identity Management</legend>
-        <div :class="$style['button-container']">
+        <div class="button-container">
           <Button text="Start" :disabled="isFetching" @click="handleSubmit" />
         </div>
-        <h1 :class="[$style['management__footer'], $style['tooltip']]">
+        <h1 class="management__footer tooltip">
           Last identity Sync(UTC time): {{ lastSyncTime.utcTime || '...' }}
-          <span :class="[$style['management__footer'], $style['tooltip_tooltiptext']]"
-            >Last identity Sync(Local time):{{ lastSyncTime.localTime || '...' }}</span
-          >
+          <span class="tooltip__text">
+            Last identity Sync(Local time): {{ lastSyncTime.localTime || '...' }}
+          </span>
         </h1>
       </fieldset>
       <!--
-      <fieldset :class="$style['management__fieldset']">
+      <fieldset class="management__fieldset">
         <legend>PlaceHolder</legend>
       </fieldset>
-      <fieldset :class="$style['management__fieldset']">
+      <fieldset class="management__fieldset">
         <legend>PlaceHolder</legend>
       </fieldset>
-      <fieldset :class="$style['management__fieldset']">
+      <fieldset class="management__fieldset">
         <legend>PlaceHolder</legend>
       </fieldset>
       -->
     </div>
   </div>
 </template>
+
 
 <script lang="ts">
 import { computed, ComputedRef, defineComponent, onMounted } from 'vue';
@@ -71,7 +72,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style  scoped lang="scss">
 .button-container {
   display: flex;
   justify-content: flex-end;

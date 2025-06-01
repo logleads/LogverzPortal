@@ -1,7 +1,7 @@
 <template>
   <div
-    :class="[$style['loader'], { [$style['loader--accent']]: accent }]"
-    :style="{ width: `${size}px`, height: `${size}px` }"
+  :class="['loader', accent ? 'loader--accent' : '']"
+  :style="{ width: `${size}px`, height: `${size}px` }"
   ></div>
 </template>
 
@@ -26,7 +26,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .loader {
   --color: #fff;
 

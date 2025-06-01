@@ -69,7 +69,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .query-builder-item {
   width: 100%;
 }

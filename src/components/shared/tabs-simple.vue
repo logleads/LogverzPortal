@@ -1,26 +1,20 @@
 <template>
-  <div :class="[$style['table__header__buttons'], $style['anylasis-style']]">
-    <button
-      :class="[
-        $style['table__header__buttons__btn'],
-        $style['border-radius-left'],
-        { [$style['active']]: tableContent },
-      ]"
-      @click="chackBtn(true)"
-    >
+  <div :class="['table__header__buttons', 'anylasis-style']">
+    <button :class="[
+      'table__header__buttons__btn',
+        'border-radius-left',
+      { 'active': tableContent },
+    ]" @click="chackBtn(true)">
       {{ btnLeftText }}
     </button>
-    <button
-      :class="[
-        $style['table__header__buttons__btn'],
-        $style['border-radius-right'],
-        { [$style['active']]: !tableContent },
-      ]"
-      @click="chackBtn(false)"
-    >
+    <button :class="[
+      'table__header__buttons__btn',
+      'border-radius-right',
+      { 'active': !tableContent },
+    ]" @click="chackBtn(false)">
       {{ btnRigthText }}
     </button>
-    <b v-if="textAfterBtn !== ''" :class="$style['btn-text']"> {{ textAfterBtn }} </b>
+    <b v-if="textAfterBtn !== ''" class="btn-text"> {{ textAfterBtn }} </b>
   </div>
 </template>
 
@@ -76,7 +70,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .table {
   display: flex;
   width: 100%;
@@ -94,7 +88,7 @@ export default defineComponent({
     font-size: 14px;
     color: var(--blue-text-color);
 
-    > div {
+    >div {
       display: flex;
       align-items: center;
       padding-right: 19px;
@@ -141,9 +135,11 @@ export default defineComponent({
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
 }
+
 .btn-text {
   margin-left: 5px;
 }
+
 .anylasis-style {
   border: 1px solid rgba(43, 42, 44, 0.4);
   padding: 0px !important;

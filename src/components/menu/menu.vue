@@ -1,24 +1,25 @@
 <template>
   <div
     ref="container"
-    :class="[$style['container'], { [$style['container--open']]: isOpen }]"
+    :class="['container', { 'container--open': isOpen }]"
+
     @click="handleOverlayClick($event)"
   >
-    <button type="button" :class="$style['close-btn']" @click="closeMenu">
+    <button type="button" class="close-btn" @click="closeMenu">
       <Icon name="window-close" :width="17" :height="17" />
     </button>
-    <div :class="$style['search']">
-      <div :class="$style['search__icon']">
+    <div class="search">
+      <div class="search__icon">
         <Icon name="search" :width="15" :height="16" />
       </div>
       <input
         v-model="searchValue"
         name="search"
         placeholder="Search"
-        :class="$style['search__input']"
+        class="search__input"
       />
     </div>
-    <div :class="$style['menu-list']">
+    <div class="menu-list">
       <button
         v-for="item in menuItems"
         v-show="
@@ -29,18 +30,18 @@
         :ref="buttonsRefrences(item.windowName)"
         :key="item.windowName"
         type="button"
-        :class="$style['menu-item']"
+        class="menu-item"
         @click="openWindow(item.windowName, item.index)"
       >
-        <div :class="$style['menu-item__icon']">
+        <div class="menu-item__icon">
           <Icon :name="item.icon.name" :width="item.icon.width" :height="item.icon.height" />
         </div>
-        <div :class="$style['menu-item__label']">
+        <div class="menu-item__label">
           {{ item.label }}
         </div>
       </button>
     </div>
-    <div :class="true ? $style['container__ad'] : $style['isLoading']">
+    <div :class="true ?'container__ad' :'isLoading'">
       <div v-html="html"></div>
     </div>
   </div>
@@ -99,7 +100,7 @@ const menuItemsArray: MenuItem[] = [
     windowName: WindowName.QUERY_HISTORY,
   },
   {
-    label: 'Events window',
+    label: 'Events',
     icon: {
       name: 'events-window',
       width: 120,
@@ -108,7 +109,7 @@ const menuItemsArray: MenuItem[] = [
     windowName: WindowName.EVENTS_WINDOW,
   },
   {
-    label: 'Admin window',
+    label: 'Admin',
     icon: {
       name: 'admin',
       width: 57,
@@ -291,7 +292,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style  scoped lang="scss">
 @mixin active-background {
   background-color: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.2);

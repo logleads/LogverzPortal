@@ -2,27 +2,27 @@
   <button
     type="button"
     :class="[
-      $style['tab'],
+      'tab',
       {
-        [$style['tab--active']]: activeWindowsIndex === item.index,
-        [$style['tab--dragging']]: dragging,
+        'tab--active': activeWindowsIndex === item.index,
+        'tab--dragging': dragging,
       },
     ]"
     @click="openWindow(item.name, item.index)"
   >
-    <div :class="$style['tab__body']">
-      <div :class="$style['tab__label']">
+    <div class="tab__body">
+      <div class="tab__label">
         {{ `${keyC} ${item.windowName}` }}
       </div>
       <button
         v-if="activeWindowsIndex === item.index"
         type="button"
-        :class="$style['tab__close-btn']"
+        class="tab__close-btn"
         @click="closeWindow($event, item.index)"
       >
         <Icon name="window-close" :width="7" :height="7" />
       </button>
-      <div :class="$style['tab__bottom-line']" />
+      <div class="tab__bottom-line" />
     </div>
   </button>
 </template>
@@ -82,7 +82,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .tab {
   margin: 0 12px;
   height: 44px;

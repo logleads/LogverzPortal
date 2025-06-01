@@ -1,46 +1,50 @@
 <template>
-  <div :class="$style['block']" @click="changeDropDown">
-    <div :class="$style['user-block']">
+  <div class="block" @click="changeDropDown">
+    <div class="user-block">
       <img
         :src="require('~/assets/images/user-icon.svg')"
-        :class="$style['user-icon']"
+        class="user-icon"
         alt="user-icon"
       />
-      <span :class="$style['user-block_text']">{{userName}}</span>
+      <span class="user-block_text">{{ userName }}</span>
       <img :src="require('~/assets/images/vector.svg')" alt="user-vector" />
     </div>
-    <div v-if="isOpen" :class="$style['user-dropdown']">
-      <div :class="$style['user-dropdown-item']" @click="usersSettings">
+    <div v-if="isOpen" class="user-dropdown">
+      <div class="user-dropdown-item" @click="usersSettings">
         <img
           :src="require('~/assets/images/user_small.svg')"
           alt="user-icon"
           width="25"
           height="25"
-        /><span :class="$style['user-dropdown-item_text']"> User profile settings </span>
+        />
+        <span class="user-dropdown-item_text"> User profile settings </span>
       </div>
-      <div :class="$style['user-dropdown-item']" @click="termsandconditions">
+      <div class="user-dropdown-item" @click="termsandconditions">
         <img
           :src="require('~/assets/images/files.svg')"
           alt="user-icon"
           width="25"
           height="25"
-        /><span :class="$style['user-dropdown-item_text']"> Terms and conditions </span>
+        />
+        <span class="user-dropdown-item_text"> Terms and conditions </span>
       </div>
-      <div :class="$style['user-dropdown-item']" @click="privacyPolicy">
+      <div class="user-dropdown-item" @click="privacyPolicy">
         <img
           :src="require('~/assets/images/files.svg')"
           alt="user-icon"
           width="25"
           height="25"
-        /><span :class="$style['user-dropdown-item_text']"> Privacy Policy </span>
+        />
+        <span class="user-dropdown-item_text"> Privacy Policy </span>
       </div>
-      <div :class="$style['user-dropdown-item']" @click="logOut">
+      <div class="user-dropdown-item" @click="logOut">
         <img
           :src="require('~/assets/images/exit.svg')"
           alt="user-icon"
           width="25"
           height="25"
-        /><span :class="$style['user-dropdown-item_text']"> Log out </span>
+        />
+        <span class="user-dropdown-item_text"> Log out </span>
       </div>
     </div>
   </div>
@@ -130,7 +134,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style  scoped lang="scss">
 .block {
   position: relative;
 }

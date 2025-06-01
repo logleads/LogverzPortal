@@ -1,27 +1,21 @@
 <template>
-  <div :class="$style['table-query-history']">
-    <div :class="$style['table']">
-      <label :class="$style['range-label']"><b> Range</b></label>
+  <div class="table-query-history">
+    <div class="table">
+      <label class="range-label"><b>Range</b></label>
       <TimerFilter @clear="clear" @unix-time-change="timeFilter" />
-      <label :class="$style['range-label']"><b> Type</b></label>
-
-      <div :class="$style['table__header__buttons']">
+      
+      <label class="range-label"><b>Type</b></label>
+      <div class="table__header__buttons">
         <button
-          :class="[
-            $style['table__header__buttons__btn'],
-            $style['border-radius-left'],
-            { [$style['active']]: tableContent },
-          ]"
+          class="table__header__buttons__btn border-radius-left"
+          :class="{ active: tableContent }"
           @click="changeTableContent(true)"
         >
           Groupped events
         </button>
         <button
-          :class="[
-            $style['table__header__buttons__btn'],
-            $style['border-radius-right'],
-            { [$style['active']]: !tableContent },
-          ]"
+          class="table__header__buttons__btn border-radius-right"
+          :class="{ active: !tableContent }"
           @click="changeTableContent(false)"
         >
           Specific events
@@ -29,21 +23,8 @@
       </div>
 
       <template v-if="tableContent">
-        <!-- <DxSelectBox
-          v-model="searchMode"
-          :items="[
-            'Category:User',
-            'Category:Infra',
-            'Severity:Info',
-            'Severity:Error',
-            'Type:API',
-            'Type:SQL',
-            'Clear',
-          ]"
-        /> -->
-      <label :class="$style['range-label']"><b> Refine results</b></label>
-
-        <select v-model="searchMode" name="searchMode" :class="$style['searchMode']">
+        <label class="range-label"><b>Refine results</b></label>
+        <select v-model="searchMode" name="searchMode" class="searchMode">
           <optgroup label="Category">
             <option value="Category:User">User</option>
             <option value="Category:Infra">Infra</option>
@@ -60,55 +41,58 @@
         </select>
       </template>
       <template v-else>
-        <div :class="$style['choose_action']">
+        <div class="choose_action">
           <Input
             id="actionsValue"
             :value="actionsValue"
             name="actionsValue"
-            :placeholder="'Type Action'"
-            :type="'string'"
+            placeholder="Type Action"
+            type="string"
             @input="handleInputAction({ value: $event.target.value, label: 'actionsValue' })"
           />
-          <div :class="$style['btn-place']">
-            <button :class="$style['btn']" @click="getActions">Apply</button>
+          <div class="btn-place">
+            <button class="btn" @click="getActions">Apply</button>
           </div>
         </div>
       </template>
     </div>
+
     <template v-if="isFetch">
       <Loader accent />
     </template>
     <template v-else>
       <template v-if="canvas === 'Groupped events'">
-        <div :class="$style['event-window']">
+        <div class="event-window">
           <h1>Category</h1>
           <h2>User</h2>
           <EventTable :searce="user" />
           <h2>Infra</h2>
           <EventTable :searce="infra" />
         </div>
-        <div :class="$style['event-window']">
+        <div class="event-window">
           <h1>Severity</h1>
           <h2>Info</h2>
           <EventTable :searce="info" />
           <h2>Error</h2>
           <EventTable :searce="error" />
         </div>
-        <div :class="$style['event-window']">
+        <div class="event-window">
           <h1>Type</h1>
-          <h2>Api</h2>
+          <h2>API</h2>
           <EventTable :searce="API" />
           <h2>SQL</h2>
           <EventTable :searce="SQL" />
         </div>
       </template>
+
       <template v-if="canvas === 'Specific events'">
         <div>
           <h1>Specific events</h1>
-          <div :class="$style['choose_action']"></div>
+          <div class="choose_action"></div>
           <EventTable :searce="actions" />
         </div>
       </template>
+
       <template v-if="canvas === 'Select events'">
         <div>
           <h1>Select events</h1>
@@ -389,7 +373,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style  scoped lang="scss">
 .event-window {
   margin-bottom: 20px;
 }

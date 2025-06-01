@@ -1,3 +1,4 @@
+import { ParameterList } from './../../types/models/query-builder-types';
 import { AxiosPromise } from 'axios';
 
 import { ACCOUNT_NUMBER, REGION, STAGE_NAME } from '~/constants';
@@ -10,11 +11,7 @@ import {
   JobConfigType,
   SettingType,
 } from '~/types/models/data-collection-types';
-import {
-  DescribeParametersType,
-  ParameterList,
-  ParametersType,
-} from '~/types/models/query-builder-types';
+import { DescribeParametersType, ParametersType } from '~/types/models/query-builder-types';
 
 export class DataCollectionService {
   static resource = `arn:aws:dynamodb:${REGION}:${ACCOUNT_NUMBER}:table/Logverz-Queries`;
@@ -26,7 +23,7 @@ export class DataCollectionService {
   static getDatasetAccessItems(isUser: boolean): AxiosPromise<Array<getTablesItemsType>> {
     const params = [
       {
-        AttributeName: isUser ? 'IAM' : 'Type',
+        AttributeName: isUser ? 'USR' : 'Type',
         AttributeValue: isUser ? 'true' : 'GroupAWS',
         Expression: '=',
       },
@@ -37,7 +34,20 @@ export class DataCollectionService {
       `${STAGE_NAME}/NoSql?Resource=arn:aws:dynamodb:${REGION}:${ACCOUNT_NUMBER}:table/Logverz-Identities&Operation=dynamodb:Query&Parameters=${Parameters}`,
     );
   }
+static getDatasetAccessGroupItems(): AxiosPromise<Array<getTablesItemsType>> {
+    const params = [
+      {
+        AttributeName: 'Type',
+        AttributeValue:'GroupAWS',
+        Expression: '=',
+      },
+    ];
+    const Parameters = encodeURI(JSON.stringify(params));
 
+    return BaseRequest.post(
+      `${STAGE_NAME}/NoSql?Resource=arn:aws:dynamodb:${REGION}:${ACCOUNT_NUMBER}:table/Logverz-Identities&Operation=dynamodb:Query&Parameters=${Parameters}`,
+    );
+  }
   static getDatatypeSelector(): AxiosPromise<Array<InfoSmmListResponseItem>> {
     const Parameters: DescribeParametersType = {
       // TODO 1
@@ -56,6 +66,17 @@ export class DataCollectionService {
   static getBuckets(): AxiosPromise<Array<BucketType>> {
     ///////
     return BaseRequest.get(`${STAGE_NAME}/Info?service=s3&apicall=ListAllMyBuckets`);
+  }
+  static getBucketsAzure(): AxiosPromise<Array<BucketType>> {
+    ///////
+    const Parameters = {
+      Accounts: '*',
+    };
+    const parameterEncode = encodeURI(JSON.stringify(Parameters));
+
+    return BaseRequest.get(
+      `${STAGE_NAME}/Info?service=blob&apicall=ListAccounts&Parameters=${parameterEncode}`,
+    );
   }
 
   static getTypeOfTable(): AxiosPromise<ParameterList> {
@@ -243,6 +264,16 @@ export class DataCollectionService {
       );
     });
     return Promise.allSettled(requests);
+  }
+  static async getAzureListFolders(listNameFolder: string[]): AxiosPromise<Array<BucketType>> {
+    const req = { EnumerationDepth: 3, Path: listNameFolder };
+
+    return BaseRequest.get(
+      `${STAGE_NAME}/Info?service=blob&apicall=ListContainers&Parameters=${encodeURI(
+        JSON.stringify(req),
+      )}`,
+    );
+    // });
   }
 
   static async getSameData(schemasName: string): Promise<string> {

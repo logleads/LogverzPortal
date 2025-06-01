@@ -12,7 +12,22 @@ import { QueryBuilderLabels, QueryBuilderRule } from '~/types/models/query-build
 import { nthOccurrence } from '~/utils/nth-occurence';
 import { parseDBAlias } from '~/utils/parseDBAlias';
 import { parseParametersList } from '~/utils/parseParametersList';
-import { createS3Folders, transformObjToS3Folder } from '~/utils/S3treelist';
+import {
+  createAzureFolders,
+  createS3Folders,
+  getMaxId,
+  mergeTreeByFullPath,
+  transformObjToS3Folder,
+  updateTreeNodeData,
+} from '~/utils/S3treelist';
+interface FolderData {
+  ID: number;
+  IDH: number;
+  StorageAccount: string;
+  ContainerName: string;
+  Location: string;
+  data: any;
+}
 
 @Module({
   dynamic: true,
@@ -33,6 +48,8 @@ class DataCollection extends VuexModule {
   s3EnumerationDepth = '2';
   preferedWorkerNumber = 'auto';
   s3Folders = 's3://';
+  blobFolders = 'blob://';
+
   logVolume = 'small';
   pathObj: unknown = {};
   isLoadConfigurationUpload: boolean = false;
@@ -90,7 +107,11 @@ class DataCollection extends VuexModule {
   savedSettings: SettingType[] = [];
   isSettingsFetch = false;
   listFolder: any = [];
+  listAzureFolder: any = [];
+
   listLoader: boolean = false;
+  listAzureLoader: boolean = false;
+
   sampleData: string = '';
   dataSets3Select: { [key: string]: any } = {};
   @Mutation
@@ -102,10 +123,18 @@ class DataCollection extends VuexModule {
   private SET_LIST_FOLDER(v: any) {
     this.listFolder = v;
   }
+  @Mutation
+  private SET_LIST_FOLDER_Azure(v: any) {
+    this.listAzureFolder = v;
+  }
 
   @Mutation
   private SET_LIST_LOADER(v: boolean) {
     this.listLoader = v;
+  }
+  @Mutation
+  private SET_LIST_AZURE_LOADER(v: boolean) {
+    this.listAzureLoader = v;
   }
 
   @Mutation
@@ -179,12 +208,36 @@ class DataCollection extends VuexModule {
       this.s3Folders = 's3://' + payload.value;
     }
   }
-
+  private SET_BLOB_FOLDERS(payload: { value: string; expanded: boolean; deep: number }): void {
+    if (this.blobFolders.includes('blob://')) {
+      if (this.blobFolders[this.blobFolders.length - 1] === '/') {
+        this.blobFolders = this.blobFolders + payload.value;
+      } else {
+        const end =
+          nthOccurrence(this.blobFolders, '/', payload.deep) === -1
+            ? this.blobFolders.length
+            : nthOccurrence(this.blobFolders, '/', payload.deep);
+        this.blobFolders = this.blobFolders.slice(0, end) + '/' + payload.value;
+      }
+    } else {
+      this.blobFolders = 'blob://' + payload.value;
+    }
+  }
   @Mutation
   private SET_S3_FOLDERS_SIMPLE(payload: string[]): void {
-    this.s3Folders = payload.reduce((acc: string, item) => {
-      return (acc + 's3://' + item + ';').length < 2000 ? acc + 's3://' + item + ';' : acc;
-    }, '');
+    if (payload.length > 0)
+      this.s3Folders = payload.reduce((acc: string, item) => {
+        return (acc + 's3://' + item + ';').length < 2000 ? acc + 's3://' + item + ';' : acc;
+      }, '');
+    else this.s3Folders = 's3://';
+  }
+  @Mutation
+  private SET_BLOB_FOLDERS_SIMPLE(payload: string[]): void {
+    if (payload.length > 0)
+      this.s3Folders = payload.reduce((acc: string, item) => {
+        return (acc + 'blob://' + item + ';').length < 2000 ? acc + 'blob://' + item + ';' : acc;
+      }, '');
+    else this.s3Folders = 'blob://';
   }
 
   @Mutation
@@ -363,6 +416,8 @@ class DataCollection extends VuexModule {
 
   @Action
   public setInputValue(payload: { label: string; value: string }): void {
+    console.log(payload);
+    
     this.SET_INPUT_VALUE(payload);
   }
 
@@ -372,12 +427,24 @@ class DataCollection extends VuexModule {
   }
 
   @Action
-  public setFoldersPath(payload: { value: string; expanded: boolean; deep: number }): void {
-    this.SET_S3_FOLDERS(payload);
+  public setFoldersPath(
+    payload: { value: string; expanded: boolean; deep: number },
+    activeSettings: { aws: boolean; azure: boolean },
+  ): void {
+    if (activeSettings.aws) {
+      this.SET_S3_FOLDERS(payload);
+    } else {
+      this.SET_BLOB_FOLDERS(payload);
+    }
   }
   @Action
   public setFoldersPathHard(payload: string[]): void {
     this.SET_S3_FOLDERS_SIMPLE(payload);
+  }
+
+  @Action
+  public setBlobFoldersPathHard(payload: string[]): void {
+    this.SET_BLOB_FOLDERS_SIMPLE(payload);
   }
 
   @Action
@@ -459,7 +526,8 @@ class DataCollection extends VuexModule {
     this.SET_IS_FETCH_SETTINGS_PARAMS(true);
     try {
       const IAMUsersResponse = await DataCollectionService.getDatasetAccessItems(true);
-      const groupsResponse = await DataCollectionService.getDatasetAccessItems(false);
+
+      const groupsResponse = await DataCollectionService.getDatasetAccessGroupItems();
 
       this.SET_TABLE_ITEMS(
         IAMUsersResponse.data?.map((item: any) => ({
@@ -489,7 +557,9 @@ class DataCollection extends VuexModule {
       const response = await DataCollectionService.getTableKeys(schema);
       this.getSampleData(schema);
       try {
-        const { StgSelectParameters } = JSON.parse(response.data.Parameter.Value);
+        console.log(response.data.Parameter?.Value);
+
+        const { StgSelectParameters } = JSON.parse(response.data.Parameter?.Value);
         // console.log(StgSelectParameters, 'StgSelectParameters');
         this.SET_DATA_SET_S3_SELECT(StgSelectParameters ? StgSelectParameters.IO : {});
         tableTypes = { [schema]: StgSelectParameters.IO.InputSerialization.CSV ? 'CSV' : 'JSON' };
@@ -619,10 +689,11 @@ class DataCollection extends VuexModule {
 
   @Action
   public async getListFolders() {
-    this.SET_LIST_LOADER(true);
     let dataArray = null;
     try {
+      this.SET_LIST_LOADER(true);
       const listFolder = (await DataCollectionService.getBuckets()).data;
+
       // const filteredListFolder = listFolder.filter(obj => Object.keys(obj).length !== 0);
       const filteredListFolder = listFolder
         ? listFolder.filter(obj => Object.keys(obj).length > 0)
@@ -637,27 +708,46 @@ class DataCollection extends VuexModule {
         .map((item: any) => {
           return item.value.data;
         });
-      console.log('DATA', data);
       const newListFolder = data?.map((item: any) => {
         return filteredListFolder.filter((it: any) => it.BucketName === Object.keys(item)[0])[0];
       });
-      console.log('new Folder List', newListFolder);
       dataArray = createS3Folders(data, newListFolder, 0);
-      console.log('data array', dataArray);
+
       this.SET_LIST_FOLDER(dataArray);
+      this.SET_LIST_LOADER(false);
     } catch (e: any) {
       ErrorsModule.showErrorMessage(e.message);
     } finally {
-      this.SET_LIST_LOADER(false);
+    }
+  }
+  @Action
+  public async getAzureListFolders() {
+    this.SET_LIST_AZURE_LOADER(true);
+
+    try {
+      const data = (await DataCollectionService.getBucketsAzure()).data; // Fetch the data
+      const idCounterObj = { count: 1 };
+
+      const azureTreeData = createAzureFolders(data, 0, null, '', idCounterObj);
+      this.SET_LIST_FOLDER_Azure(azureTreeData);
+      this.SET_LIST_AZURE_LOADER(false);
+
+      return azureTreeData;
+     
+    } catch (e: any) {
+      ErrorsModule.showErrorMessage(e.message); // Handle errors if any
+    } finally {
+      // this.SET_LIST_LOADER(false); // Hide loader when done
     }
   }
 
   @Action
-  public async updateListFolders(data: { newRow: any[]; oldRow: any }) {
+  public async updateListFolders(data: { newRow: any; oldRow: any }) {
     this.SET_IS_SETTINGS_FETCH(true);
     try {
       const searchChildreByID = this.listFolder.filter((item: any) => item.IDH === data.oldRow.ID);
       const arrayKeys = data.oldRow.value.split('/');
+
       const datas = data.newRow.map((item: any) => {
         return arrayKeys.reduce((acc: any, it: string) => {
           return acc[it];
@@ -690,6 +780,51 @@ class DataCollection extends VuexModule {
   }
 
   @Action
+  public async updateAzureListFolders(data: { newRow: any; oldRow: any }) {
+    this.SET_IS_SETTINGS_FETCH(true);
+    try {
+      let updatedTree = [...this.listAzureFolder];
+
+      // 1. Prepare ID counter to keep IDs unique
+      const idCounterObj = { count: getMaxId(updatedTree) + 1 };
+      const dotPath = data.oldRow.fullPath.split('/').join('.');
+
+      function getNestedValue(obj: any, path: string): any {
+        return path
+          .split('.')
+          .reduce((acc, key) => (acc && acc[key] !== undefined ? acc[key] : undefined), obj);
+      }
+      const value = getNestedValue(data.newRow, dotPath);
+
+      if (!value) {
+        console.warn('No nested data found for ContainerName or StorageAccount');
+        return;
+      }
+      console.log("dotPath?.split('.')[0]", dotPath?.split('.')[0]);
+
+      // 3. Generate new folders (only children from backend)
+      const generatedChildren = createAzureFolders(
+        value,
+        data.oldRow.ID,
+        dotPath?.split('.')[0],
+        data.oldRow?.fullPath || '',
+        idCounterObj,
+        data.newRow['stgaccproperties'],
+      );
+
+      const mergedChildren = mergeTreeByFullPath(data.oldRow.data, generatedChildren);
+
+      // 5. Now update tree with updated children of oldRow
+      updatedTree = updateTreeNodeData(updatedTree, data.oldRow.ID, mergedChildren);
+
+      this.SET_LIST_FOLDER_Azure(updatedTree);
+    } catch (e: any) {
+      ErrorsModule.showErrorMessage(e.message);
+    } finally {
+      this.SET_IS_SETTINGS_FETCH(false);
+    }
+  }
+  @Action
   public loadConfiguration(data: {
     S3Folders: string;
     DatabaseName: string;
@@ -705,47 +840,47 @@ class DataCollection extends VuexModule {
   }) {
     console.log('data: ', data);
 
-    // this.HARD_SET_S3_FOLDERS(data.S3Folders);
-    // this.HARD_SET_TABLE_DESCRIPRION(data.Description);
-    // // console.log('GRAB DATA', data);
-    // this.SET_INPUT_VALUE({
-    //   value: data.DatasetWarnings,
-    //   label: 'DatasetWarning',
-    // });
-    // this.SET_INPUT_VALUE({
-    //   value: data.DatasetName,
-    //   label: 'DatasetName',
-    // });
-    // this.SET_INPUT_VALUE({
-    //   value: data.QueryString,
-    //   label: 'QueryString',
-    // });
-    // this.SET_INPUT_VALUE({
-    //   value: data.DatabaseName,
-    //   label: 'DBServerAlias',
-    // });
-    // this.SET_INPUT_VALUE({
-    //   value: data.DataType,
-    //   label: 'DatatypeSelector',
-    // });
+    this.HARD_SET_S3_FOLDERS(data.S3Folders);
+    this.HARD_SET_TABLE_DESCRIPRION(data.Description);
+    // console.log('GRAB DATA', data);
+    this.SET_INPUT_VALUE({
+      value: data.DatasetWarnings,
+      label: 'DatasetWarning',
+    });
+    this.SET_INPUT_VALUE({
+      value: data.DatasetName,
+      label: 'DatasetName',
+    });
+    this.SET_INPUT_VALUE({
+      value: data.QueryString,
+      label: 'QueryString',
+    });
+    this.SET_INPUT_VALUE({
+      value: data.DatabaseName,
+      label: 'DBServerAlias',
+    });
+    this.SET_INPUT_VALUE({
+      value: data.DataType,
+      label: 'DatatypeSelector',
+    });
 
-    // //data.UsersQuery was using here before changes [{ name: data.UsersQuery }]
-    // const dataOwners = data.Owners?.split(' ').map(i => {
-    //   return { name: i };
-    // });
-    // this.SET_MULTI_SELECT({
-    //   label: 'DatasetOwners',
-    //   value: dataOwners,
-    // });
-    // const DatasetAccess = data.Access?.split(' ').map(i => {
-    //   return { name: i };
-    // });
-    // this.SET_MULTI_SELECT({
-    //   label: 'DatasetAccess',
-    //   value: DatasetAccess,
-    // });
+    //data.UsersQuery was using here before changes [{ name: data.UsersQuery }]
+    const dataOwners = data.Owners?.split(' ').map(i => {
+      return { name: i };
+    });
+    this.SET_MULTI_SELECT({
+      label: 'DatasetOwners',
+      value: dataOwners,
+    });
+    const DatasetAccess = data.Access?.split(' ').map(i => {
+      return { name: i };
+    });
+    this.SET_MULTI_SELECT({
+      label: 'DatasetAccess',
+      value: DatasetAccess,
+    });
 
-    // this.SET_LOAD_CONFIGURATION(true);
+    this.SET_LOAD_CONFIGURATION(true);
   }
 
   @Action

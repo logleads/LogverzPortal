@@ -1,70 +1,53 @@
 <template>
-  <div :class="[$style['query-main']]">
-    <div v-if="isFinishConnected" :class="$style['query-options']">
-      <div :class="$style['query-options__item']">
+  <div class="query-main">
+    <div v-if="isFinishConnected" class="query-options">
+      <div class="query-options__item">
         <label>
-          <p :class="$style['customLabel']">Sql servers</p>
+          <p class="customLabel">Sql servers</p>
         </label>
-        <DropDownSimple
-          :content="dataBaseCurrentAlias"
-          :items="dataBaseAlias"
-          name="dataBaseCurrentAlias"
-          @select-value="handleDBSelect($event)"
-        />
+        <DropDownSimple :content="dataBaseCurrentAlias" :items="dataBaseAlias" name="dataBaseCurrentAlias"
+          @select-value="handleDBSelect($event)" />
       </div>
-      <div :class="$style['query-options__item']">
+      <div class="query-options__item">
         <template v-if="availableTables.length">
           <label>
-            <p :class="$style['customLabel']">Available DataSets</p>
+            <p class="customLabel">Available DataSets</p>
           </label>
-          <DropDownSimple
-            :content="currentAvailableTable"
-            :items="availableTables"
-            name="currentAvailableTable"
-            @select-value="handleTableSelect($event)"
-          />
+          <DropDownSimple :content="currentAvailableTable" :items="availableTables" name="currentAvailableTable"
+            @select-value="handleTableSelect($event)" />
         </template>
         <template v-else>
-          <span :class="$style['choose_db']">Select Database server from the dropdown</span>
+          <span class="choose_db">Select Database server from the dropdown</span>
         </template>
       </div>
     </div>
     <template v-else>
       <Loader accent />
     </template>
-    <div :class="$style['query-arrow']">
-      <div :class="$style['query-arrow__container']" @click.stop="$emit('close-side-bar')">
+    <div class="query-arrow">
+      <div class="query-arrow__container" @click.stop="$emit('close-side-bar')">
         <Icon name="arrow-left" :width="5" :height="9" />
       </div>
     </div>
-    <div :class="$style['container-filter']">
-      <div :class="$style['query-header']">
-        <p :class="$style['query-header__title']">Query Builder</p>
+    <div class="container-filter">
+      <div class="query-header">
+        <p class="query-header__title">Query Builder</p>
       </div>
-      <div :class="$style['query-container']">
-        <QueryItem
-          :curent-key="curentKey"
-          :data-number="dataNumber"
-          @update-command="e => (cmd = e)"
-          @query-loaded="queryLoaded"
-        />
+      <div class="query-container">
+        <QueryItem :curent-key="curentKey" :data-number="dataNumber" @update-command="e => (cmd = e)"
+          @query-loaded="queryLoaded" />
       </div>
-      <div :class="$style['query-footer']">
+      <div class="query-footer">
         <!-- <Button
           text="Export table"
-          :class="$style['query-header__btn']"
+          class="query-header__btn"
           :disabled="!items"
           :no-load="true"
           @click="exportDataBase
           "
         /> -->
-        <MyButton
-          text="Run"
-          :disabled="!currentAvailableTable || disableButton"
-          :no-load="!isSending"
-          :class="$style['query-header__btn']"
-          @click="run"
-        />
+        <MyButton text="Run" :disabled="!currentAvailableTable || disableButton" :no-load="!isSending"
+          class="query-header__btn" @click="run" />
         <Loader v-if="isSending" accent />
       </div>
     </div>
@@ -163,7 +146,7 @@ export default defineComponent({
     });
     // TODO think about it
     function exportDataBase(): void {
-      QueryBuilderModule.toggleForExport(props.dataNumber);
+      // QueryBuilderModule.toggleForExport(props.dataNumber);
     }
 
     function handleDBSelect(payload: { item: string; content: string }): void {
@@ -176,17 +159,19 @@ export default defineComponent({
       SaveSettingModule.saveTableName({ key: props.dataNumber, name: payload.item });
     }
     function run(): void {
+
+      // QueryBuilderModule.toggleForExport(null, 'Query')
       if (cmd.value) {
-        console.log('is it if');
         sendCmd();
       } else {
-        console.log('is it else ');
         QueryBuilderModule.setKeyForWIndow(props.dataNumber);
         ServerConnectionModule.sendQuery(props.dataNumber);
       }
+
     }
 
     function sendCmd(): void {
+      
       QueryBuilderModule.setKeyForWIndow(props.dataNumber);
       RTCServiceObj.sendQuery(
         `{"LogverzDBFriendlyName":"${dataBaseCurrentAlias.value}","Mode":"Native","QueryParams":"${cmd.value}"}`,
@@ -258,7 +243,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .choose_db {
   margin-bottom: 20px;
 }
@@ -301,9 +286,11 @@ export default defineComponent({
     border-radius: 31px;
   }
 }
-.customLabel{
+
+.customLabel {
   margin-bottom: 10px !important;
 }
+
 .query-arrow {
   background-color: var(--background-color);
   height: 19px;
@@ -360,6 +347,7 @@ export default defineComponent({
     background: var(--accent-color);
     border-radius: 31px;
   }
+
   &::-webkit-scrollbar-thumb:hover {
     background: var(--accent-color);
   }
@@ -392,7 +380,7 @@ export default defineComponent({
     box-shadow: none;
   }
 
-  > div {
+  >div {
     width: 97px;
   }
 
@@ -404,6 +392,7 @@ export default defineComponent({
     line-height: 1;
   }
 }
+
 .query-options {
   margin-top: 30px;
   width: 90%;

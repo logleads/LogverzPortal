@@ -36,7 +36,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .container {
   margin: 15px 0;
 

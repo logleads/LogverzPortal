@@ -1,7 +1,7 @@
 <template>
   <div
     ref="select"
-    :class="$style['input-drop-down']"
+    class="input-drop-down"
     contenteditable="true"
     @blur="handleBlur"
     @click="toggleShow"
@@ -9,22 +9,22 @@
     <label contenteditable="false">
       <input contenteditable="false" type="text" disabled :value="selectedRule?.label || ''" />
       <div v-if="!scopedExpanded" contenteditable="false">
-        <Icon name="arrow-down" :class="$style['input-arrow-down']" :width="9" :height="6" />
+        <Icon name="arrow-down" class="input-arrow-down" :width="9" :height="6" />
       </div>
       <div v-else contenteditable="false">
-        <Icon name="arrow-up" :class="$style['input-arrow-down']" :width="9" :height="6" />
+        <Icon name="arrow-up" class="input-arrow-down" :width="9" :height="6" />
       </div>
     </label>
     <div
       v-if="scopedExpanded"
       contenteditable="false"
-      :class="[$style['input-unwrapped'], { [$style['up-direction']]: direction }]"
+      :class="['input-unwrapped', { 'up-direction': direction }]"
     >
       <div
         v-for="item in locItem"
         :key="item?.id + Math.random() * 10000"
         contenteditable="false"
-        :class="$style['input-unwrapped__item']"
+        class="input-unwrapped__item"
         @click="handleClick($event, item)"
       >
         {{ item.label }}
@@ -111,7 +111,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .input-drop-down {
   max-width: 100%;
   position: relative;

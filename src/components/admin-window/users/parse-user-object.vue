@@ -5,16 +5,16 @@
         <parse-user-object :obj="obj[s]" :label="s" />
       </template>
     </div>
-    <div v-if="Array.isArray(obj)" :class="$style['container']">
-      <span v-if="obj.length" :class="$style['container__key']">{{ changeKey(label) }}:</span>
+    <div v-if="Array.isArray(obj)" class="container">
+      <span v-if="obj.length" class="container__key">{{ changeKey(label) }}:</span>
       <template v-if="obj.length">
         <span
           v-for="(item, index) in obj"
           :key="index + Math.random() * 10000"
-          :class="$style['container__value']"
+          class="container__value"
         >
           <template v-if="checkIfObj(item)">
-            <div :class="$style['container__child']">
+            <div class="container__child">
               <parse-user-object
                 v-for="(ir, nr) in JSON.parse(item)"
                 :key="nr + Math.random() * 10000"
@@ -25,14 +25,14 @@
           </template>
           <template v-else>
             <pre>{{ item }}</pre>
-            {{ obj.length - 1 !== index ? ',' : '' }}
+            {{ obj.length - 1 !== index ? '' : '' }}
           </template>
         </span>
       </template>
     </div>
-    <div v-if="typeof obj === 'string' && label !== 'PolicyDocument'" :class="$style['container']">
-      <span :class="$style['container__key']">{{ label }}:</span>
-      <span :class="$style['container__value-string']">{{ obj }}</span>
+    <div v-if="typeof obj === 'string' && label !== 'PolicyDocument'" class="container">
+      <span class="container__key">{{ label }}:</span>
+      <span class="container__value-string">{{ obj }}</span>
     </div>
   </div>
 </template>
@@ -75,7 +75,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .container {
   margin: 15px 0;
 

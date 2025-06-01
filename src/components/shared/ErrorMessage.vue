@@ -1,5 +1,5 @@
 <template>
-  <div v-if="showMessage" :class="$style['error-message']">
+  <div v-if="showMessage" class="error-message">
     {{ errorMessage }}
   </div>
 </template>
@@ -20,7 +20,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style  scoped lang="scss">
 .error-message {
   position: absolute;
   bottom: 10%;

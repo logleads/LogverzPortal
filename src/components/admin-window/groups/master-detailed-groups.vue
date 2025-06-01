@@ -30,38 +30,39 @@
             <ParseObject :obj="k" :label="i" />
           </template>
           <template v-else>
-            <div v-if="k !== ''" :class="$style['container']">
-              <span :class="$style['container__key']">{{ i }}: </span>
-              <span :class="$style['container__value']">{{ k }}</span>
+            <div v-if="k !== ''" class="container">
+              <span class="container__key">{{ i }}: </span>
+              <span class="container__value">{{ k }}</span>
             </div>
           </template>
         </div>
       </div>
       <div v-if="Array.isArray(data.data[item])" :key="item + Math.random() * 10000">
-        <div :class="$style['container']">
-          <span :class="$style['container__key']">{{ item }}: </span>
+        <div class="container">
+          <span class="container__key">{{ item }}: </span>
           <span
             v-for="(arrItem, index) in data.data[item]"
             :key="arrItem + Math.random() * 10000"
-            :class="$style['container__value']"
+            class="container__value"
             >{{ arrItem }}{{ data.data[item].length - 1 !== index ? ',' : '' }}</span
           >
         </div>
       </div>
       <div v-if="data.data[item] === 'null'" :key="item + Math.random() * 10000">
-        <div :class="$style['container']">
-          <span :class="$style['container__key']">{{ item }}: </span>
-          <span :class="$style['container__value']">{{ data.data[item] }}</span>
+        <div class="container">
+          <span class="container__key">{{ item }}: </span>
+          <span class="container__value">{{ data.data[item] }}</span>
         </div>
       </div>
     </template> -->
 
     <template v-if="data.data.Policies">
-      <h1 :class="$style['container__margin-8px']">Policies</h1>
+      <h1 class="container__margin-8px">Policies</h1>
 
       <template v-for="(value, index) in data.data.Policies">
         <div v-if="Object.keys(value).length" :key="index">
-          <p>{{ index }}</p>
+          <p>{{ index }} : </p>
+          <p>{{ JSON.parse(value[0]).PolicyName }}</p>
           <json-viewer-custom
             :value="parseGroupPolicy(JSON.parse(value[0]))"
             copyable
@@ -103,6 +104,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    
     onMounted(async () => {
       await AdminModule.getUserOfGroup(props.data.data.Name);
     });
@@ -112,6 +114,8 @@ export default defineComponent({
     });
 
     function parseGroupPolicy(data: IPoliciesGroup) {
+      
+      
       return parseGroupPolicyFn(data);
     }
     return {
@@ -122,7 +126,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style  scoped lang="scss">
 @use '../styles';
 
 .container {

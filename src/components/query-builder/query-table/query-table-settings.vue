@@ -1,31 +1,31 @@
 <template>
-  <div :class="$style['container']">
-    <h1 :class="$style['container__head1']">Select visible columns</h1>
-    <h2 :class="$style['container__head2']">Event properties</h2>
+  <div class="container">
+    <h1 class="container__head1">Select visible columns</h1>
+    <h2 class="container__head2">Event properties</h2>
 
     <template v-if="views === null">
-      <h2 :class="$style['container__head2']">There is no fields</h2>
+      <h2 class="container__head2">There is no fields</h2>
     </template>
     <template v-else>
-      <div v-for="(view, index) in views" :key="index" :class="$style['rules']">
+      <div v-for="(view, index) in views" :key="index" class="rules">
         <input
           type="radio"
           :value="index"
           :checked="index == type"
           @change="changeViewType($event, index)"
         />
-        <p :class="$style['my-5']">{{ index }}</p>
+        <p class="my-5">{{ index }}</p>
       </div>
       <template v-if="type == 'Custom'">
         <div
           v-for="item in fields"
           :key="item + Math.random() * 1000"
-          :class="$style['container__item']"
+          class="container__item"
         >
           {{ item.label }}
-          <label :class="$style['switch']">
+          <label class="switch">
             <input v-model="data[item.label]" type="checkbox" @change="changeCustomColumn" />
-            <span :class="[$style['slider'], $style['round']]"></span>
+            <span :class="['slider', 'round']"></span>
           </label>
         </div>
       </template>
@@ -144,7 +144,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .rules {
   display: flex;
   justify-content: start;

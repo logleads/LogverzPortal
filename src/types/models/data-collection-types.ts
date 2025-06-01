@@ -48,6 +48,7 @@ export interface getTablesItemsType {
 }
 
 export interface BucketType {
+  StorageAccount: never;
   BucketName: string;
   Region: string;
   Geography: string;

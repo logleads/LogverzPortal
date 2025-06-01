@@ -1,10 +1,10 @@
 <template>
-  <div :class="$style['header']">
-    <div :class="$style['header']">
+  <div class="header">
+    <div class="header">
       <MenuButton />
       <WindowTabs />
     </div>
-    <div :class="$style['header']">
+    <div class="header">
       <global-notifications />
       <ConnectionsIndecator />
       <UserBlock />
@@ -27,7 +27,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style  scoped lang="scss">
 .header {
   height: 46px;
   background-color: var(--header-color);

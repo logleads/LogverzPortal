@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span :class="$style['container__key']">{{ title }}</span>
+    <span class="container__key">{{ title }}</span>
     <json-viewer :value="value" :expand-depth="expandDepth" copyable boxed sort></json-viewer>
   </div>
 </template>
@@ -40,7 +40,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .container {
   &__key {
     font-size: 14px;

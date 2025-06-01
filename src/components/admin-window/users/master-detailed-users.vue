@@ -13,21 +13,19 @@
               <ParseUserObject :obj="k" :label="i" />
             </template>
             <template v-else>
-              <div v-if="k !== ''" :class="$style['container']">
+              <div v-if="k !== ''" class="container">
                 <template v-if="i === 'UserInline'">
-                  <span :class="$style['container__key-clickable']" @click="handleShowMore"
-                    >{{ i }}:
-                  </span>
-                  <span :class="$style['container__value']"> {{ k }}</span>
+                  <span class="container__key-clickable" @click="handleShowMore">{{ i }}: </span>
+                  <span class="container__value"> {{ k }}</span>
                   <div v-if="showMoreInline">
                     <div>
-                      <span :class="$style['container__key']">Policy name: </span>
-                      <span :class="$style['container__value']">{{
+                      <span class="container__key">Policy name: </span>
+                      <span class="container__value">{{
                         filterPlainItems(plainItems, data?.data.Name).PolicyName
                       }}</span>
                     </div>
                     <div>
-                      <span :class="$style['container__key']">Policy document: </span>
+                      <span class="container__key">Policy document: </span>
 
                       <json-viewer
                         :value="formaterPolicyDocument(plainItems, data.data.Name)"
@@ -41,40 +39,40 @@
                   </div>
                 </template>
                 <template v-else>
-                  <span :class="$style['container__key']">{{ i }}: </span>
-                  <span :class="$style['container__value']">{{ k }}</span>
+                  <span class="container__key">{{ i }}: </span>
+                  <span class="container__value">{{ k }} </span>
                 </template>
               </div>
             </template>
           </template>
         </div>
         <div v-if="Array.isArray(data?.data[item])" :key="item + Math.random() * 10000">
-          <div :class="$style['container']">
-            <span :class="$style['container__key']">{{ item }}: </span>
+          <div class="container">
+            <span class="container__key">{{ item }}: </span>
             <span
               v-for="(arrItem, index) in data.data[item]"
               :key="arrItem + Math.random() * 10000"
-              :class="$style['container__value']"
+              class="container__value"
               >{{ arrItem }}{{ data.data[item].length - 1 !== index ? ',' : '' }}</span
             >
           </div>
         </div>
         <div v-if="data?.data[item] === 'null'" :key="item + Math.random() * 10000">
-          <div :class="$style['container']">
-            <span :class="$style['container__key']">{{ item }}: </span>
-            <span :class="$style['container__value']">{{ data.data[item] }}</span>
+          <div class="container">
+            <span class="container__key">{{ item }}: </span>
+            <span class="container__value">{{ data.data[item] }}</span>
           </div>
         </div>
       </div>
     </template>
-    <div :class="$style['container-flex']">
+    <div class="container-flex">
       <h1>Groups</h1>
-      <div :class="$style['container__value']">
+      <div class="container__value">
         <p v-for="(item, key) in data?.data.IAMGroups.split(',')" :key="key">{{ item }}</p>
       </div>
     </div>
-    <div :class="$style['container']">
-      <span :class="$style['container__key']">JSON view: </span>
+    <div class="container">
+      <span class="container__key">JSON view: </span>
       <json-viewer :value="data?.data" :expand-depth="5" copyable boxed sort></json-viewer>
     </div>
   </div>
@@ -138,7 +136,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 @use '../styles';
 
 .container {

@@ -1,7 +1,7 @@
 <template>
-  <div :class="$style['container']">
-    <div :class="$style['icon-bar']">
-      <div :class="$style['icon-container']">
+  <div class="container">
+    <div class="icon-bar">
+      <div class="icon-container">
         <img
           v-if="isChartT"
           :src="require('~/assets/images/chart_line.png')"
@@ -11,7 +11,7 @@
           @click="() => setChart(false)"
         />
       </div>
-      <div :class="$style['icon-container']">
+      <div class="icon-container">
         <img
           v-if="!isChartT"
           :src="require('~/assets/images/chart.svg')"
@@ -21,7 +21,7 @@
           @click="() => setChart(true)"
         />
       </div>
-      <div :class="$style['icon-container']">
+      <div class="icon-container">
         <img
           :src="require('~/assets/images/download.png')"
           alt="columnselector"
@@ -30,7 +30,7 @@
           @click="exportFunct"
         />
       </div>
-      <div :class="$style['icon-container']">
+      <div class="icon-container">
         <img
           :src="require('~/assets/images/refresh.png')"
           alt="columnselector"
@@ -47,7 +47,7 @@
       <DxSeries key="name" value-field="val" name="data" />
       <DxLegend :visible="false" />
     </DxChart>
-    <DxChart ref="chartRef" :class="$style['chart']">
+    <DxChart ref="chartRef" class="chart">
       <DxTooltip :enabled="true" :customize-tooltip="customizeTooltip">
         <DxFormat :precision="1" type="largeNumber" />
       </DxTooltip>
@@ -266,7 +266,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .container {
   overflow: scroll;
   height: 100%;

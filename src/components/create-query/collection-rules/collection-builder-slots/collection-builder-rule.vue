@@ -1,15 +1,15 @@
 <template>
   <!-- eslint-disable vue/no-v-html -->
-  <div :class="$style['rule-container']">
-    <div :class="$style['rule-header']"></div>
-    <div :class="$style['input-container']">
+  <div class="rule-container">
+    <div class="rule-header"></div>
+    <div class="input-container">
       <!-- List of operands (optional) -->
-      <div :class="[$style['input-container__item'], $style['label']]">
-        <label :class="$style['rule-header__label']">{{ rule.label }}</label>
+      <div class="input-container__item label">
+        <label class="rule-header__label">{{ rule.label }}</label>
       </div>
       <div
         v-if="typeof rule.operands !== 'undefined'"
-        :class="[$style['input-container__item'], $style['replace-margin']]"
+        class="input-container__item replace-margin"
       >
         <DropDownInput
           :items="rule.operands"
@@ -23,7 +23,7 @@
       <!-- List of operators (e.g. =, !=, >, <) -->
       <div
         v-if="typeof rule.operators !== 'undefined' && rule.operators.length > 1"
-        :class="[$style['input-container__item'], $style['replace-margin']]"
+        class="input-container__item replace-margin"
       >
         <DropDownInput
           :items="rule.operators"
@@ -35,16 +35,16 @@
       </div>
 
       <!-- Basic text input -->
-      <div v-if="rule.inputType === 'text'" :class="$style['input-container__item']">
+      <div v-if="rule.inputType === 'text'" class="input-container__item">
         <Input v-model="query.value" type="text" :placeholder="labels.textInputPlaceholder" />
       </div>
 
       <!-- Radio input -->
       <div
         v-if="rule.inputType === 'radio'"
-        :class="[$style['input-container__item'], $style['radio-input-container']]"
+        class="input-container__item radio-input-container"
       >
-        <div v-for="choice in rule.choices" :key="choice.value" :class="$style['radio-input']">
+        <div v-for="choice in rule.choices" :key="choice.value" class="radio-input">
           <input
             :id="'depth' + depth + '-' + rule.id + '-' + index + '-' + choice.value"
             v-model="query.value"
@@ -53,13 +53,13 @@
             :value="choice.value"
           />
           <label
-            :class="$style['radio-input__label']"
+            class="radio-input__label"
             :for="'depth' + depth + '-' + rule.id + '-' + index + '-' + choice.value"
             >{{ choice.label }}</label
           >
         </div>
       </div>
-      <div :class="[$style['input-container-item'], $style['close-icon']]" @click="remove">
+      <div class="input-container-item close-icon" @click="remove">
         <Icon type="button" name="x-mark" :width="30" :height="30" />
       </div>
     </div>
@@ -104,7 +104,7 @@ export default {
 };
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .rule-header {
   display: flex;
   align-items: center;

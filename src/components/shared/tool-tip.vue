@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div :class="$style['tooltip']">
-      <Icon name="exclamation-colored" :class="$style['label-icon']" :width="15" :height="15" />
-      <span :class="$style['tooltiptext']">{{ tip }}</span>
+    <div class="tooltip">
+      <Icon name="exclamation-colored" class="label-icon" :width="15" :height="15" />
+      <span class="tooltiptext">{{ tip }}</span>
     </div>
   </div>
 </template>
@@ -30,7 +30,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .label-icon {
   color: var(--accent-color);
 }

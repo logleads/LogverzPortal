@@ -11,6 +11,7 @@ enum responseType {
   USER = 'UserAWS',
   GROUP = 'GroupAWS',
   POLICY = 'PolicyAWS',
+  ROLE = 'RoleAWS',
 }
 
 export interface userResponse {
@@ -67,6 +68,12 @@ export interface payloadForUpdate {
   IAMGroups: string[];
   IAMPolicies: string[];
 }
+export interface payloadForUpdate2 {
+  Name: string;
+  type: string;
+  IAMGroups: string[];
+  AppScopeAuth: { Policies: string[] };
+}
 
 export interface groupResponse {
   Arn: string;
@@ -92,6 +99,20 @@ export interface policiesResponse {
   Path: string;
   PolicyId: string;
   Type: responseType;
+  Associations:string[]
+}
+export interface rolesResponse {
+  Arn?: string;
+  Name?: string;
+  Path?: string;
+  AppScopeAuth?: {
+    Policies?: any;
+  };
+  Policies?: {
+    RoleAttached?: string[];
+    RoleInline?: string[];
+  };
+  Type?: responseType;
 }
 
 export interface PermissionsTypes {
@@ -99,6 +120,7 @@ export interface PermissionsTypes {
   LisaPowerUsers: boolean;
   LisaUsers: boolean;
   UserName: string;
+  Azure: boolean;
 }
 
 export interface IPolicies {

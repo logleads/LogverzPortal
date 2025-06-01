@@ -1,30 +1,30 @@
 <!-- eslint-disable vue/no-side-effects-in-computed-properties -->
 <template>
-  <div v-if="isOpenDeleteRecordDialog" :class="[$style['container']]" @click.self="close">
-    <div :class="[$style['container__window']]">
-      <div v-if="!checkSpecialCondition()" :class="[$style['container__body']]">
-        <div :class="$style['delete-checkbox']">
+  <div v-if="isOpenDeleteRecordDialog" class="container" @click.self="close">
+    <div class="container__window">
+      <div v-if="!checkSpecialCondition()" class="container__body">
+        <div class="delete-checkbox">
           <input
             id="withRedirect"
             v-model="dataSetDelete"
-            :class="$style['delete-checkbox__checkbox']"
+            class="delete-checkbox__checkbox"
             type="checkbox"
           />
-          <p :class="$style['delete-checkbox__label']">Delete Dataset</p>
+          <p class="delete-checkbox__label">Delete Dataset</p>
         </div>
       </div>
-      <div :class="[$style['container__body']]">
-        <div :class="$style['delete-checkbox']">
+      <div class="container__body">
+        <div class="delete-checkbox">
           <input
             id="withRedirect"
             v-model="RecordDelete"
-            :class="$style['delete-checkbox__checkbox']"
+            class="delete-checkbox__checkbox"
             type="checkbox"
           />
-          <p :class="$style['delete-checkbox__label']">Delete Record</p>
+          <p class="delete-checkbox__label">Delete Record</p>
         </div>
       </div>
-      <h4 v-if="RecordDelete && !dataSetDelete" :class="$style['warning-text']">
+      <h4 v-if="RecordDelete && !dataSetDelete" class="warning-text">
         The record is selected for deletion, collected data will <br />
         remain on the database server
       </h4>
@@ -32,7 +32,7 @@
       <div v-if="dataSetDelete">
         <h3>Dataset Deletion Conditions</h3>
         <br />
-        <h4 :class="[isConnected ? $style['green-text'] : $style['red-text']]">
+        <h4 :class="isConnected ? 'green-text' : 'red-text'">
           {{
             isConnected
               ? 'WebRTC connection Active'
@@ -41,11 +41,11 @@
         </h4>
         <br />
         <br />
-        <h4 :class="[DBinstance ? $style['green-text'] : $style['red-text']]">
+        <h4 :class="DBinstance ? 'green-text': 'red-text'">
           {{ DBinstance ? 'DBServer is in running state' : 'DBServer is not in running state' }}
         </h4>
       </div>
-      <div :class="[$style['container__footer']]">
+      <div class="container__footer">
         <MyButton text="Cancel" @click="close" />
         <MyButton
           text="Delete"
@@ -240,7 +240,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .container {
   width: 100%;
   height: 100%;

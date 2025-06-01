@@ -1,9 +1,9 @@
 <template>
-  <div :class="$style['buttons']">
+  <div class="buttons">
     <button :class="[
-      $style['buttons__btn'],
-      $style['border-radius'],
-      disable ? $style['disable'] : $style['active'],
+      'buttons__btn',
+      'border-radius',
+      disable ? 'disable' : 'active',
     ]" :disabled="disable" @click.stop="e => clicked(e)">
       {{ btnText }}
     </button>
@@ -39,7 +39,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .buttons {
   padding: 0 4px;
   display: flex;

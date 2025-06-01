@@ -1,22 +1,22 @@
 <template>
-  <div :class="$style['time-filter']">
-    <span :class="[activeTimeFilter === '4h' && $style['span-active']]" @click="giveLast4h">4h</span>
-    <span :class="[activeTimeFilter === '1day' && $style['span-active']]" @click="giveLast1day">1day</span>
-    <span :class="[activeTimeFilter === '1week' && $style['span-active']]" @click="giveLast1week">1week</span>
-    <span :class="[activeTimeFilter === '30day' && $style['span-active']]" @click="giveLast30day">30day</span>
+  <div class="time-filter">
+    <span :class="[activeTimeFilter === '4h' && 'span-active']" @click="giveLast4h">4h</span>
+    <span :class="[activeTimeFilter === '1day' && 'span-active']" @click="giveLast1day">1day</span>
+    <span :class="[activeTimeFilter === '1week' && 'span-active']" @click="giveLast1week">1week</span>
+    <span :class="[activeTimeFilter === '30day' && 'span-active']" @click="giveLast30day">30day</span>
     <span @click="clear">clear</span>
     <span @click="openCustomTimeRangeBlock">custom</span>
-    <div v-if="customTimeRange" :class="$style['custome-time-filter']">
-      <div :class="$style['custome-time-filter-form']">
+    <div v-if="customTimeRange" class="custome-time-filter">
+      <div class="custome-time-filter-form">
         <p for="timeRange">Choose number value</p>
         <Input id="timeRange" v-model="timeRange" name="timeRange" :min="1" :type="'number'"
           />
         <p for="timePeriod">Choose time period</p>
         <DropDownSimple :content="timePeriod" :items="timePeriods" name="timePeriod" @select-value="handleTimePeriod" />
       </div>
-      <div :class="$style['btn-place']">
-        <button :class="$style['btn']" @click="cencelBtn">Cancel</button>
-        <button :class="$style['btn']" @click="applyBtn">Apply</button>
+      <div class="btn-place">
+        <button class="btn" @click="cencelBtn">Cancel</button>
+        <button class="btn" @click="applyBtn">Apply</button>
       </div>
     </div>
   </div>
@@ -167,7 +167,7 @@ console.log("unixTime",unixTime);
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .time-filter {
   border: 1px solid rgba(43, 42, 44, 0.4);
   margin: 0 10px 0 10px;

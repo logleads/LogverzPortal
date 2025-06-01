@@ -10,6 +10,8 @@ export const STAGE_NAME = process.env.STAGE_NAME as string;
 //hints
 export const DCH_AVAILABLE_BUCKETS = process.env.DCH_AVAILABLE_BUCKETS as string;
 export const DCH_S3_FOLDERS = process.env.DCH_S3_FOLDERS as string;
+export const DCH_AZURE_FOLDERS = process.env.DCH_AZURE_FOLDERS as string;
+
 export const DCH_LOG_VOLUME = process.env.DCH_LOG_VOLUME as string;
 export const DCH_QUERY_TYPE_SELECTOR = process.env.DCH_QUERY_TYPE_SELECTOR as string;
 export const DCH_DB_SERVER_ALIAS = process.env.DCH_DB_SERVER_ALIAS as string;
@@ -38,6 +40,14 @@ export const RTC_PORT = process.env.RTC_PORT as string;
 export const USR_RTC_DESCRIPTION = process.env.USR_RTC_DESCRIPTION as string;
 
 export const NOTIFICATION_GLOBAL_NEWS_URL = process.env.NOTIFICATION_GLOBAL_NEWS_URL as string;
+
+export const AWS_ICON_DESCRIPTION = process.env.AWS_ICON_DESCRIPTION as string;
+
+export const AZURE_ICON_DESCRIPTION = process.env.AZURE_ICON_DESCRIPTION as string;
+
+
+
+
 
 
 

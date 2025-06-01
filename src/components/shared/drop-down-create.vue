@@ -1,16 +1,16 @@
 <template>
   <div>
-    <div :class="$style['input-drop-down']">
+    <div class="input-drop-down">
       <!-- {{ isLoadConfigurationUpload }} -->
       <label @click="toggleExpanded">
-        <div :class="$style['input-drop-down__block']">
+        <div class="input-drop-down__block">
           {{ label }}
         </div>
-        <Icon v-if="!isExpanded" name="arrow-down" :class="$style['input-arrow']" :width="12" :height="7.7" />
-        <Icon v-if="isExpanded" name="arrow-up" :class="$style['input-arrow']" :width="12" :height="7.7" />
+        <Icon v-if="!isExpanded" name="arrow-down" class="input-arrow" :width="12" :height="7.7" />
+        <Icon v-if="isExpanded" name="arrow-up" class="input-arrow" :width="12" :height="7.7" />
       </label>
     </div>
-    <div :class="{ [$style['hidden']]: !isExpanded }">
+    <div :class="{ 'hidden': !isExpanded }">
       <slot />
     </div>
   </div>
@@ -38,9 +38,16 @@ export default defineComponent({
       if (props.label === 'Review')
         emit('onPress', isExpanded.value)
     }
-    const isLoadConfigurationUpload: WritableComputedRef<boolean> = computed(() => {
-      return DataCollectionModule.isLoadConfigurationUpload;
+    // const isLoadConfigurationUpload: WritableComputedRef<boolean> = computed(() => {
+    //   return DataCollectionModule.isLoadConfigurationUpload;
+    // });
+    const isLoadConfigurationUpload: WritableComputedRef<boolean> = computed({
+      get: () => DataCollectionModule.isLoadConfigurationUpload,
+      set: (value: boolean) => {
+        DataCollectionModule.isLoadConfigurationUpload = value;
+      }
     });
+
 
     watch(isLoadConfigurationUpload, (value: boolean) => {
       // eslint-disable-next-line no-console
@@ -58,7 +65,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .input-drop-down {
   max-width: 100%;
   position: relative;

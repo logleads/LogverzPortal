@@ -1,42 +1,42 @@
 <template>
-  <div :class="$style['advanced']">
+  <div class="advanced">
     <template v-if="!isFetching">
-      <div v-for="input in inputs" :key="input.label" :class="$style['advanced__inputs']">
+      <div v-for="input in inputs" :key="input.label" class="advanced__inputs">
         <InputContainer :label="input.label">
           <template #icon>
             <ToolTip :tip="input.tip" />
           </template>
           <template #input>
-            <Input
-              v-model="input.content"
-              :name="input.label"
-              :error="submitted && v$[input.label].$error"
-              @input="handleInput({ value: $event, label: input.label })"
-            />
+            <Input v-model="input.content" :name="input.label" :error="submitted && v$[input.label].$error"
+              @input="handleInput({ value: $event?.target.value, label: input.label })" />
           </template>
         </InputContainer>
-        <div v-if="submitted && v$[input.label].$error" :class="$style['validation-text']">
-          {{ input.label }} is required
+        <div v-if="submitted && v$[input.label].$error" class="validation-text">
+          <template v-if="input.label === 'S3EnumerationDepth' && v$[input.label].validate.$invalid">
+            S3EnumerationDepth must be a number between 0 and 9
+          </template>
+          <template v-else-if="input.label === 'PreferedWorkerNumber' && v$[input.label].validate.$invalid">
+            PreferedWorkerNumber is required and cannot be empty
+          </template>
+          <template v-else>
+            {{ input.label }} is required
+          </template>
         </div>
 
-        <div v-if="submitted && v$[input.label].between" :class="$style['validation-text']">
+        <div v-if="submitted && v$[input.label].between" class="validation-text">
           {{ input.label }} Must be between
           {{ v$[input.label].between.$params.min }}
           -
           {{ v$[input.label].between.$params.max }}
         </div>
       </div>
-      <div :class="$style['advanced__inputs']">
-        <label :class="$style['label']">
-          <span :class="$style['label__text']">AllocationStrategy</span>
+      <div class="advanced__inputs">
+        <label class="label">
+          <span class="label__text">AllocationStrategy</span>
           <ToolTip :tip="DCH_ALLOCATION_STRATEGY_LOCAL" />
         </label>
-        <DropDownSimple
-          :content="AllocationStrategy"
-          :items="items"
-          name="AllocationStrategy"
-          @select-value="handleInputSelect"
-        />
+        <DropDownSimple :content="AllocationStrategy" :items="items" name="AllocationStrategy"
+          @select-value="handleInputSelect" />
       </div>
     </template>
     <template v-else>
@@ -48,7 +48,7 @@
 <script lang="ts">
 import { useVuelidate } from '@vuelidate/core';
 import { between, required } from '@vuelidate/validators';
-import { computed, defineComponent, onMounted, Ref, ref, WritableComputedRef } from 'vue';
+import { computed, defineComponent, onMounted, Ref, ref, WritableComputedRef, watch } from 'vue';
 
 import DropDownSimple from '~/components/shared/drop-down-simple.vue';
 import Input from '~/components/shared/input.vue';
@@ -79,9 +79,18 @@ export default defineComponent({
   setup(props, { emit }) {
     const items: string[] = ['cost-sensitive', 'balanced', 'time-sensitive'];
     const DCH_ALLOCATION_STRATEGY_LOCAL = DCH_ALLOCATION_STRATEGY;
+    const validateS3Depth = (value: string) => {
+      const num = parseInt(value);
+      return !isNaN(num) && num >= 0 && num <= 9;
+    };
+
+    const validatePreferedWorker = (value: string) => {
+      return value && value.trim().length > 0;
+    };
+
     const rules = {
-      S3EnumerationDepth: { required, between: between(0, 9) },
-      PreferedWorkerNumber: { required },
+      S3EnumerationDepth: { required, validate: validateS3Depth },
+      PreferedWorkerNumber: { required, validate: validatePreferedWorker },
       AllocationStrategy: { required },
     };
 
@@ -93,9 +102,16 @@ export default defineComponent({
       return DataCollectionModule.preferedWorkerNumber;
     });
 
-    const AllocationStrategy: WritableComputedRef<string> = computed(() => {
-      return DataCollectionModule.allocationStrategy;
+    // const AllocationStrategy: WritableComputedRef<string> = computed(() => {
+    //   return DataCollectionModule.allocationStrategy;
+    // });
+    const AllocationStrategy: WritableComputedRef<string> = computed({
+      get: () => DataCollectionModule.allocationStrategy,
+      set: (value: string) => {
+        DataCollectionModule.allocationStrategy = value;
+      }
     });
+
 
     const inputs: Ref<Array<{ label: string; content: string; tip: string }>> = ref([
       {
@@ -114,6 +130,13 @@ export default defineComponent({
       S3EnumerationDepth,
       PreferedWorkerNumber,
       AllocationStrategy,
+    });
+
+    watch(() => props.submitted, (newVal) => {
+      if (newVal) {
+        v$.value.$touch();
+        emit('validate', v$);
+      }
     });
 
     onMounted(() => {
@@ -146,7 +169,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .advanced {
   margin-top: 23px;
   background-color: var(--gray-background);
@@ -155,15 +178,17 @@ export default defineComponent({
 
   &__inputs {
     max-width: 99%;
+
     input {
       height: 42px;
     }
 
-    > div {
+    >div {
       margin-bottom: 20px;
     }
   }
 }
+
 .error {
   border-color: red;
 }

@@ -52,7 +52,19 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [{ loader: 'style-loader' }, { loader: 'css-loader' }],
+        use: [
+          { loader: 'style-loader' },
+          {
+            loader: 'css-loader',
+            options: {
+              modules: {
+                auto: true, // Enable CSS modules automatically for files ending in `.module.css`
+                namedExport: false, // Use default imports instead of namespace imports
+                exportLocalsConvention: 'as-is', // Preserve class names as-is
+              },
+            },
+          },
+        ],
       },
       {
         test: /\.ts$/,
@@ -70,26 +82,17 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              modules: {
-                localIdentName: isProduction ? '[hash:base64:5]' : '[local]__[hash:base64:5]',
-              },
+              // modules: {
+              //   localIdentName: isProduction ? '[hash:base64:5]' : '[local]__[hash:base64:5]',
+              // },
               sourceMap: !isProduction,
               importLoaders: 1,
             },
           },
           'sass-loader',
         ],
-      },
-      // {
-      //   test: /\.(ts|vue)$/,
-      //   enforce: 'pre',
-      //   use: [
-      //     {
-      //       loader: 'eslint-loader',
-      //     },
-      //   ],
-      //   exclude: /node_modules/,
-      // },
+      }
+      ,
       {
         test: /\.(?:ico|gif|png|jpg|jpeg)$/i,
         type: 'asset/resource',

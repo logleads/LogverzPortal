@@ -4,8 +4,10 @@ import { BaseRequest } from '~/services/api/base-request';
 import {
   groupResponse,
   payloadForUpdate,
+  payloadForUpdate2,
   PermissionsTypes,
   policiesResponse,
+  rolesResponse,
   userResponse,
 } from '~/types/models/admin-window-types';
 
@@ -18,7 +20,7 @@ export class AdminWindowService {
         Resource: AdminWindowService.resource,
         Parameters: [
           {
-            AttributeName: 'IAM',
+            AttributeName: 'USR',
             AttributeValue: 'true',
             Expression: '=',
           },
@@ -52,7 +54,7 @@ export class AdminWindowService {
           },
           {
             Payload: {
-              IAM: 'true',
+              USR: 'true',
               IAMGroups: payload.IAMGroups,
               IAMPolicies: payload.IAMPolicies,
               Name: payload.Name,
@@ -83,7 +85,7 @@ export class AdminWindowService {
           },
           {
             Payload: {
-              IAM: 'true',
+              USR: 'true',
               IAMGroups: payload.IAMGroups,
               IAMPolicies: payload.IAMPolicies,
               Name: payload.Name,
@@ -94,6 +96,38 @@ export class AdminWindowService {
         Operation: 'dynamodb:PutItem',
       },
     });
+    return data as userResponse[];
+  }
+  static async updateUser2(payload: payloadForUpdate2): Promise<any> {
+        
+    const { data } = await BaseRequest.post(`${STAGE_NAME}/NoSql`, undefined, {
+      params: {
+        Resource: AdminWindowService.resource,
+        Parameters: [
+          {
+            AttributeName: 'Name',
+            AttributeValue: payload.Name,
+            Expression: '=',
+          },
+          {
+            AttributeName: 'Type',
+            AttributeValue: payload.type,
+            Expression: '=',
+          },
+          {
+            Payload: {
+              USR: 'true',
+              IAMGroups: payload.IAMGroups,
+              AppScopeAuth: payload.AppScopeAuth,
+              Name: payload.Name,
+              Type: payload.type,
+            },
+          },
+        ],
+        Operation: 'dynamodb:PutItem',
+      },
+    });
+    
     return data as userResponse[];
   }
 
@@ -131,14 +165,14 @@ export class AdminWindowService {
     return data as PermissionsTypes;
   }
 
-  static async getPolicies(): Promise<policiesResponse[]> {
+  static async getPolicies(policyType = 'PolicyAWS'): Promise<policiesResponse[]> {
     const { data } = await BaseRequest.post(`${STAGE_NAME}/NoSql`, undefined, {
       params: {
         Resource: AdminWindowService.resource,
         Parameters: [
           {
             AttributeName: 'Type',
-            AttributeValue: 'PolicyAWS',
+            AttributeValue: policyType,
             Expression: '=',
           },
         ],
@@ -147,6 +181,24 @@ export class AdminWindowService {
     });
 
     return data as policiesResponse[];
+  }
+
+  static async getRoles(): Promise<rolesResponse[]> {
+    const { data } = await BaseRequest.post(`${STAGE_NAME}/NoSql`, undefined, {
+      params: {
+        Resource: AdminWindowService.resource,
+        Parameters: [
+          {
+            AttributeName: 'Type',
+            AttributeValue: 'RoleAWS',
+            Expression: '=',
+          },
+        ],
+        Operation: 'dynamodb:Query',
+      },
+    });
+
+    return data as rolesResponse[];
   }
 
   static async getGroups(): Promise<groupResponse[]> {
@@ -189,7 +241,7 @@ export class AdminWindowService {
         Resource: AdminWindowService.resource,
         Parameters: [
           {
-            AttributeName: 'IAM',
+            AttributeName: 'USR',
             AttributeValue: 'true',
             Expression: '=',
           },
@@ -207,6 +259,9 @@ export class AdminWindowService {
 
     return { data, groupName } as { data: userResponse; groupName: string };
   }
+  // [({ AttributeName: 'Type', AttributeValue: 'PolicyAWS', Expression: '=' },
+  // { AttributeName: 'Name', AttributeValue: 'ZZZZZZZ', Expression: '=' },
+  // { KeyConditionExpression: 'and' })];
 
   static async getUserOfPolicy(
     policyName: string,
@@ -216,17 +271,19 @@ export class AdminWindowService {
         Resource: AdminWindowService.resource,
         Parameters: [
           {
-            AttributeName: 'IAM',
-            AttributeValue: 'true',
+            AttributeName: 'Type',
+            AttributeValue: 'PolicyAWS',
             Expression: '=',
           },
-          {
-            FilterExpression: {
-              Expression: 'contains',
-              AttributeName: 'IAMPolicies',
-              AttributeValue: policyName,
-            },
-          },
+          // {
+          //   FilterExpression: {
+          //     Expression: 'contains',
+          //     AttributeName: 'IAMPolicies',
+          //     AttributeValue: policyName,
+          //   },
+          // },
+          { AttributeName: 'Name', AttributeValue: policyName, Expression: '=' },
+          { KeyConditionExpression: 'and' },
         ],
         Operation: 'dynamodb:Query',
       },
@@ -263,5 +320,39 @@ export class AdminWindowService {
     } catch (error: any) {
       throw new Error(error);
     }
+  }
+  static async createPolicy(payload: {
+    Name: string;
+    Type: string;
+    Document: string;
+    Associations: string[];
+  }): Promise<any> {
+    const { data } = await BaseRequest.post(`${STAGE_NAME}/NoSql`, undefined, {
+      params: {
+        Resource: AdminWindowService.resource,
+        Operation: 'dynamodb:PutItem',
+        Parameters: [
+          {
+            AttributeName: 'Name',
+            AttributeValue: payload.Name,
+            Expression: '=',
+          },
+          {
+            AttributeName: 'Type',
+            AttributeValue: payload.Type,
+            Expression: '=',
+          },
+          {
+            Payload: {
+              arn: '',
+              path: '',
+              LatestVersion: { Document: payload.Document },
+              Associations: payload.Associations,
+            },
+          },
+        ],
+      },
+    });
+    return data as policiesResponse[];
   }
 }

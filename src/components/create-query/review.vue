@@ -1,11 +1,11 @@
 <template>
-  <div :class="$style['fields-container']">
-    <div v-for="item in fields" :key="item.label" :class="$style['item-field']">
+  <div class="fields-container">
+    <div v-for="item in fields" :key="item.label" class="item-field">
       <div
         :class="[
-          $style['item-field__key'],
+          'item-field__key',
           {
-            [$style[decideDisplayError(item.label, item.value).classDisplay]]: decideDisplayError(
+            [decideDisplayError(item.label, item.value).classDisplay]: decideDisplayError(
               item.label,
               item.value,
             ).show,
@@ -14,14 +14,13 @@
       >
         {{ item.label }}:
       </div>
-      <div :class="$style['item-field__value']">{{ item.value }}</div>
+      <div class="item-field__value">{{ item.value }}</div>
     </div>
-    <p :class="$style['warning-text']">
+    <p class="warning-text">
       {{ DatasetWarning }}
     </p>
   </div>
 </template>
-
 <script lang="ts">
 import {
   computed,
@@ -171,21 +170,20 @@ export default defineComponent({
     function getServerStatus(): any {
       return ConnectionIndecatoreModule.getRTCStatuse();
     }
-
-    const fields = ref([
-      { label: 'S3Folders', value: S3Folders },
-      { label: 'LogVolume', value: LogVolume },
-      { label: 'AllocationStrategy', value: AllocationStrategy },
-      { label: 'DataType', value: DataType },
-      { label: 'DatabaseParameters', value: DatabaseParameters },
-      { label: 'DatasetName', value: DatasetName },
-      { label: 'DatasetDescription', value: DatasetDescription },
-      { label: 'DatasetOwners', value: DatasetOwners },
-      { label: 'DatasetAccess', value: DatasetAccess },
-      { label: 'S3EnumerationDepth', value: S3EnumerationDepth },
-      { label: 'PreferedWorkerNumber', value: PreferedWorkerNumber },
-      { label: 'QueryString', value: QueryString },
-      { label: 'DBinstance', value: DBinstance },
+    const fields = computed(() => [
+      { label: 'S3Folders', value: S3Folders.value },
+      { label: 'LogVolume', value: LogVolume.value },
+      { label: 'AllocationStrategy', value: AllocationStrategy.value },
+      { label: 'DataType', value: DataType.value },
+      { label: 'DatabaseParameters', value: DatabaseParameters.value },
+      { label: 'DatasetName', value: DatasetName.value },
+      { label: 'DatasetDescription', value: DatasetDescription.value },
+      { label: 'DatasetOwners', value: DatasetOwners.value },
+      { label: 'DatasetAccess', value: DatasetAccess.value },
+      { label: 'S3EnumerationDepth', value: S3EnumerationDepth.value },
+      { label: 'PreferedWorkerNumber', value: PreferedWorkerNumber.value },
+      { label: 'QueryString', value: QueryString.value },
+      { label: 'DBinstance', value: DBinstance.value },
     ]);
 
     watch(DBinstance, (value: any) => {
@@ -220,7 +218,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .item-field {
   display: flex;
   align-items: center;

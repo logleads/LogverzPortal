@@ -1,14 +1,14 @@
 <template>
-  <button type="button" :class="$style['container']" @click="showMenu">
-    <div :class="$style['logo']">
+  <button type="button" class="container" @click="showMenu">
+    <div class="logo">
       <img
-        :class="$style['logo__img']"
+        class="logo__img"
         :src="require('~/assets/images/logo_light.png')"
         alt="logo"
       />
     </div>
-    <div :class="$style['delimiter']" />
-    <div :class="$style['icon']">
+    <div class="delimiter" />
+    <div class="icon">
       <Icon name="menu" :width="16" :height="16" />
     </div>
     <template v-if="isLoad">
@@ -97,7 +97,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style  scoped lang="scss">
 .container {
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 5px;

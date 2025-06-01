@@ -1,12 +1,12 @@
 <template>
-  <div :class="$style['query-item']">
+  <div class="query-item">
     <template v-if="currentAvailableTable && !noDataType && rules && rules.length">
-      <div :class="$style['query-item__container']">
+      <div class="query-item__container">
         <QueryGenerator
           :fields="rules"
           :curent-key="curentKey"
           :data-number="dataNumber"
-          :class="$style['query-item__container__el']"
+          class="query-item__container__el"
           :curent-table="currentAvailableTable"
           :type-data-base="dataBaseEngineItems"
           @update-query="setCommand"
@@ -17,12 +17,12 @@
     </template>
     <template v-else-if="rules && rules.length === 0 && !noDataType">
       <div>
-        <h1 :class="$style['query-error']">Choose DataSet for query</h1>
+        <h1 class="query-error">Choose DataSet for query</h1>
       </div>
     </template>
     <template v-else-if="noDataType">
       <div>
-        <h1 :class="$style['query-error']">Choose DataSet with another data type</h1>
+        <h1 class="query-error">Choose DataSet with another data type</h1>
       </div>
     </template>
     <template v-else>
@@ -136,7 +136,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .query-builder-item {
   width: 100%;
 }

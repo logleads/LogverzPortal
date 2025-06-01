@@ -1,43 +1,51 @@
 <template>
-  <div :class="$style['standard']">
+  <div class="standard">
     <template v-if="!isFetching">
       <template v-if="!IsFetchingQuery">
-        <template v-if="!listLoader">
-          <TreeList :list-folder="listFolder" />
+        <template v-if="activeSettings?.aws">
+          <template v-if="!listLoader">
+            <TreeList :list-folder="listFolder" />
+          </template>
+          <template v-else>
+            <div class="standard__loader">
+              <h1>Loading...</h1>
+              <Loader accent />
+            </div>
+          </template>
         </template>
         <template v-else>
-          <div :class="$style['standard__loader']">
-            <Loader accent />
-          </div>
+          <template v-if="!listAzureLoader">
+            <TreeListComponent :listAzureFolder="listAzureFolder" />
+          </template>
+          <template v-else>
+            <div class="standard__loader">
+              <h1>Loading...</h1>
+              <Loader accent />
+            </div>
+          </template>
         </template>
-        <div v-for="input in S3FoldersValue" :key="input.label" :class="$style['customeClass']">
+        <div v-for="input in S3FoldersValue" :key="input.label" class="customeClass">
           <InputContainer :label="input.label">
             <template #icon>
               <ToolTip :tip="input.hint" />
             </template>
             <template #input>
-              <Input
-                v-model="input.content"
-                :name="input.label"
-                :error="submitted && v$[input.label]?.$error"
-                :class="$style['standard__add-file__input']"
-                @input="handleInput({ value: $event.target.value, label: input.label })"
-              />
+              <Input v-model="input.content" :name="input.label" :error="submitted && v$[input.label]?.$error"
+                class="standard__add-file__input"
+                @input="handleInput({ value: $event.target.value, label: input.label })" />
             </template>
           </InputContainer>
-          <div v-if="submitted && v$[input.label]?.$error" :class="$style['validation-text']">
+          <div v-if="submitted && v$[input.label]?.$error" class="validation-text">
             {{ input.label }} is required
           </div>
-          <div
-            v-if="
-              submitted &&
-              (v$[input.label].maxLength.$invalid || v$[input.label].maxLength.$invalid)
-            "
-          >
+          <div v-if="
+            submitted &&
+            (v$[input.label].maxLength.$invalid || v$[input.label].maxLength.$invalid)
+          ">
             {{ v$[input.label].maxLength.$message }}
           </div>
         </div>
-        <!-- <label for="s3folder" :class="$style['standard__file-label']"
+        <!-- <label for="s3folder" class="standard__file-label"
           >S3Folders
           <span>
             <ToolTip :tip="DCH_S3_FOLDERS_Local" />
@@ -55,17 +63,17 @@
             id="s3folder"
             v-model="S3FoldersValue"
             name="S3Folders"
-            :class="$style['standard__add-file__input']"
+            class="standard__add-file__input"
             @input="handleInput({ value: $event, label: 'S3Folders' })"
           />
            @input="data => handleInput({ value: data, label: 'S3Folders' })"
         </div> -->
-        <!-- <div v-if="submitted && v$.S3Folders?.$error" :class="$style['validation-text']">
+        <!-- <div v-if="submitted && v$.S3Folders?.$error" class="validation-text">
           S3Folders is required
         </div>
         <div
           v-if="submitted && (v$.S3Folders.minLength.$invalid || v$.S3Folders.maxLength.$invalid)"
-          :class="$style['validation-text']"
+          class="validation-text"
         >
           <template v-if="v$.S3Folders.minLength.$invalid"
             >{{ v$.S3Folders.minLength.$message }}
@@ -75,23 +83,20 @@
           </template>
         </div> -->
         <div v-if="isFilesBrowses">
-          <div :class="$style['standard__sites']">
-            <SiteItem :path="Path" :deep="1" :root-folder-fetching="rootFolderFetching" />
+          <div class="standard__sites">
+            <SiteItem :path="Path" :deep="1" :root-folder-fetching="rootFolderFetching"
+              :active-settings="activeSettings" />
           </div>
         </div>
 
-        <div :class="$style['standard__inputs']">
+        <div class="standard__inputs">
           <div v-for="select in selects" :key="select.label">
-            <label :class="$style['customLabel']">
+            <label class="customLabel">
               <span>{{ select.label }}</span>
               <ToolTip :tip="select.hint" />
             </label>
-            <DropDownSimple
-              :content="select.content"
-              :items="select.items"
-              :name="select.label"
-              @select-value="handleInputSelect"
-            />
+            <DropDownSimple :content="select.content" :items="select.items" :name="select.label"
+              @select-value="handleInputSelect" />
           </div>
           <div v-for="input in inputs" :key="input.label">
             <InputContainer :label="input.label">
@@ -99,76 +104,49 @@
                 <ToolTip :tip="input.hint" />
               </template>
               <template #input>
-                <Input
-                  v-model="input.content"
-                  :name="input.label"
-                  :error="submitted && v$[input.label]?.$error"
-                  :class="$style['standard__add-file__input']"
-                  @input="handleInput({ value: $event.target.value, label: input.label })"
-                />
+                <Input v-model="input.content" :name="input.label" :error="submitted && v$[input.label]?.$error"
+                  class="standard__add-file__input"
+                  @input="handleInput({ value: $event.target.value, label: input.label })" />
               </template>
             </InputContainer>
-            <div v-if="submitted && v$[input.label]?.$error" :class="$style['validation-text']">
+            <div v-if="submitted && v$[input.label]?.$error" class="validation-text">
               {{ input.label }} is required
             </div>
-            <div
-              v-if="
-                submitted &&
-                (v$[input.label].maxLength.$invalid || v$[input.label].maxLength.$invalid)
-              "
-            >
+            <div v-if="
+              submitted &&
+              (v$[input.label].maxLength.$invalid || v$[input.label].maxLength.$invalid)
+            ">
               {{ v$[input.label].maxLength.$message }}
             </div>
           </div>
           <div>
-            <label :class="$style['multiselect-label']">
+            <label class="multiselect-label">
               <span> Dataset Owners </span>
-              
+
               <ToolTip :tip="DCH_TABLE_OWNERS_Local" />
             </label>
             <div>
-              <multiselect
-                v-model="DatasetOwners"
-                name="DatasetOwners"
-                :options="TableOptions"
-                :multiple="true"
-                :close-on-select="true"
-                :clear-on-select="false"
-                :preserve-search="true"
-                placeholder="Select option"
-                label="name"
-                track-by="name"
-                :preselect-first="true"
-                :class="{
-                  [$style['invalid']]: submitted && v$.DatasetOwners?.$error,
-                  [$style['multiselect']]: true,
-                }"
-              />
+              <multiselect v-model="DatasetOwners" name="DatasetOwners" :options="TableOptions" :multiple="true"
+                :close-on-select="true" :clear-on-select="false" :preserve-search="true" placeholder="Select option"
+                label="name" track-by="name" :preselect-first="true" :class="{
+                  'invalid': submitted && v$.DatasetOwners?.$error,
+                  'multiselect': true,
+                }" />
             </div>
 
-            <div v-if="submitted && v$.DatasetOwners?.$error" :class="$style['validation-text']">
+            <div v-if="submitted && v$.DatasetOwners?.$error" class="validation-text">
               DatasetOwners is required
             </div>
           </div>
           <div>
-            <label :class="$style['multiselect-label']">
+            <label class="multiselect-label">
               <span> Dataset Access </span>
               <ToolTip :tip="DCH_TABLE_ACCESS_Local" />
             </label>
             <div>
-              <multiselect
-                v-model="DatasetAccess"
-                name="DatasetAccess"
-                :options="TableOptions"
-                :multiple="true"
-                :close-on-select="true"
-                :clear-on-select="false"
-                :preserve-search="true"
-                placeholder="Select option"
-                label="name"
-                track-by="name"
-                :preselect-first="true"
-              />
+              <multiselect v-model="DatasetAccess" name="DatasetAccess" :options="TableOptions" :multiple="true"
+                :close-on-select="true" :clear-on-select="false" :preserve-search="true" placeholder="Select option"
+                label="name" track-by="name" :preselect-first="true" />
             </div>
           </div>
         </div>
@@ -191,6 +169,7 @@ import Loader from '~/components/shared/loader.vue';
 import ToolTip from '~/components/shared/tool-tip.vue';
 import {
   DCH_AVAILABLE_BUCKETS,
+  DCH_AZURE_FOLDERS,
   DCH_DB_SERVER_ALIAS,
   DCH_LOG_VOLUME,
   DCH_QUERY_TYPE_SELECTOR,
@@ -219,6 +198,7 @@ import {
   watch,
   WritableComputedRef,
 } from 'vue';
+import TreeListComponent from './TreeListComponent.vue';
 
 export default defineComponent({
   name: 'StandardSettings',
@@ -228,6 +208,7 @@ export default defineComponent({
     DropDownSimple,
     SiteItem,
     InputContainer,
+    TreeListComponent,
     // eslint-disable-next-line vue/no-reserved-component-names
     Input,
     Multiselect,
@@ -237,6 +218,9 @@ export default defineComponent({
     submitted: {
       type: Boolean,
       required: false,
+    },
+    activeSettings: {
+      type: Object
     },
     isFetching: {
       type: Boolean,
@@ -248,6 +232,8 @@ export default defineComponent({
     const expandedRowKeys = ref([1, 2]);
     const selectedRowKeys = ref([]);
     const isFilesBrowses = ref(false);
+
+
     const value = ref(null);
     const selectedEmployeeNames = ref(emptySelectedText);
     const selectionMode = ref('all');
@@ -283,6 +269,7 @@ export default defineComponent({
       return DataCollectionModule.listFolder;
     });
 
+
     const DatasetAccess = computed({
       get() {
         return DataCollectionModule.DatasetAccess;
@@ -302,12 +289,20 @@ export default defineComponent({
       return `Maximum length is ${maxLength}`;
     }
 
+    const listAzureFolder = computed(() => {
+      return DataCollectionModule.listAzureFolder;
+    });
+
     const rootFolderFetching: ComputedRef<boolean> = computed(() => {
       return DataCollectionModule.rootFolderFetching;
     });
 
     const listLoader: ComputedRef<boolean> = computed(() => {
       return DataCollectionModule.listLoader;
+    });
+    
+     const listAzureLoader: ComputedRef<boolean> = computed(() => {
+      return DataCollectionModule.listAzureLoader;
     });
 
     const IsFetchingQuery: ComputedRef<boolean> = computed(() => {
@@ -509,9 +504,9 @@ export default defineComponent({
     const S3FoldersValue = computed(() => {
       return [
         {
-          label: 'S3Folders',
+          label: props.activeSettings?.aws ? 'S3Folders' : 'Storage Account',
           content: S3Folders.value,
-          hint: DCH_S3_FOLDERS_Local.value,
+          hint: props.activeSettings?.aws ? DCH_S3_FOLDERS_Local.value : DCH_AZURE_FOLDERS,
         },
       ];
     });
@@ -606,12 +601,14 @@ export default defineComponent({
       Path,
       IsFetchingQuery,
       listLoader,
+      listAzureLoader,
       rootFolderFetching,
       maxLengthMessage,
       minLengthMessage,
       DatasetAccess,
       DatasetOwners,
       listFolder,
+      listAzureFolder,
       expandedRowKeys,
       selectedRowKeys,
       isFilesBrowses,
@@ -634,14 +631,16 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .selected-site {
   color: #4b75ed;
 }
+
 .customeClass {
   margin-top: 10px;
   padding-right: 9px !important;
 }
+
 .standard {
   margin-top: 23px;
   background-color: var(--gray-background);
@@ -658,29 +657,31 @@ export default defineComponent({
     display: flex;
     align-items: center;
 
-    > span {
+    >span {
       margin-left: 6px;
     }
   }
+
   .customLabel {
     margin-bottom: 5px;
     color: #1a1b20;
     font-size: 14px;
     font-weight: bold;
   }
+
   &__inputs {
     // margin-top: 49px;
     max-width: 99%;
     padding-bottom: 59px;
 
-    > div {
+    >div {
       // margin-bottom: 29px;
       margin-top: 10px;
     }
   }
 
   &__sites {
-    > h1 {
+    >h1 {
       font-weight: 500;
       font-size: 16px;
       display: flex;
@@ -688,7 +689,7 @@ export default defineComponent({
       margin-bottom: 7px;
       cursor: pointer;
 
-      > span {
+      >span {
         margin-right: 7.24px;
       }
     }
@@ -728,6 +729,7 @@ export default defineComponent({
 
     &__input {
       width: 100%;
+
       input {
         height: 42px;
       }
@@ -741,7 +743,7 @@ export default defineComponent({
     align-items: center;
     color: var(--ink-color);
 
-    > span {
+    >span {
       margin-right: 6px;
     }
   }
@@ -754,11 +756,13 @@ export default defineComponent({
 .error {
   border-color: red;
 }
+
 .validation-text {
   color: red;
   font-size: 12px;
   margin: 10px auto;
 }
+
 .multiselect-label {
   margin-bottom: 5px;
   font-weight: bold;

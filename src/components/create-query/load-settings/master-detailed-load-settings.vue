@@ -29,10 +29,10 @@
             (item !== 'S3Folders')
           "
           :key="item + Math.random() * 100000"
-          :class="$style['container']"
+          class="container"
         >
-          <span :class="$style['container__key']">{{ item }}: </span>
-          <div :class="$style['container__value']">{{ customizedData[item] }}</div>
+          <span class="container__key">{{ item }}: </span>
+          <div class="container__value">{{ customizedData[item] }}</div>
         </div>
       </template> -->
     </div>
@@ -95,7 +95,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .container {
   margin: 15px 0;
 

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div ref="editorEl" :style="$style['editor']" />
+    <div ref="editorEl" style="editor" />
   </div>
 </template>
 
@@ -72,7 +72,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .editor {
   height: 100%;
 }

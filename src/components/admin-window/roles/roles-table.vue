@@ -1,8 +1,8 @@
 <!-- eslint-disable vue/no-useless-template-attributes -->
 <template>
   <div class="main-container">
-    <template v-if="showForm">
-      <GroupsForm :current-group-name="currentGroupName" @toggleForm="handleToggle" />
+    <template v-if="showPolicyForm">
+      <RolesForm :current-policy-name="currentPolicyName" @toggleForm="handleToggleForm" />
     </template>
     <div v-if="isLoading" class="loader-container">
       <Loader accent :size="50" />
@@ -26,7 +26,7 @@
 
           <DxMasterDetail :enabled="true" template="masterDetailedUsers" />
           <template #masterDetailedUsers="{ data: employee }">
-            <MasterDetailedGroups :data="employee" :user-of-group="userOfGroup" />
+            <MasterDetailedRole :data="employee" />
           </template>
         </DxDataGrid>
       </template>
@@ -36,7 +36,6 @@
 </template>
 
 <script lang="ts">
-import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from 'vue';
 import {
   DxColumn,
   DxDataGrid,
@@ -45,80 +44,79 @@ import {
   DxHeaderFilter,
   DxMasterDetail,
 } from 'devextreme-vue/data-grid';
+import { computed, ComputedRef, defineComponent, onMounted, Ref, ref } from 'vue';
 
-import GroupsForm from '~/components/admin-window/groups/groupsForm.vue';
-import MasterDetailedGroups from '~/components/admin-window/groups/master-detailed-groups.vue';
 import Loader from '~/components/shared/loader.vue';
 import { AdminModule } from '~/store/modules/admin';
 import { AsyncStatus } from '~/types';
-import { groupResponse } from '~/types/models/admin-window-types';
+import { policiesResponse, rolesResponse } from '~/types/models/admin-window-types';
+import MasterDetailedRole from './master-detailed-role.vue';
+import RolesForm from './rolesForm.vue';
 
 export default defineComponent({
-  name: 'GroupsTable',
+  name: 'RolesTable',
   components: {
-    GroupsForm,
+    MasterDetailedRole,
+    RolesForm,
     Loader,
     DxColumn,
     DxDataGrid,
     DxFilterRow,
     DxMasterDetail,
     DxEditing,
-    MasterDetailedGroups,
     DxHeaderFilter,
   },
   setup() {
-    const showForm: Ref<boolean> = ref(false);
-    const currentGroupName: Ref<string> = ref('');
+    const showPolicyForm: Ref<boolean> = ref(false);
+    const currentPolicyName: Ref<string> = ref('');
     onMounted(async () => {
-      await AdminModule.getGroups();
-      await AdminModule.getUsers();
+      await AdminModule.getRoles();
     });
-    const items: ComputedRef<groupResponse[]> = computed(() => {
-      return AdminModule.groups;
+    const items: ComputedRef<rolesResponse[]> = computed(() => {
+      return AdminModule.roles;
     });
     const isLoading: ComputedRef<boolean> = computed(() => {
-      return AdminModule.groupsStatus === AsyncStatus.LOADING;
+      return AdminModule.rolesStatus === AsyncStatus.LOADING;
     });
-    const userOfGroup: ComputedRef<any> = computed(() => {
-      return AdminModule.usersOfGroups;
+    const usersOfPolicies: ComputedRef<any> = computed(() => {
+      return AdminModule.usersOfPolicies;
     });
-    const isSuccess: ComputedRef<any> = computed(() => {
-      return AdminModule.groupsStatus === AsyncStatus.SUCCESS;
+    const isSuccess: ComputedRef<boolean> = computed(() => {
+      return AdminModule.rolesStatus === AsyncStatus.SUCCESS;
     });
-
-    function handleToggle(value: boolean): void {
-      showForm.value = value;
-    }
 
     function handleStartEdit(e: { cancel: boolean; data: { Name: string } }): void {
-      currentGroupName.value = e.data.Name;
-      showForm.value = true;
+      currentPolicyName.value = e.data.Name;
+      showPolicyForm.value = true;
       e.cancel = true;
     }
+
+    function handleToggleForm(value: boolean): void {
+      showPolicyForm.value = value;
+    }
     return {
+      handleToggleForm,
       handleStartEdit,
-      handleToggle,
       isSuccess,
+      usersOfPolicies,
       isLoading,
-      userOfGroup,
       items,
-      currentGroupName,
-      showForm,
+      currentPolicyName,
+      showPolicyForm,
     };
   },
 });
 </script>
 
-<style  scoped lang="scss">
+<style scoped lang="scss">
 .main-container {
   position: relative;
 }
 </style>
 
-<style scoped>
-#gridContainer3{
+<style>
+#gridContainer3 {
   font-family: 'Roboto', sans-serif;
-
 }
 #gridContainer3 .dx-command-edit a {
   color: white;

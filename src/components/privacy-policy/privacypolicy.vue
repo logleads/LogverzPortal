@@ -40,7 +40,7 @@ export default defineComponent({
   },
 });
 </script>
-<style module lang="scss">
+<style  scoped lang="scss">
 .hiden {
   opacity: 0;
 }

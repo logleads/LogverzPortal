@@ -1,41 +1,26 @@
 <!-- //global-notifications.vue -->
 <template name="component-name">
-  <div :class="$style['box']">
-    <div :class="$style['indecator']" @click="() => openDropDownNotifications()">
+  <div class="box">
+    <div class="indecator" @click="() => openDropDownNotifications()">
       <img :src="require('~/assets/images/bell.png')" alt="notification" />
-      <span v-if="notifications > 0" :class="$style['num']">{{ notifications }}</span>
+      <span v-if="notifications > 0" class="num">{{ notifications }}</span>
     </div>
-    <div v-if="isOpenDropDownNotification" :class="$style['drop-down']">
-      <div :class="$style['drop-down__box']">
-        <div :class="$style['drop-down__first-part']">
-          <div :class="$style['tabset']">
-            <!-- Tab 1 -->
-            <!-- <input id="tab1" type="radio" name="tabset" aria-controls="globalnews" checked />
-            <label for="tab1">Global News</label> -->
-            <!-- Tab 2 -->
-            <!-- <input id="tab2" type="radio" name="tabset" aria-controls="systemevents" />
-            <label for="tab2">System Events</label> -->
-
-            <div :class="$style['tab-panels']">
-              <section id="globalnews" :class="$style['tab-panel']">
-                <!-- <section id="globalnews" :class="$style['tab-panel']"> -->
+    <div v-if="isOpenDropDownNotification" class="drop-down">
+      <div class="drop-down__box">
+        <div class="drop-down__first-part">
+          <div class="tabset">
+            <div class="tab-panels">
+              <section id="globalnews" class="tab-panel">
                 <div id="accordion" class="acc">
-                  <!-- <div :class="$style['notification']">
-                    <img src="harry.jpg" alt="" />
-                    <div :class="$style['text']">
-                      <p><span :class="$style['name']">Harry Potter</span> left a comment.</p>
-                      <p :class="$style['time']">1 hour age</p>
-                    </div>
-                  </div> -->
-                  <div :class="$style['faq-box']">
+                  <div class="faq-box">
                     <div
                       v-for="notification in globalNotificationsList.Notification"
                       :key="notification.id"
-                      :class="$style['faq']"
+                      class="faq"
                     >
-                      <input :id="notification.id" :class="$style['radio-input']" type="radio" />
+                      <input :id="notification.id" class="radio-input" type="radio" />
 
-                      <label :class="$style['faq-label']" :for="notification.id">
+                      <label class="faq-label" :for="notification.id">
                         <img
                           v-if="notification.imgurl"
                           :src="notification.imgurl"
@@ -45,51 +30,20 @@
                           style="float: left"
                         />
                         {{ notification.type }}
-                        <small :class="$style['small-font']">{{ notification.date }}</small>
+                        <small class="small-font">{{ notification.date }}</small>
                       </label>
-                      <div :class="$style['faq-content']">
-                        <div :class="$style['parent']">
+                      <div class="faq-content">
+                        <div class="parent">
                           <div
-                            :class="[$style['child'], $style['child2']]"
+                            class="child child2"
                             v-html="notification.detail"
                           ></div>
                         </div>
                       </div>
                     </div>
                   </div>
-
-                  <!-- <DxAccordion
-                    id="accordion-container"
-                    :data-source="companies"
-                    :collapsible="collapsible"
-                    :selected-items="selectedItems"
-                    :multiple="multiple"
-                    :animation-duration="animationDuration"
-                  >
-                    <template #title="{ data }">
-                      <CustomTitle :item-data="data" />
-                    </template>
-                    <template #item="{ data }">
-                      <CustomItem :item-data="data" />
-                    </template>
-                  </DxAccordion> -->
                 </div>
               </section>
-              <!-- <section id="systemevents" :class="$style['tab-panel']">
-                <h2>6B. Rauchbier</h2>
-                <p>
-                  <strong>Overall Impression:</strong> An elegant, malty German amber lager with a
-                  balanced, complementary beechwood smoke character. Toasty-rich malt in aroma and
-                  flavor, restrained bitterness, low to high smoke flavor, clean fermentation
-                  profile, and an attenuated finish are characteristic.
-                </p>
-                <p>
-                  <strong>History:</strong> A historical specialty of the city of Bamberg, in the
-                  Franconian region of Bavaria in Germany. Beechwood-smoked malt is used to make a
-                  Märzen-style amber lager. The smoke character of the malt varies by maltster; some
-                  breweries produce their own smoked malt (rauchmalz).
-                </p>
-              </section> -->
             </div>
           </div>
         </div>
@@ -97,6 +51,7 @@
     </div>
   </div>
 </template>
+
 <script lang="ts">
 import { computed, ComputedRef, defineComponent, onMounted, ref } from 'vue';
 
@@ -171,7 +126,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style  scoped lang="scss">
 /*
  CSS for the main interaction
 */

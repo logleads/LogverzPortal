@@ -10,29 +10,29 @@
             <ParseObject :obj="k" :label="i" />
           </template>
           <template v-else>
-            <div v-if="k !== ''" :class="$style['container']">
-              <span :class="$style['container__key']">{{ i }}: </span>
-              <div :class="$style['container__value']">{{ k }}</div>
+            <div v-if="k !== ''" class="container">
+              <span class="container__key">{{ i }}: </span>
+              <div class="container__value">{{ k }}</div>
             </div>
           </template>
         </template>
       </div>
       <div v-if="Array.isArray(data?.data[item])" :key="item + Math.random() * 10000">
-        <div :class="$style['container']">
-          <span :class="$style['container__key']">{{ item }}: </span>
+        <div class="container">
+          <span class="container__key">{{ item }}: </span>
           <template
             v-for="(arrItem, index) in data?.data[item]"
             :key="arrItem + Math.random() * 10000"
-            :class="$style['container__value']"
+            class="container__value"
           >
             {{ arrItem }}{{ data?.data[item].length - 1 !== index ? ',' : '' }}
           </template>
         </div>
       </div>
       <div v-if="data?.data[item] === 'null'" :key="item + Math.random() * 10000">
-        <div :class="$style['container']">
-          <span :class="$style['container__key']">{{ item }}: </span>
-          <div :class="$style['container__value']">{{ data.data[item] }}</div>
+        <div class="container">
+          <span class="container__key">{{ item }}: </span>
+          <div class="container__value">{{ data.data[item] }}</div>
         </div>
       </div>
     </template>
@@ -62,7 +62,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style  scoped lang="scss">
 @import './styles';
 
 .container {

@@ -1,13 +1,8 @@
 <template>
-  <div :class="$style['data-container']">
+  <div class="data-container">
     <template v-if="items !== null">
-      <DataColumnComponent
-        :headers="headers"
-        :items-remastered="itemsRemastered"
-        :rawitems="rawItems"
-        :curent-key="curentKey"
-        :data-number="dataNumber"
-      />
+      <DataColumnComponent ref="dataColumnRef" :headers="headers" :items-remastered="itemsRemastered"
+        :rawitems="rawItems" :curent-key="curentKey" :data-number="dataNumber" />
     </template>
   </div>
 </template>
@@ -16,7 +11,7 @@
 import 'devextreme/dist/css/dx.common.css';
 import 'devextreme/dist/css/dx.greenmist.css';
 
-import { json2csv } from 'json-2-csv';  // Using the new promise-based API
+import { json2csv } from 'json-2-csv';  // Using the synchronous version of the method
 import { computed, ComputedRef, defineComponent, Ref, ref, watchEffect } from 'vue';
 
 import { QueryBuilderModule } from '~/store/modules/query-builder';
@@ -46,8 +41,13 @@ export default defineComponent({
     const headers: Ref<string[]> = ref([]);
     const rawItems: Ref<any> = ref([]);
     const csvData: Ref<string | null> = ref(null); // Store CSV data here
-
+    const dataColumnRef = ref();
+    function exportData() {
+      dataColumnRef.value?.exportData();
+    }
     function filterBySelectCollums(key: string) {
+      console.log("key==========", props.dataNumber);
+
       return QueryBuilderModule.dataForAllWindows[props.dataNumber as number].showCollums
         ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].showCollums.includes(key)
         : false;
@@ -62,11 +62,12 @@ export default defineComponent({
     const items: ComputedRef<CloudTrailDataResponse[] | null> = computed(() => {
       const data = QueryBuilderModule.dataForAllWindows[props.dataNumber as number]
         ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].data?.map(
-            (i: Record<string, unknown>) => i,
-          )
+          (i: Record<string, unknown>) => i,
+        )
         : [];
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       rawItems.value = data;
+
       const sortedBySelectedColum = data?.map((item: Record<string, unknown>) => {
         const obj: Record<string, unknown> = {};
         Object.keys(item)
@@ -76,6 +77,7 @@ export default defineComponent({
           .map((key: string) => {
             obj[key] = item[key];
           });
+        console.log("=0000000000000", obj);
 
         return obj;
       });
@@ -84,21 +86,26 @@ export default defineComponent({
     });
 
     // Watch for changes in the items array and generate CSV when it's updated
-    watchEffect(async () => {
+    watchEffect(() => {
       if (items.value) {
         try {
-          const csv = await json2csv(items.value as CloudTrailDataResponse[]);
+          // json2csv is now synchronous
+          const csv = json2csv(items.value as CloudTrailDataResponse[]);
           csvData.value = csv;
           const tmp = csv as string;
           const arr = tmp.split('\n');
+          console.log("=============999", items.value);
+
           headers.value = arr[0].split(',').map((item: any) => {
             return item.replaceAll('.', '-').toLowerCase();
           });
+          console.log("headers.value", headers.value);
+
         } catch (err) {
           console.error("Error while converting to CSV:", err);
         }
       }
-    });
+    },);
 
     const itemsRemastered: ComputedRef<Array<unknown>> = computed(() => {
       const data = (items.value as unknown as Array<Record<string, unknown>>).map(
@@ -134,15 +141,17 @@ export default defineComponent({
       headers,
       grid,
       csvData,
+      dataColumnRef,
+      exportData,
+
     };
   },
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .data-container {
   width: 100%;
   height: 100%;
 }
 </style>
-

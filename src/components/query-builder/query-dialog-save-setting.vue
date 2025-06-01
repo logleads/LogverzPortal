@@ -1,18 +1,18 @@
 <template>
-  <div v-if="isOpenDialogWindow" :class="[$style['container']]" @click.self="close">
-    <div :class="[$style['container__window']]">
-      <div :class="[$style['container__body']]">
-        <div v-for="(item, key) in dataT" :key="key" :class="[$style['container__input']]">
+  <div v-if="isOpenDialogWindow" class="container" @click.self="close">
+    <div class="container__window">
+      <div class="container__body">
+        <div v-for="(item, key) in dataT" :key="key" class="container__input">
           <label>{{ key }}</label>
           <Input :model-value="transformValue(item)" disabled />
         </div>
-        <div :class="[$style['container__input']]">
+        <div class="container__input">
           <label>Analysis name</label>
-          <Input slot="input" v-model="Name" name="name" :placeholder="'Analysis name'" />
+          <Input v-model="Name" name="name" placeholder="Analysis name" />
         </div>
       </div>
 
-      <div :class="[$style['container__footer']]">
+      <div class="container__footer">
         <Button text="Cancel" @click="close" />
         <Button text="Save" @click="save" />
       </div>
@@ -93,7 +93,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .container {
   width: 100%;
   height: 100%;

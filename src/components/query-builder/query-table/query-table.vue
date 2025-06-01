@@ -1,59 +1,36 @@
 <template>
-  <div :class="$style['table']" @click="closeSettings">
-    <!-- <div :class="$style['big-alert']"></div> -->
-    <div :class="$style['table__header']">
-      <div :class="$style['table-top']">
-        <MyButton
-          v-if="tableMode"
-          text="Export table"
-          :class="[$style['query-header__btn'], $style['query-button-padding']]"
-          :disabled="!items"
-          :no-load="true"
-          @click="exportDataBase"
-        />
-        <button
-          :class="[$style['btn'], $style['query-button-padding'], $style['query-button-margin']]"
-          @click="saveConfig"
-        >
+  <div class="table" @click="closeSettings">
+    <!-- <div class="big-alert"></div> -->
+    <div class="table__header">
+      <div class="table-top">
+        <MyButton v-if="tableMode" text="Export table" :class="['query-header__btn', 'query-button-padding']"
+          :disabled="!items" :no-load="true" @click="exportDataBase" />
+        <button :class="['btn', 'query-button-padding', 'query-button-margin']" @click="saveConfig">
           save config
         </button>
-        <TabsSimple
-          btn-rigth-text="Pivot table"
-          btn-left-text="Data table"
-          :state-b-t-n="tableMode"
-          @change-table-content="changeTableMode"
-        />
+        <TabsSimple btn-rigth-text="Pivot table" btn-left-text="Data table" :state-b-t-n="tableMode"
+          @change-table-content="changeTableMode" />
 
-        <div :class="$style['icon-container']" @click.stop="log('test')">
+        <div class="icon-container" @click.stop="log('test')">
           <div @click.stop="toggleSettings">
-            <img
-              :src="require('~/assets/images/columnselector.png')"
-              alt="columnselector"
-              width="25"
-              height="25"
-            />
+            <img :src="require('~/assets/images/columnselector.png')" alt="columnselector" width="25" height="25" />
           </div>
-          <query-table-settings
-            v-if="showSettings"
-            :class="$style['big-alert']"
-            :curent-key="curentKey"
-            :data-number="dataNumber"
-            :default-type="defaultType"
-          />
+          <query-table-settings v-if="showSettings" class="big-alert" :curent-key="curentKey" :data-number="dataNumber"
+            :default-type="defaultType" />
         </div>
       </div>
     </div>
-    <div :class="$style['table__body']">
+    <div class="table__body">
       <template v-if="forbiddenObj.status">
         <h1>{{ forbiddenObj.reason }}</h1>
       </template>
       <template v-else>
         <template v-if="items !== null">
-          <DataGridComponent v-if="tableMode" :curent-key="curentKey" :data-number="dataNumber" />
+          <DataGridComponent v-if="tableMode" :curent-key="curentKey" :data-number="dataNumber" ref="dataGridRef" />
           <PivotGridComponent v-else :curent-key="curentKey" :data-number="dataNumber" />
         </template>
         <template v-else>
-          <div :class="$style['no-data']">Select DB server and table in the left sidebar</div>
+          <div class="no-data">Select DB server and table in the left sidebar</div>
         </template>
       </template>
     </div>
@@ -92,9 +69,11 @@ export default defineComponent({
     },
   },
   setup(props) {
+
     const tableMode: Ref<boolean> = ref(true);
     const showSettings: Ref<boolean> = ref(false);
     const defaultType: Ref<string> = ref('Default');
+    const dataGridRef = ref();
 
     function changeTableMode(): void {
       tableMode.value = !tableMode.value;
@@ -140,9 +119,9 @@ export default defineComponent({
     });
     // TODO think about it
     function exportDataBase(): void {
-      console.log("props.dataNumber",props.dataNumber);
-      
-      QueryBuilderModule.toggleForExport(props.dataNumber);
+      dataGridRef.value?.exportData();
+
+      // QueryBuilderModule.toggleForExport(props.dataNumber,'export');
     }
 
     watch(exportc, (value: boolean) => {
@@ -166,18 +145,20 @@ export default defineComponent({
       tableMode,
       showSettings,
       defaultType,
+      dataGridRef
     };
   },
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .no-data {
   width: 100%;
   height: 100%;
   text-align: center;
   font-size: 18px;
 }
+
 .big-alert {
   z-index: 10000;
 }
@@ -206,6 +187,7 @@ export default defineComponent({
 .table {
   width: 100%;
   height: 100%;
+
   &__header {
     display: flex;
     justify-content: end;
@@ -219,7 +201,7 @@ export default defineComponent({
     color: var(--blue-text-color);
     margin-top: 5px;
 
-    > div {
+    >div {
       display: flex;
       align-items: center;
       padding-right: 19px;
@@ -230,7 +212,7 @@ export default defineComponent({
       display: flex;
       align-items: center;
       margin-right: 18px;
-      width: 233px;
+      width: 220px;
       height: 35px;
       background-color: rgba(136, 196, 190, 0.1);
       border-radius: 5px;
@@ -303,11 +285,13 @@ export default defineComponent({
       height: 5px;
       margin: 0 12px 13px 0;
     }
+
     /* Track */
     &::-webkit-scrollbar-track {
       height: 5px;
       background: #e9ecf0;
     }
+
     /* Handle */
     &::-webkit-scrollbar-thumb {
       height: 5px;
@@ -330,6 +314,7 @@ export default defineComponent({
     }
   }
 }
+
 .icon-container {
   position: relative;
   z-index: 10000;
@@ -348,6 +333,7 @@ export default defineComponent({
   padding: 5px 14px;
   cursor: pointer;
 }
+
 .table-top {
   padding: 0 6px;
   display: flex;
@@ -357,6 +343,7 @@ export default defineComponent({
   height: 35px;
   margin-top: 5px;
 }
+
 .query-button-padding {
   border: 1px solid rgba(43, 42, 44, 0.4);
   padding: 5px;
@@ -366,6 +353,7 @@ export default defineComponent({
   justify-content: center;
   height: 100%;
 }
+
 .query-button-margin {
   margin-right: 5px;
 }

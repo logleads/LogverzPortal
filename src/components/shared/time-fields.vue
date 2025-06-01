@@ -1,9 +1,9 @@
 <!-- eslint-disable vue/prop-name-casing -->
 <!-- eslint-disable vue/prop-name-casing -->
 <template>
-  <p :class="$style['tooltip']">
+  <p class="tooltip">
     UTC time: {{ UnixTimeNormalFormat }}
-    <span :class="$style['tooltip_tooltiptext']">Local time: {{ TimeLocalFormat || '...' }}</span>
+    <span class="tooltip_tooltiptext">Local time: {{ TimeLocalFormat || '...' }}</span>
   </p>
 </template>
 
@@ -25,7 +25,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .tooltip {
   position: relative;
   display: inline-block;

@@ -1,17 +1,53 @@
 <template>
-  <div :class="$style['con']">
+  <div class="con">
     <LoadSettings v-if="showLoadSettings" @toggleForm="toggleLoadSettings" />
-    <div :class="$style['data__body']">
-      <h1 :class="$style['data__body__title']">Create query</h1>
-      <div :class="$style['data__creation']">
-        <div :class="$style['data__creation__line']" />
-        <div v-for="item in setupArray" :key="item.id" :class="$style['data__creation__item']">
-          <span :class="$style['data__creation__item__numbers']">{{ item.id + 1 }} </span>
-          <p v-if="item.id === 3" :class="$style['data__creation__item__hide-line']" />
+    <div class="data__body">
+      <!-- <h1 class="data__body__title">Create query</h1> -->
+      <div v-if="Azure" class="cloud">
+        <h3>Your cloud, your choice!</h3>
+        <span>Will you be analysing data from Azure or AWS? Click on the source of the data.</span>
+        <!-- <div class="cloud-tab">
+          <div class="tooltip">
+            <img 
+              :src="require('~/assets/images/aws.png')" 
+              alt="AWS" 
+              class="aws"
+              @click="() => handleActiveSettings('aws')" 
+            />
+            <span class="tooltiptext">{{ AWS_ICON_DESCRIPTION_LOCAL }}</span>
+          </div>
+          <div class="tooltip">
+            <img :src="require('~/assets/images/azure.png')" alt="AWS" class="aws"
+            @click="() => handleActiveSettings('azure')" />
+            <span class="tooltiptext">{{ AZURE_ICON_DESCRIPTION_LOCAL }}</span>
+          </div>
+        </div> -->
+        <div class="cloud-tab">
+          <div class="tooltip cloud-option" :class="{ selected: activeSettings.aws }"
+            @click="handleActiveSettings('aws')">
+            <div class="checkmark" v-if="activeSettings.aws">✔</div>
+            <img :src="require('~/assets/images/aws.png')" alt="AWS" class="cloud-img" />
+            <span class="tooltiptext">{{ AWS_ICON_DESCRIPTION_LOCAL }}</span>
+          </div>
+
+          <div class="tooltip cloud-option" :class="{ selected: activeSettings.azure }"
+            @click="handleActiveSettings('azure')">
+            <div class="checkmark" v-if="activeSettings.azure">✔</div>
+            <img :src="require('~/assets/images/azure.png')" alt="Azure" class="cloud-img" />
+            <span class="tooltiptext">{{ AZURE_ICON_DESCRIPTION_LOCAL }}</span>
+          </div>
+        </div>
+
+      </div>
+      <div class="data__creation">
+        <div class="data__creation__line" />
+        <div v-for="item in setupArray" :key="item.id" class="data__creation__item">
+          <span class="data__creation__item__numbers">{{ item.id + 1 }} </span>
+          <p v-if="item.id === 3" class="data__creation__item__hide-line" />
 
           <DropDownCreate :label="item.label" @onPress="toggleExpanded">
             <template v-if="item.id === 0">
-              <StandardSettings :submitted="submitted" :is-fetching="isFetching"
+              <StandardSettings :submitted="submitted" :is-fetching="isFetching" :active-settings="activeSettings"
                 @validate="handleValidate($event, 'standard')" />
             </template>
             <template v-if="item.id === 1">
@@ -28,19 +64,17 @@
           </DropDownCreate>
         </div>
       </div>
-      <div :class="$style['additional-settings']">
-        <p :class="$style['additional-settings__label']">Check progress of data collection</p>
-        <input id="withRedirect" v-model="withRedirect" :class="$style['additional-settings__checkbox']"
-          type="checkbox" />
+      <div class="additional-settings">
+        <p class="additional-settings__label">Check progress of data collection</p>
+        <input id="withRedirect" v-model="withRedirect" class="additional-settings__checkbox" type="checkbox" />
       </div>
-      <div :class="$style['data__body__footer']">
-          <button :class="$style['data__body__footer__btn']" @click="toggleLoadSettings(true)">
-            Load Configuration
-          </button>
+      <div class="data__body__footer">
+        <button class="data__body__footer__btn" @click="toggleLoadSettings(true)">
+          Load Configuration
+        </button>
 
-        <MyButton text="Submit" :classAssign="$style['_btn-submit']"
-          :disabled="isFetching || !isDatatypeDefined || !DBinstanse" :no-load="!isDatatypeDefined || !DBinstanse"
-          @click="handleSubmit($event)" />
+        <MyButton text="Submit" :classAssign="'_btn-submit'" :disabled="isFetching || !isDatatypeDefined || !DBinstanse"
+          :no-load="!isDatatypeDefined || !DBinstanse" @click="handleSubmit($event)" />
       </div>
     </div>
   </div>
@@ -56,11 +90,14 @@ import Review from '~/components/create-query/review.vue';
 import StandardSettings from '~/components/create-query/standard-settings/standard-settings.vue';
 import MyButton from '~/components/shared/button.vue';
 import DropDownCreate from '~/components/shared/drop-down-create.vue';
-import { REGION } from '~/constants';
+import { REGION, AWS_ICON_DESCRIPTION, AZURE_ICON_DESCRIPTION } from '~/constants';
+import { AdminModule } from '~/store/modules/admin';
 import { ConnectionIndecatoreModule } from '~/store/modules/connection-indecatore';
 import { DataCollectionModule } from '~/store/modules/data-collection';
 import { WindowsModule } from '~/store/modules/windows';
 import { JobConfigType } from '~/types/models/data-collection-types';
+import ToolTip from '~/components/shared/tool-tip.vue';
+import { server } from 'typescript';
 
 export default defineComponent({
   name: 'DataCollectionWindow',
@@ -72,11 +109,16 @@ export default defineComponent({
     AdvancedSettings,
     CollectionRules,
     MyButton,
+    ToolTip
   },
   setup() {
     const validStandard: Ref<any> = ref(null);
     const validAdvanced: Ref<any> = ref(null);
     const validCollection: Ref<any> = ref(null);
+    const activeSettings = ref({
+      aws: true,
+      azure: false,
+    });
     const withRedirect = ref(false);
     const submitted = ref(false);
     const isReviewExpanded = ref(false);
@@ -90,12 +132,19 @@ export default defineComponent({
       { id: 3, label: 'Review' },
     ]);
 
+    const AWS_ICON_DESCRIPTION_LOCAL = ref(AWS_ICON_DESCRIPTION);
+    const AZURE_ICON_DESCRIPTION_LOCAL = ref(AZURE_ICON_DESCRIPTION);
+
     const isFetching: ComputedRef<boolean> = computed(() => {
       return DataCollectionModule.isFetching;
     });
     const isJobCreated: ComputedRef<boolean> = computed(() => {
       return DataCollectionModule.jobCreated;
     });
+    const Azure: ComputedRef<boolean> = computed(() => {
+      return AdminModule.permissions.Azure;
+    });
+
 
     watch(isJobCreated, (value: boolean) => {
       if (value) {
@@ -112,8 +161,14 @@ export default defineComponent({
 
     onMounted(() => {
       DataCollectionModule.getListFolders();
+      if (AdminModule.permissions.Azure) {
+
+        DataCollectionModule.getAzureListFolders()
+      }
       DataCollectionModule.initStartJob();
-      DataCollectionModule.getDatasetAccessParameters();
+      if(DataCollectionModule.tableOptions.length === 0){
+        DataCollectionModule.getDatasetAccessParameters();
+      }
       // DataCollectionModule.getTableType("random");
     });
 
@@ -162,17 +217,17 @@ export default defineComponent({
     function handleSubmit(e: Event): void {
       e.stopPropagation();
       submitted.value = true;
-      // console.log('standard', validStandard.value);
+      console.log('standard', validStandard.value?.$invalid);
       // validAdvanced.value.$touch();
-      console.log('advance', validAdvanced.value);
-      // console.log('collection', validCollection.value);
+      console.log('advance', validStandard.value?.$invalid);
+      console.log('collection', validCollection.value?.$invalid);
       if (
         !validStandard.value?.$invalid &&
         !validAdvanced.value?.$invalid &&
         !validCollection.value?.$invalid
       ) {
-        DataCollectionModule.startJob(startJobBody.value);
       }
+      DataCollectionModule.startJob(startJobBody.value);
     }
     const DataType: ComputedRef<string> = computed(() => {
       return DataCollectionModule.DataType;
@@ -194,6 +249,22 @@ export default defineComponent({
         isDatatypeDefined.value = false;
       }
     });
+    const handleActiveSettings = async(server: string) => {
+      
+      
+      
+      if (server === 'aws') {
+        DataCollectionModule.setFoldersPathHard([]);
+        activeSettings.value.aws = true
+        activeSettings.value.azure = false
+
+      } else {
+        DataCollectionModule.setBlobFoldersPathHard([])
+        activeSettings.value.aws = false
+        activeSettings.value.azure = true
+
+      }
+    }
     return {
       DBinstanse,
       DataType,
@@ -212,15 +283,82 @@ export default defineComponent({
       showLoadSettings,
       setupArray,
       toggleExpanded,
-      isReviewExpanded
+      isReviewExpanded,
+      Azure,
+      handleActiveSettings,
+      activeSettings,
+      AZURE_ICON_DESCRIPTION_LOCAL,
+      AWS_ICON_DESCRIPTION_LOCAL
     };
   },
 });
 </script>
-<style module lang="scss">
+<style scoped lang="scss">
 .con {
   width: 100%;
   height: 100%;
+}
+
+.cloud {
+  margin: 22px 0 22px 24px;
+
+  h3 {
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 100%;
+    margin-bottom: 5px;
+  }
+
+}
+
+.cloud-option {
+  margin-top: 10px;
+  position: relative;
+  border: 2px solid rgba(151, 150, 150, 0.486);
+  border-radius: 5px;
+  margin-right: 16px;
+  padding: 4px;
+
+  &.selected {
+    border-color: var(--accent-color); // blue
+  }
+}
+
+.cloud-img {
+  height: 80px;
+  width: 80px;
+  cursor: pointer;
+}
+
+.checkmark {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  background-color: var(--accent-color); // blue
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  z-index: 2;
+}
+
+
+.cloud-tab {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: start;
+
+  .aws {
+    height: 80px;
+    width: 80px;
+    cursor: pointer;
+  }
 }
 
 ._btn-submit {
@@ -319,7 +457,7 @@ export default defineComponent({
     /* Handle on hover */
     &::-webkit-scrollbar-thumb:hover {
       // background: var(--accent-color);
-  background: #555; 
+      background: #555;
 
     }
   }
@@ -421,5 +559,43 @@ export default defineComponent({
   float: left;
   color: #e2c36b;
   font-size: 15px;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+
+  .tooltiptext {
+    visibility: hidden;
+    background-color: white;
+    color: var(--blue-text-color);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    padding: 10px;
+    border-radius: 6px;
+    font-family: 'Roboto', sans-serif;
+    width: 200px;
+    font-weight: bold;
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+
+    &:after {
+      content: '';
+      position: absolute;
+      top: 70%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 10px;
+      border-style: solid;
+      border-color: white transparent transparent transparent;
+    }
+  }
+
+  &:hover .tooltiptext {
+    visibility: visible;
+  }
 }
 </style>

@@ -127,9 +127,12 @@ class QueryBuilder extends VuexModule {
   data: CloudTrailDataResponse[] | null = null;
 
   togglingExport = false;
-  DataSet:string = 'null'; //
+  DataSet: string = 'null'; //
+  exportType = '';
   @Mutation
   private SET_SHOW_COLLUMS(value: [string]) {
+    console.log('SET_SHOW_COLLUMS', value);
+
     this.dataForAllWindows = {
       ...this.dataForAllWindows,
       [this.key as number]: { ...this.dataForAllWindows[this.key as number], showCollums: value },
@@ -171,6 +174,8 @@ class QueryBuilder extends VuexModule {
       ...this.dataForAllWindows,
       [this.key as number]: { ...this.dataForAllWindows[this.key as number], data: value },
     };
+    console.log('this.dataForAllWindows', this.dataForAllWindows);
+
     // this.data = value;
   }
 
@@ -324,7 +329,7 @@ class QueryBuilder extends VuexModule {
 
   @Mutation
   private SET_CURRENT_AVAILABLE_TABLE(value: string) {
-    this.DataSet=value;    
+    this.DataSet = value;
     this.dataForAllWindows = {
       ...this.dataForAllWindows,
       [this.key as number]: {
@@ -345,11 +350,18 @@ class QueryBuilder extends VuexModule {
       },
     };
   }
-
+  @Mutation
+  private SET_EXPORT_TYPE(value: string) {
+    this.exportType = value;
+  }
+ 
   @Action
-  public toggleForExport(key: number) {
-    this.SET_KEY_FOR_WINDOW(key);
-    this.TOGGLE_FOR_EXPORT();
+  public toggleForExport(key: number|null, type) {
+    if (key) {
+      this.SET_KEY_FOR_WINDOW(key);
+      this.TOGGLE_FOR_EXPORT();
+    }
+    this.SET_EXPORT_TYPE(type);
   }
 
   @Action
@@ -359,8 +371,8 @@ class QueryBuilder extends VuexModule {
 
   @Action
   public setData(value: string): void {
-    console.log('SETTING DATA', value);
     const response = JSON.parse(value);
+    console.log('SETTING DATA', response);
 
     if (response.status === 'Deny') {
       this.SET_FORBIDDEN({ status: true, reason: response.Reason });
@@ -403,7 +415,6 @@ class QueryBuilder extends VuexModule {
   @Action
   public setAvailableTables(value: string[]) {
     this.SET_AVAILABLE_TABLES(value);
-    
   }
 
   @Action
@@ -423,7 +434,8 @@ class QueryBuilder extends VuexModule {
       const data = JSON.parse(response.data.Parameter.Value).Views.reduce((acc: any, item: any) => {
         return { ...acc, ...item };
       }, {});
-      if (tableDataFormat.CSV) {
+
+      if (tableDataFormat?.CSV) {
         this.SET_TABLE_DATA_FORMAT('csv');
       } else {
         this.SET_TABLE_DATA_FORMAT('json');

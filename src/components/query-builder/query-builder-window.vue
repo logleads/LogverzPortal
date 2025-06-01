@@ -1,7 +1,7 @@
 <template>
   <div
     ref="blockHeigth"
-    :class="$style['analytics__content']"
+    class="analytics__content"
     @mousemove="move"
     @mouseup="
       () => {
@@ -11,25 +11,25 @@
     "
   >
     <template v-if="isConnection">
-      <p :class="$style['connection-message']">
+      <p class="connection-message">
         <Loader accent />
-        <span :class="$style['connection-message__text']"> Initiating WebRTC connection </span>
+        <span class="connection-message__text"> Initiating WebRTC connection </span>
       </p>
     </template>
     <template v-if="!isConnection && !isConnectedToWebRTC">
-      <div :class="$style['failed-connection']">
-        <h1 :class="$style['failed-connection__text']">
+      <div class="failed-connection">
+        <h1 class="failed-connection__text">
           WebRTC connection issue, please click try again or reload page
         </h1>
-        <div :class="$style['failed-connection__try-again']">
+        <div class="failed-connection__try-again">
           <MyButton text="Try again" :disabled="isConnection" @click="connectToDB" />
         </div>
       </div>
     </template>
     <template v-if="isConnectedToWebRTC">
-      <aside :class="[$style['analytics__sidebar']]" :style="genereteLeftWidth">
+      <aside class="analytics__sidebar" :style="genereteLeftWidth">
         <div
-          :class="[$style['query-builder'], isShowBackground ? $style['bg-color__side-bar'] : '']"
+          :class="['query-builder', isShowBackground ? 'bg-color__side-bar' : '']"
           @click="openSideBar"
         >
           <QueryBuilder
@@ -42,33 +42,33 @@
           />
         </div>
       </aside>
-      <div :class="$style['line-vertical']" @mousedown="isSidebarMove = true"></div>
+      <div class="line-vertical" @mousedown="isSidebarMove = true"></div>
       <div
         ref="block"
-        :class="[$style['analytics__body'], $style['plice']]"
+        class="analytics__body plice"
         :style="{ width: rightWidth + '%' }"
       >
-        <div :class="$style['container-big']" :style="{ height: topHeigth + '%' }">
+        <div class="container-big" :style="{ height: topHeigth + '%' }">
           <QueryTable
             :curent-key="curentKey"
             :data-number="dataNumber"
-            :class="$style['w_h-full']"
+            class="w_h-full"
           />
         </div>
         <div
-          :class="[$style['text-editor'], isOpenTextEditor ? '' : $style['bg-color']]"
+          :class="['text-editor', isOpenTextEditor ? '' : 'bg-color']"
           :style="genereteHeight"
           @click="openTextEditor"
         >
-          <div :class="$style['line']" @mousedown.self="isPassMoveBar = true">
-            <div v-if="isOpenTextEditor" :class="$style['cursor']" @click.stop="closeTextEditor">
+          <div class="line" @mousedown.self="isPassMoveBar = true">
+            <div v-if="isOpenTextEditor" class="cursor" @click.stop="closeTextEditor">
               <Icon name="arrow-down" :width="15" :height="29" />
             </div>
           </div>
           <div :style="{ height: 95 + '%' }">
             <TextEditor
               v-if="isOpenTextEditor"
-              :class="$style['w_h-full']"
+              class="w_h-full"
               :curent-key="curentKey"
               :data-number="dataNumber"
             />
@@ -398,7 +398,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style  scoped lang="scss">
 .bg-color {
   background-color: gray;
   &__side-bar {

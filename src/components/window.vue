@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="$style['container']"
+    class="container"
     :style="{
       zIndex: window.zIndex,
       transform: `translate3d(${left}px, ${top}px, 0)`,
@@ -11,30 +11,30 @@
     }"
     @click="openWindow"
   >
-    <div :class="[$style['inactive-overlay'], { [$style['inactive-overlay--on']]: !isFocused }]" />
-    <div :class="$style['top-panel']" @mousedown="handleDragStart">
-      <div :class="$style['top-panel__label']">
-        <p :class="$style['window-name-p']">{{ window.index }}</p>
+    <div class="inactive-overlay" :class="{ 'inactive-overlay--on': !isFocused }" />
+    <div class="top-panel" @mousedown="handleDragStart">
+      <div class="top-panel__label">
+        <p class="window-name-p">{{ window.index }}</p>
         <input
           ref="windowName"
           v-model="title"
           type="text"
-          :class="$style['window-name']"
+          class="window-name"
           maxlength="30"
           @input="changeWindowName"
         />
       </div>
-      <p ref="pHideElement" :class="$style['hiden']"></p>
-      <div :class="$style['top-panel__controls']">
-        <button type="button" :class="$style['top-panel__control-btn']" @click="minimizeWindow">
+      <p ref="pHideElement" class="hiden"></p>
+      <div class="top-panel__controls">
+        <button type="button" class="top-panel__control-btn" @click="minimizeWindow">
           <Icon name="window-minimize" :width="15" :height="4" />
         </button>
-        <button type="button" :class="$style['top-panel__control-btn']" @click="toggleFullScreen">
+        <button type="button" class="top-panel__control-btn" @click="toggleFullScreen">
           <Icon name="window-fullscreen" :width="15" :height="15" />
         </button>
         <button
           type="button"
-          :class="$style['top-panel__control-btn']"
+          class="top-panel__control-btn"
           @click="closeWindow($event, index)"
         >
           <Icon name="window-close" :width="12" :height="12" />
@@ -45,13 +45,13 @@
       v-for="side in resizeSides"
       :key="side"
       :class="[
-        $style['resize-side'],
-        $style[`resize-side--${side}`],
-        { [$style['resize-side--off']]: fullscreen },
+        'resize-side',
+        `resize-side--${side}`,
+        { 'resize-side--off': fullscreen },
       ]"
       @mousedown="handleResizeStart($event, side)"
     ></template>
-    <div :class="$style['content']">
+    <div class="content">
       <slot />
     </div>
   </div>
@@ -442,9 +442,10 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style  scoped lang="scss">
 .hiden {
   opacity: 0;
+  // display: none !important;
 }
 .window-name {
   // width: 320px;

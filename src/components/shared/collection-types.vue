@@ -1,17 +1,17 @@
 <template>
-  <div :class="$style['collection-filter']">
+  <div class="collection-filter">
     <span
-      :class="[activeCollectionFilter === 'A' && $style['span-active']]"
+      :class="[activeCollectionFilter === 'A' && 'span-active']"
       @click="changeCollectionType('A')"
       >Analysis</span
     >
     <span
-      :class="[activeCollectionFilter === 'C' && $style['span-active']]"
+      :class="[activeCollectionFilter === 'C' && 'span-active']"
       @click="changeCollectionType('C')"
       >Collection</span
     >
     <span
-      :class="[activeCollectionFilter === 'CC' && $style['span-active']]"
+      :class="[activeCollectionFilter === 'CC' && 'span-active']"
       @click="changeCollectionType('CC')"
       >Continous Collection</span
     >
@@ -48,7 +48,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .collection-filter {
   border: 1px solid rgba(43, 42, 44, 0.4);
   margin: 0 10px 0 10px;

@@ -1,12 +1,12 @@
 <template>
-  <div :class="[$style['container']]" @click.self="close">
-    <div :class="[$style['container__window']]">
-      <div :class="[$style['container__body']]">
+  <div class="container" @click.self="close">
+    <div class="container__window">
+      <div class="container__body">
         <h4>Are You Sure?</h4>
       </div>
-      <div :class="[$style['container__footer']]">
+      <div class="container__footer">
         <Button text="No" @click="close" />
-        <Button text="YESsa" @click="save" />
+        <Button text="Yes" @click="save" />
       </div>
     </div>
   </div>
@@ -43,7 +43,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .container {
   width: 500%;
   height: 300%;
@@ -65,6 +65,7 @@ export default defineComponent({
     z-index: 200000;
     padding: 30px;
     overflow: scroll;
+
     &::-webkit-scrollbar {
       width: 10px;
       height: 0;

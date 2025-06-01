@@ -1,8 +1,8 @@
 <template>
-  <div :class="$style['container']">
-    <div :class="$style['container__label']">
+  <div class="container">
+    <div class="container__label">
       {{ label }}
-      <span :class="$style['container__label__icon']">
+      <span class="container__label__icon">
         <slot name="icon" />
       </span>
     </div>
@@ -24,7 +24,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .container {
   display: flex;
   flex-direction: column;

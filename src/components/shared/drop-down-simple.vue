@@ -1,7 +1,7 @@
 <template>
   <div
     ref="select"
-    :class="$style['input-drop-down']"
+    class="input-drop-down"
     contenteditable="true"
     @blur="handleBlur"
     @click="toggleShow"
@@ -12,24 +12,24 @@
         <Icon
           v-if="!scopeExpanded"
           name="arrow-down"
-          :class="$style['input-arrow-down']"
+          class="input-arrow-down"
           :width="12"
           :height="7.7"
         />
         <Icon
           v-else
           name="arrow-up"
-          :class="$style['input-arrow-down']"
+          class="input-arrow-down"
           :width="12"
           :height="7.7"
         />
       </div>
     </label>
-    <div v-show="scopeExpanded" :class="$style['input-unwrapped']">
+    <div v-show="scopeExpanded" class="input-unwrapped">
       <div
         v-for="item in $props.items"
         :key="item + Math.random() * 1000"
-        :class="$style['input-unwrapped__item']"
+        class="input-unwrapped__item"
         contenteditable="false"
         @click="handleClick($event, { item, content })"
       >
@@ -105,7 +105,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .input-drop-down {
   max-width: 100%;
   position: relative;

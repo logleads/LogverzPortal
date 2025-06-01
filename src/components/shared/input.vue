@@ -1,14 +1,14 @@
 <template>
-  <div :class="$style['container']">
-    <div v-if="type === 'password'" :class="$style['password-icon']">
+  <div class="container">
+    <div v-if="type === 'password'" class="password-icon">
       <icon name="lock" />
     </div>
     <input
       :type="type"
       :class="[
-        $style['input'],
-        { [$style['input__error']]: error },
-        { [$style['height-44']]: fromQueryBuilder },
+        'input',
+        { 'input__error': error },
+        { 'height-44': fromQueryBuilder },
       ]"
       :value="modelValue"
       :min="min"
@@ -78,7 +78,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 $inputPadding: 16px;
 $iconSize: 16px;
 
@@ -107,7 +107,7 @@ $iconSize: 16px;
   padding: 0 $inputPadding;
   width: 100%;
   margin-top: 5px;
-  height: 30px;
+  height: 40px;
   transition: background 0.1s linear;
   &__error {
     border: 1px solid red;

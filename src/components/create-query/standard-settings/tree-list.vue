@@ -9,8 +9,8 @@
     :allow-column-resizing="true"
     :show-borders="true"
     :column-auto-width="true"
-    key-expr="ID"
-    parent-id-expr="IDH"
+    key-expr="ID" 
+    parent-id-expr="IDH" 
     @row-expanding="log"
     @selection-changed="onSelectionChanged"
   >
@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { DxColumn, DxScrolling, DxSelection, DxTreeList } from 'devextreme-vue/tree-list';
+  import { DxColumn, DxScrolling, DxSelection, DxTreeList } from 'devextreme-vue/tree-list';
 import { defineComponent, ref } from 'vue';
 
 import { DataCollectionService } from '~/services/api/data-collection-service';
@@ -60,12 +60,14 @@ export default defineComponent({
       DataCollectionModule.setFoldersPathHard(selectedData?.map((item: any) => item.value));
     }
 
-    function log({ component, key }: any): void {
+    function log({ component, key }: any): void {      
       component.byKey(key).then(async (data: any) => {
+        
         if (isObject(data.data)) {
           const awaitTofolder: string[] = Object.keys(data.data)
             .filter((item: string) => data.data[item] === '*')
             .map((it: string) => data.value + '/' + it);
+            console.log("awaitTofolder", awaitTofolder);
 
           const response = (await DataCollectionService.getListFolders(awaitTofolder))
             .filter(it => it.status === 'fulfilled')

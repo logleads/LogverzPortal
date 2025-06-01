@@ -516,9 +516,9 @@
         </g>
       </symbol>
     </svg>
-    <main :class="$style['app-wrapper']">
+    <main class="app-wrapper">
       <HomePage />
-      <!-- <div :class="$style['ad']">
+      <!-- <div class="ad">
         <div v-html="html"></div>
       </div> -->
     </main>
@@ -527,49 +527,31 @@
 
 <script lang="ts">
 import '~/assets/scss/main.scss';
-// import 'highlight.js/styles/dracula.css';
 import 'highlight.js/styles/lightfair.css';
 
-// import 'highlight.js/styles/default.css';
-// import 'vue-highlight.js/lib/allLanguages';
-import { onMounted } from 'vue';
-import { defineComponent, Ref, ref } from 'vue';
+import { defineComponent, onMounted, Ref,ref } from 'vue';
 
-// import VueHighlightJS from 'vue-highlight.js';
-// import JsonViewer from 'vue-json-viewer';
-// import Notifications from 'vue-notification';
 import { AD_HTML_TAG, AD_SCRIPT_SRC } from '~/constants';
 import HomePage from '~/pages/home-page.vue';
 import { ConnectionIndecatoreModule } from '~/store/modules/connection-indecatore';
-
-// Vue.use(Notifications);
-// Vue.use(JsonViewer);
-/*
- * Use Vue Highlight.js
- */
-// Vue.use(VueHighlightJS);
-// Vue.component('JsonViewerCustom', JsonViewerCustom);
-// Vue.component('InfoMsgSpan', InfoMsgSpan);
-// Vue.component('pdfcustom', pdf);
 
 export default defineComponent({
   name: 'App',
   components: { HomePage },
   setup() {
     const html: Ref<string> = ref('');
+      // console.log(this.$style);  // Should log the CSS class mappings.
+
     onMounted(() => {
       html.value = AD_HTML_TAG;
-      // eslint-disable-next-line no-console
-      // console.log('version', Vue.version);
       ConnectionIndecatoreModule.getDefaultParameters();
       const script = document.createElement('script');
       script.src = AD_SCRIPT_SRC;
-      // script.id = 'ad-id-' + Date.now();
       script.async = false; // to ensure order
       document.head.appendChild(script);
-      // eslint-disable-next-line no-console
       console.log(script.id);
     });
+
     return {
       html,
     };
@@ -577,7 +559,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style  scoped lang="scss">
 .app-wrapper {
   display: flex;
   flex-direction: column;

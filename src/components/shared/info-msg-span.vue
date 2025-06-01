@@ -1,7 +1,7 @@
 <template>
   <div>
-    <span :class="$style['container__key']">{{ title }}: </span>
-    <span :class="$style['container__value']">{{ value }}</span>
+    <span class="container__key">{{ title }}: </span>
+    <span class="container__value">{{ value }}</span>
   </div>
 </template>
 
@@ -23,7 +23,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .container {
   &__key {
     font-size: 14px;

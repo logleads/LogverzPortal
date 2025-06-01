@@ -22,10 +22,10 @@
             (item !== 'S3Folders')
           "
           :key="item + Math.random() * 100000"
-          :class="$style['container']"
+          class="container"
         >
-          <span :class="$style['container__key']">{{ item }}: </span>
-          <div :class="$style['container__value']">{{ customizedData[item] }}</div>
+          <span class="container__key">{{ item }}: </span>
+          <div class="container__value">{{ customizedData[item] }}</div>
         </div>
       </template> -->
     </div>
@@ -85,6 +85,7 @@ export default defineComponent({
       } else {
         customizedData.value = props.data.data;
       }
+      
       if (customizedData.value?.TableName) {
         customizedData.value['DatasetName'] = customizedData.value['TableName'];
         delete customizedData.value['TableName'];
@@ -121,7 +122,6 @@ export default defineComponent({
         //   // eslint-disable-next-line no-console
       }
       // // eslint-disable-next-line no-console
-      // console.log('customizedData', customizedData.value);
     });
     return {
       currentMode,
@@ -134,7 +134,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .container {
   margin: 15px 0;
 

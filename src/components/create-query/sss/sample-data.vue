@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style['fields-container']">
+  <div class="fields-container">
     <Icon name="arrow-down" :width="12" :height="7.7" />
     <button type="button" @click="onTriger">
       <p style="margin-left: 5px">{{ triger ? 'Close sample data' : 'Open sample data' }}</p>
@@ -211,7 +211,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .item-field {
   display: flex;
   align-items: center;

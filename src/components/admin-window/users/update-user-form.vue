@@ -1,53 +1,32 @@
 <template>
-  <div :class="$style['form']" @click="handleShowForm($event, false)">
-    <div :class="$style['form__body']" @click="handleBodyClick($event)">
-      <div :class="$style['container']">
-        <span :class="$style['container__key']">Name: </span>
-        <span :class="$style['container__value']">
+  <div class="form" @click="handleShowForm($event, false)">
+    <div class="form__body" @click="handleBodyClick($event)">
+      <div class="container">
+        <span class="container__key">Name: </span>
+        <span class="container__value">
           {{ name }}
         </span>
       </div>
-      <div :class="$style['container']">
-        <span :class="$style['container__key']">Type: </span>
-        <span :class="$style['container__value']">
+      <div class="container">
+        <span class="container__key">Type: </span>
+        <span class="container__value">
           {{ type }}
         </span>
       </div>
-      <div :class="$style['select-container']">
-        <h3 :class="$style['label-heading']">Groups</h3>
-        <multiselect
-          v-model="chosenGroup"
-          name="chosenGroup"
-          :options="groups"
-          :multiple="true"
-          :close-on-select="true"
-          :clear-on-select="false"
-          :preserve-search="true"
-          placeholder="Select option"
-          open-direction="bottom"
-          label="name"
-          track-by="name"
-          :class="{ invalid: submitted && v$.chosenGroup.$error }"
-        />
+      <div class="select-container">
+        <h3 class="label-heading">Groups</h3>
+        <multiselect v-model="chosenGroup" name="chosenGroup" :options="groups" :multiple="true" :close-on-select="true"
+          :clear-on-select="false" :preserve-search="true" placeholder="Select option" open-direction="bottom"
+          label="name" track-by="name" :class="{ invalid: submitted && v$.chosenGroup.$error }" />
       </div>
-      <div :class="$style['select-container']">
-        <h3 :class="$style['label-heading']">Policies</h3>
-        <multiselect
-          v-model="chosenPolicies"
-          name="chosenPolicies"
-          :options="policies"
-          :multiple="true"
-          :close-on-select="true"
-          :clear-on-select="false"
-          :preserve-search="true"
-          placeholder="Select option"
-          open-direction="bottom"
-          label="name"
-          track-by="name"
-          :class="{ invalid: submitted && v$.chosenGroup.$error }"
-        />
+      <div class="select-container">
+        <h3 class="label-heading">Policies</h3>
+        <multiselect v-model="chosenPolicies" name="chosenPolicies" :options="policies" :multiple="true"
+          :close-on-select="true" :clear-on-select="false" :preserve-search="true" placeholder="Select option"
+          open-direction="bottom" label="name" track-by="name"
+          :class="{ invalid: submitted && v$.chosenGroup.$error }" />
       </div>
-      <div :class="$style['button-container']">
+      <div class="button-container">
         <Button text="Save" @click="handleSubmit" />
       </div>
     </div>
@@ -57,10 +36,11 @@
 <script lang="ts">
 import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
-import { computed, ComputedRef, defineComponent, Ref, ref } from 'vue';
+import { computed, ComputedRef, defineComponent, nextTick, onMounted, Ref, ref } from 'vue';
 import Multiselect from 'vue-multiselect';
 
 import Button from '~/components/shared/button.vue';
+import { AdminWindowService } from '~/services/api/admin-window-service';
 import { AdminModule } from '~/store/modules/admin';
 
 export default defineComponent({
@@ -89,6 +69,8 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const submitted: Ref<boolean> = ref(false);
+    const allPoliciesLGVZ: Ref<Array<{ name: string }>> = ref([])
+
     const chosenGroup = ref(props.prevGroups);
     const chosenPolicies = ref(props.prevPolicies);
     const rules = {
@@ -102,21 +84,59 @@ export default defineComponent({
     const policies: ComputedRef<Array<{ name: string }>> = computed(() => {
       return AdminModule.policies.map(i => ({ name: i.Name }));
     });
+    onMounted(async () => {
+      const data = await AdminWindowService.getPolicies('PolicyLGVZ');
+      allPoliciesLGVZ.value = data.map((i) => ({ name: i.Name }))
+
+    });
+
 
     function handleSubmit(): void {
       submitted.value = true;
       v$.value.$touch();
       if (!v$.value.chosenGroup.$error) {
         emit('toggleForm', false);
+        const logverzPolicies = chosenPolicies.value?.filter((chosenPolicy: any) =>
+          allPoliciesLGVZ.value.some((lgvzPolicy) => lgvzPolicy.name === chosenPolicy?.name)
+        );
+
+        const othersPolicies = chosenPolicies.value.filter(
+          (chosenPolicy: any) =>
+            !allPoliciesLGVZ.value.some(
+              (lgvzPolicy) => lgvzPolicy.name === chosenPolicy.name
+            )
+        );
+
+
+
         AdminModule.updateUser({
           Name: props.name,
           type: props.type,
           IAMGroups: chosenGroup.value.map((i: any) => i.name),
-          IAMPolicies: chosenPolicies.value.map((i: any) => i.name),
+          IAMPolicies: othersPolicies?.map((i: any) => i.name),
         });
+        
+        if (logverzPolicies.length > 0) {
+          logverzPolicies?.map((i: any) => {
+
+            AdminModule.updateUser2({
+              Name: props.name,
+              type: props.type,
+              IAMGroups: chosenGroup.value.map((i: any) => i.name),
+              AppScopeAuth: { Policies: i.name }
+            });
+          })
+        }
+
+        resetForm();
       }
     }
-
+    const resetForm = () => {
+      chosenGroup.value = [...props.prevGroups];
+      chosenPolicies.value = [...props.prevPolicies];
+      submitted.value = false;
+      v$.value.$reset();
+    };
     function handleBodyClick(e: Event): void {
       e.stopPropagation();
     }
@@ -141,7 +161,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .form {
   position: absolute;
   z-index: 2;
@@ -165,9 +185,11 @@ export default defineComponent({
     background-color: var(--gray-background);
   }
 }
-.label-heading{
+
+.label-heading {
   margin-bottom: 5px;
 }
+
 .container {
   margin: 15px 0;
 
@@ -190,6 +212,7 @@ export default defineComponent({
   display: flex;
   justify-content: flex-end;
 }
+
 .container__key {
   color: #000000;
   font-weight: 700;

@@ -10,8 +10,10 @@ import { AsyncStatus } from '~/types';
 import {
   groupResponse,
   payloadForUpdate,
+  payloadForUpdate2,
   PermissionsTypes,
   policiesResponse,
+  rolesResponse,
   userResponse,
 } from '~/types/models/admin-window-types';
 import { parseFormatTimeUTS } from '~/utils/parsTimeUTC';
@@ -22,11 +24,13 @@ class Admin extends VuexModule {
   usersNotAWS: userResponse[] = [];
   groups: groupResponse[] = [];
   policies: policiesResponse[] = [];
+  roles: rolesResponse[] = [];
   platform: any = [];
 
   usersStatus: AsyncStatus = AsyncStatus.IDLE;
   groupsStatus: AsyncStatus = AsyncStatus.IDLE;
   policiesStatus: AsyncStatus = AsyncStatus.IDLE;
+  rolesStatus: AsyncStatus = AsyncStatus.IDLE;
   platformStatus: AsyncStatus = AsyncStatus.IDLE;
 
   permissions: PermissionsTypes = {
@@ -34,6 +38,8 @@ class Admin extends VuexModule {
     LisaPowerUsers: false,
     LisaUsers: false,
     UserName: '',
+    Azure:false
+    
   };
   identitySyncFetching = false;
   isReceivedPermissions = false;
@@ -51,6 +57,7 @@ class Admin extends VuexModule {
   @Mutation
   private SET_PERMISSIONS(obj: PermissionsTypes) {
     this.permissions = obj;
+    
   }
 
   @Mutation
@@ -144,6 +151,15 @@ class Admin extends VuexModule {
   private SET_POLICIES(policies: policiesResponse[]) {
     this.policies = policies;
   }
+  @Mutation
+  private SET_ROLES_STATUS(status: AsyncStatus) {
+    this.rolesStatus = status;
+  }
+
+  @Mutation
+  private SET_ROLES(roles: rolesResponse[]) {
+    this.roles = roles;
+  }
 
   @Mutation
   private SET_PLATFORM_STATUS(status: AsyncStatus) {
@@ -186,6 +202,7 @@ class Admin extends VuexModule {
     try {
       await AdminWindowService.createUser(payload);
       await this.getUsers();
+      
     } catch (e: any) {
       ErrorsModule.showErrorMessage(e.message);
     }
@@ -195,6 +212,15 @@ class Admin extends VuexModule {
   public async updateUser(payload: payloadForUpdate): Promise<void> {
     try {
       await AdminWindowService.updateUser(payload);
+      await this.getUsers();
+    } catch (e: any) {
+      ErrorsModule.showErrorMessage(e.message);
+    }
+  }
+  @Action
+  public async updateUser2(payload: payloadForUpdate2): Promise<void> {
+    try {
+      await AdminWindowService.updateUser2(payload);
       await this.getUsers();
     } catch (e: any) {
       ErrorsModule.showErrorMessage(e.message);
@@ -215,6 +241,7 @@ class Admin extends VuexModule {
   public async checkIfAdmin() {
     try {
       const data = await IdentitiesService.checkIfAdmin();
+
       this.SET_PERMISSIONS(data);
       this.RECEIVE_PERMISSIONS();
     } catch (e: any) {
@@ -241,11 +268,43 @@ class Admin extends VuexModule {
     this.SET_POLICIES_STATUS(AsyncStatus.LOADING);
 
     try {
-      const data = await IdentitiesService.getPolicies();
+      const PolicyLGVZ = await IdentitiesService.getPolicies('PolicyLGVZ');
+      const PolicyAWS = await IdentitiesService.getPolicies('PolicyAWS');
+
+      const data = [...PolicyLGVZ, ...PolicyAWS];
+
       this.SET_POLICIES(data);
       this.SET_POLICIES_STATUS(AsyncStatus.SUCCESS);
     } catch (e: any) {
       this.SET_POLICIES_STATUS(AsyncStatus.FAIL);
+      ErrorsModule.showErrorMessage(e.message);
+    }
+  }
+  @Action
+  public async createPolicy(payload: {
+    Name: string;
+    Type: string;
+    Document: string;
+    Associations: string[];
+  }): Promise<void> {
+    try {
+      await AdminWindowService.createPolicy(payload);
+      await this.getUsers();
+    } catch (e: any) {
+      ErrorsModule.showErrorMessage(e.message);
+    }
+  }
+
+  @Action
+  public async getRoles() {
+    this.SET_ROLES_STATUS(AsyncStatus.LOADING);
+    try {
+      const ROLESAWS = await IdentitiesService.getRoles();
+      
+      this.SET_ROLES(ROLESAWS);
+      this.SET_ROLES_STATUS(AsyncStatus.SUCCESS);
+    } catch (e: any) {
+      this.SET_ROLES_STATUS(AsyncStatus.FAIL);
       ErrorsModule.showErrorMessage(e.message);
     }
   }

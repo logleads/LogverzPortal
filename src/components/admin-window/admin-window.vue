@@ -1,23 +1,22 @@
 <template>
-  <div :class="$style['admin-container']">
-    <div :class="$style['admin-header']">
+  <div class="admin-container">
+    <div class="admin-header">
       <button
         v-for="tab in tabs"
         :key="tab"
-        :class="[
-          $style['admin-header__item'],
-          { [$style['admin-header__item--active']]: tab === currentTab },
-        ]"
+        class="admin-header__item"
+        :class="{ 'admin-header__item--active': tab === currentTab }"
         type="button"
         @click="currentTab = tab"
       >
         {{ tab }}
       </button>
     </div>
-    <div :class="$style['admin-form']"></div>
-    <div :class="$style['body']">
+    <!-- <div class="admin-form"></div> -->
+    <div class="body">
       <UsersTable v-if="showUsersTable" />
       <GroupsTable v-if="showGroupsTable" />
+      <RolesTable v-if="showRolesTable" />
       <PoliciesTable v-if="showPoliciesTable" />
       <PlatformTable v-if="showPlatformTable" />
     </div>
@@ -33,22 +32,26 @@ import { computed, ComputedRef, defineComponent, Ref, ref } from 'vue';
 import GroupsTable from './groups/groups-table.vue';
 import PlatformTable from './platform/platform-table.vue';
 import PoliciesTable from './policies/policies-table.vue';
+// import RolesTable from './roles/roles-table.vue';
 import UsersTable from './users/users-table.vue';
+import RolesTable from './roles/roles-table.vue';
 
 export enum AdminWindowTab {
   USERS = 'Users',
   GROUPS = 'Groups',
+  ROLES = 'Roles',
   POLICIES = 'Policies',
   PLATFORM = 'Platform',
 }
 
 export default defineComponent({
   name: 'AdminWindow',
-  components: { UsersTable, GroupsTable, PoliciesTable, PlatformTable },
+  components: { UsersTable, GroupsTable, PoliciesTable, PlatformTable, RolesTable },
   setup() {
     const tabs: Ref<Array<AdminWindowTab>> = ref([
       AdminWindowTab.USERS,
       AdminWindowTab.GROUPS,
+      AdminWindowTab.ROLES,
       AdminWindowTab.POLICIES,
       AdminWindowTab.PLATFORM,
     ]);
@@ -67,6 +70,10 @@ export default defineComponent({
       return currentTab.value === AdminWindowTab.POLICIES;
     });
 
+    const showRolesTable: ComputedRef<boolean> = computed(() => {
+      return currentTab.value === AdminWindowTab.ROLES;
+    });
+
     const showPlatformTable: ComputedRef<boolean> = computed(() => {
       return currentTab.value === AdminWindowTab.PLATFORM;
     });
@@ -77,12 +84,13 @@ export default defineComponent({
       showUsersTable,
       currentTab,
       tabs,
+      showRolesTable,
     };
   },
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .container {
   width: 1179px;
   margin: 20px auto;

@@ -95,7 +95,7 @@ export default defineComponent({
   // @Prop() readonly itemsRemastered!: Array<unknown>;
   // @Prop() readonly rawitems!: Array<unknown>;
   // @Prop() readonly curentKey!: number;
-  setup(props) {
+  setup(props,{expose}) {
     const grid: Ref<any> = ref(null);
     function selectWidth(data: string): string {
       return data.length > 30 ? '200px' : '100%';
@@ -149,12 +149,13 @@ export default defineComponent({
         ? QueryBuilderModule.dataForAllWindows[props.dataNumber as number].tableDataFormat
         : null;
     });
-    watch(
-      () => QueryBuilderModule.dataForAllWindows[props.dataNumber as number],
-      newVal => {
-        exportData();
-      },
-    );
+    // watch(
+    //   () => QueryBuilderModule.dataForAllWindows[props.dataNumber as number],
+    //   newVal => {        
+    //     exportData();
+    //   },
+    // );
+      expose({ exportData });
     function exportData(): void {
       const workbook = new ExcelJS.Workbook();
       const worksheet = workbook.addWorksheet(

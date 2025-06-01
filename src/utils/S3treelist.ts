@@ -63,6 +63,146 @@ export function createS3Folders(data: any, listFolder: any, IDH: number | string
     ];
   }, []);
 }
+interface FolderNode {
+  ID: number;
+  IDH: number;
+  StorageAccount: string;
+  ContainerName: string;
+  Location: string;
+  data: FolderNode[];
+  fullPath: string;
+}
+export function createAzureFolders(
+  data: any,
+  parentID: number = 0,
+  StorageAccount: string | null = null,
+  parentPath: string = '',
+  idCounterObj = { count: 1 },
+  visitedPaths = new Set<string>(),
+  inheritedLocation: string = '',
+): FolderNode[] {
+  return Object.keys(data).reduce((acc: FolderNode[], key: string) => {
+    if (key === 'stgaccproperties') return acc;
+
+    const fullPath = parentPath ? `${parentPath}/${key}` : key;
+    if (visitedPaths.has(fullPath)) return acc;
+    visitedPaths.add(fullPath);
+
+    const newID = idCounterObj.count++;
+    const currentLocation = data.stgaccproperties?.Location || inheritedLocation;
+
+    // ✅ Use root ContainerName only at the top level
+    const storageAccount = fullPath?.split('/')[0];
+
+    const row: FolderNode = {
+      ID: newID,
+      IDH: parentID,
+      StorageAccount: storageAccount,
+      ContainerName: key,
+      Location: currentLocation,
+      data: [],
+      fullPath,
+    };
+
+    if (typeof data[key] === 'object' && data[key] !== null && !Array.isArray(data[key])) {
+      row.data = createAzureFolders(
+        data[key],
+        newID,
+        storageAccount, // ✅ Only pass top-level container as account
+        fullPath,
+        idCounterObj,
+        visitedPaths,
+        currentLocation,
+      );
+    }
+
+    acc.push(row);
+    return acc;
+  }, []);
+}
+export function findNestedDataByKey(data: any, keyToFind: string): any | null {
+  if (typeof data !== 'object' || data === null) return null;
+
+  if (keyToFind in data) return data[keyToFind];
+
+  for (const key in data) {
+    if (typeof data[key] === 'object') {
+      const found = findNestedDataByKey(data[key], keyToFind);
+      if (found) return found;
+    }
+  }
+  return null;
+}
+
+export function updateTreeNodeData(
+  tree: FolderNode[],
+  id: number,
+  newChildren: FolderNode[],
+): FolderNode[] {
+  return tree.map(node => {
+    if (node.ID === id) {
+      // Merge existing children with new ones where needed
+      const mergedChildren = node.data.map(existingChild => {
+        const updated = newChildren.find(
+          newChild => newChild.fullPath === existingChild.fullPath, // ✅ Match on fullPath
+        );
+
+        // If there's an update and it has children, update that child
+        if (updated && updated.data.length > 0) {
+          return {
+            ...existingChild,
+            data: updated.data,
+          };
+        }
+
+        return existingChild;
+      });
+
+      return { ...node, data: mergedChildren };
+    } else if (node.data?.length) {
+      return { ...node, data: updateTreeNodeData(node.data, id, newChildren) };
+    }
+
+    return node;
+  });
+}
+export function mergeTreeByFullPath(
+  existingNodes: FolderNode[],
+  newNodes: FolderNode[],
+): FolderNode[] {
+  return existingNodes.map(existing => {
+    const updated = newNodes.find(n => n.fullPath === existing.fullPath);
+
+    if (updated && updated.data.length > 0) {
+      return {
+        ...existing,
+        data:
+          existing.data.length > 0
+            ? mergeTreeByFullPath(existing.data, updated.data)
+            : updated.data, // ✅ fallback when existing is empty
+      };
+    }
+
+    // Still recurse if needed (e.g., nested structure updates)
+    return {
+      ...existing,
+      data: mergeTreeByFullPath(existing.data, newNodes),
+    };
+  });
+}
+
+export function getMaxId(tree: any[]): number {
+  let maxId = 0;
+  function recurse(nodes: FolderNode[]) {
+    nodes.forEach(node => {
+
+      if (node.ID > maxId) maxId = node.ID;
+      if (node.data?.length) recurse(node.data);
+    });
+  }
+  recurse(tree);
+  return maxId;
+}
 
 function getAllFolder(data: any, IDH: number | string, listFolderData: any, prefix: string): any[] {
   return Object.keys(data).reduce((acc: any, it: string, key: number) => {

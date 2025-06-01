@@ -1,12 +1,12 @@
 <template>
-  <div :class="$style['form']" @click="handleShowForm($event, false)">
-    <div :class="$style['form__body']" @click="handleBodyClick($event)">
+  <div class="form" @click="handleShowForm($event, false)">
+    <div class="form__body" @click="handleBodyClick($event)">
       <template v-if="fetching">
         <Loader accent />
       </template>
       <template v-else>
         <h3>Add or remove external users</h3>
-        <div :class="$style['input-wrapper__multi']">
+        <div class="input-wrapper__multi">
           <template v-if="usersPoliciesFetching">
             <Loader accent />
           </template>
@@ -26,7 +26,7 @@
             />
           </template>
         </div>
-        <div :class="$style['button-container']">
+        <div class="button-container">
           <Button text="Save" @click="handleSubmit" />
         </div>
       </template>
@@ -161,7 +161,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .form {
   position: absolute;
   z-index: 2;

@@ -1,14 +1,14 @@
 <template>
-  <div :class="[$style['group'], $style[`group-depth-${depth.toString()}`]]">
+  <div :class="['group', `group-depth-${depth.toString()}`]">
     <div>
-      <div :class="$style['group-header']">
-        <div :class="$style['group-header__buttons-container']">
+      <div class="group-header">
+        <div class="group-header__buttons-container">
           <button
             v-for="label in labels.matchTypes"
             :key="label.id"
             :class="[
-              { [$style['query-item__btn']]: query.logicalOperator !== label.id },
-              { [$style['query-item__btn-disabled']]: query.logicalOperator === label.id },
+              { 'query-item__btn': query.logicalOperator !== label.id },
+              { 'query-item__btn-disabled': query.logicalOperator === label.id },
             ]"
             @click="handleClick(label.id)"
           >
@@ -17,34 +17,34 @@
         </div>
         <div
           ref="select"
-          :class="$style['group-header__icons-container']"
+          class="group-header__icons-container"
           contenteditable="true"
           @blur="handleBlur"
         >
-          <div contenteditable="false" :class="$style['query-item__icon']">
+          <div contenteditable="false" class="query-item__icon">
             <div contenteditable="false" @click="togglePopup">
               <Icon name="plus" :height="30" :width="30" />
             </div>
             <div
               v-show="isPopupShown"
               contenteditable="false"
-              :class="$style['query-item__icon__add']"
+              class="query-item__icon__add"
             >
               <!-- <div v-if="depth < maxDepth" contenteditable="false" @click="handleAddGroup">
-                <span contenteditable="false" :class="$style['query-item__icon__add__plus']">
+                <span contenteditable="false" class="query-item__icon__add__plus">
                   <Icon name="simple-plus" :width="15" :height="15" />
                 </span>
                 <span contenteditable="false">{{ labels.addGroup }}</span>
               </div> -->
               <div contenteditable="false" @click="handleAddRule">
-                <span contenteditable="false" :class="$style['query-item__icon__add__plus']">
+                <span contenteditable="false" class="query-item__icon__add__plus">
                   <Icon name="simple-plus" :width="15" :height="15" />
                 </span>
                 <span> {{ labels.addRule }}</span>
               </div>
             </div>
           </div>
-          <div v-if="depth > 1" :class="$style['query-item__icon__remove']" @click="remove">
+          <div v-if="depth > 1" class="query-item__icon__remove" @click="remove">
             <Icon name="x-mark" :width="30" :height="30" />
           </div>
         </div>
@@ -143,7 +143,7 @@ export default {
 };
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .group {
   width: 100%;
 }

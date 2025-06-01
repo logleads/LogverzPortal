@@ -1,9 +1,9 @@
 <template>
   <div>
     <div>
-      <div :class="$style['rule-header']">
-        <label :class="$style['rule-header__label']">{{ rule.label }}</label>
-        <div :class="$style['rule-header__close']" @click="remove">
+      <div class="rule-header">
+        <label class="rule-header__label">{{ rule.label }}</label>
+        <div class="rule-header__close" @click="remove">
           <Icon type="button" name="x-mark" :width="30" :height="30" />
         </div>
       </div>
@@ -29,7 +29,7 @@
       />
 
       <!-- Basic text input -->
-      <div :class="$style['basic-text']">
+      <div class="basic-text">
         <Input
           v-if="rule.inputType === 'text'"
           v-model="query.value"
@@ -40,7 +40,7 @@
 
       <!-- Radio input -->
       <template v-if="rule.inputType === 'radio'">
-        <div v-for="choice in rule.choices" :key="choice.value" :class="$style['radio-input']">
+        <div v-for="choice in rule.choices" :key="choice.value" class="radio-input">
           <input
             :id="'depth' + depth + '-' + rule.id + '-' + index + '-' + choice.value"
             v-model="query.value"
@@ -49,7 +49,7 @@
             :value="choice.value"
           />
           <label
-            :class="$style['radio-input__label']"
+            class="radio-input__label"
             :for="'depth' + depth + '-' + rule.id + '-' + index + '-' + choice.value"
             >{{ choice.label }}</label
           >
@@ -97,7 +97,7 @@ export default {
 };
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .rule-header {
   display: flex;
   align-items: center;

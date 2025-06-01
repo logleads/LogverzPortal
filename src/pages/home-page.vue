@@ -1,7 +1,7 @@
 <template>
-  <div :class="$style['container']">
+  <div class="container">
     <Header />
-    <div :class="$style['workspace']">
+    <div classs="workspace">
       <Window v-for="(window, index) in activeWindows" :key="index" :index="index" :window="window">
         <component
           :is="windowComponents[window.name]"
@@ -18,7 +18,7 @@
       </Window>
     </div>
     <Menu v-if="isReceivedPermissions" />
-    <!--- <notifications group="foo" /> -->
+    - <notifications group="foo" />
   </div>
 </template>
 
@@ -164,7 +164,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style   scoped lang="scss">
 .container {
   height: 100vh;
   display: flex;

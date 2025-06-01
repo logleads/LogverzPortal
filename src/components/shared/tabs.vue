@@ -1,11 +1,11 @@
 <template>
-    <div :class="$style['table__header__buttons']">
-      <b v-if="textBeforeBtn !== ''" :class="$style['before-btn-text']"> {{ textBeforeBtn }} </b>
+    <div class="table__header__buttons">
+      <b v-if="textBeforeBtn !== ''" class="before-btn-text"> {{ textBeforeBtn }} </b>
       <button
         :class="[
-          $style['table__header__buttons__btn'],
-          $style['border-radius-left'],
-          { [$style['active']]: tableContent },
+          'table__header__buttons__btn',
+          'border-radius-left',
+          { 'active': tableContent },
         ]"
         @click="chackBtn(true)"
       >
@@ -13,15 +13,15 @@
       </button>
       <button
         :class="[
-          $style['table__header__buttons__btn'],
-          $style['border-radius-right'],
-          { [$style['active']]: !tableContent },
+          'table__header__buttons__btn',
+          'border-radius-right',
+          {'active': !tableContent },
         ]"
         @click="chackBtn(false)"
       >
         {{ btnRigthText }}
       </button>
-      <b v-if="textAfterBtn !== ''" :class="$style['btn-text']"> {{ textAfterBtn }} </b>
+      <b v-if="textAfterBtn !== ''" class="btn-text"> {{ textAfterBtn }} </b>
     </div>
 </template>
 
@@ -72,7 +72,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .table {
   display: flex;
   width: 100%;

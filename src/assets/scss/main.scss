@@ -99,12 +99,11 @@ body {
   font-size: 14px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-size: contain;
-  background: #F7F7F7 url("~/assets/images/background.png") no-repeat center;
   color: var(--ink-color);
-  width: 100%;
-  min-width: 1180px;
-  overflow: hidden;
+  background: url("~/assets/images/background.png") no-repeat center center fixed; 
+  height: auto;
+  min-height: 100%;
+  background-size:cover;
 }
 
 :root {

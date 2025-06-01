@@ -1,31 +1,29 @@
 <template name="component-name">
-  <div :class="$style['box']">
-    <div :class="$style['indecator']" @click="openDropDown">
+  <div class="box">
+    <div class="indecator" @click="openDropDown">
       <img v-if="isConnected" :src="require('~/assets/images/connected.svg')" alt="connected-vector" />
       <img v-else :src="require('~/assets/images/disconnected.svg')" alt="disconnected-vector" />
     </div>
 
-    <div v-if="isOpenDropDown" :class="$style['drop-down']">
-      <div :class="$style['drop-down__box']">
-        <div v-if="loader" :class="$style['drop-down__loader']">
+    <div v-if="isOpenDropDown" class="drop-down">
+      <div class="drop-down__box">
+        <div v-if="loader" class="drop-down__loader">
           <Loader accent />
         </div>
         <template v-if="!loader">
-          <div :class="$style['drop-down__first-part']">
+          <div class="drop-down__first-part">
             <div>
-              <div :class="$style['drop-down__header__title']">
+              <div class="drop-down__header__title">
                 <img :src="require('~/assets/images/server-storage.svg')" alt="connected-vector" />
-                <span >Database(s)
-                </span>
+                <span>Database(s)</span>
               </div>
             </div>
-            <div v-for="(instanse, index) in DBinstanse" :key="index" :class="$style['drop-down__body']">
-              <span :class="$style['drop-down__body__center']">
-                <span :class="$style['drop-down__ind']" :style="{ backgroundColor: instanse.status }"></span>
-                <span :class="$style['desc', 'space']" @click="() => openDbInstance(instanse.DBInstanceIdentifier)">
+            <div v-for="(instanse, index) in DBinstanse" :key="index" class="drop-down__body">
+              <span class="drop-down__body__center">
+                <span class="drop-down__ind" :style="{ backgroundColor: instanse.status }"></span>
+                <span class="desc space" @click="() => openDbInstance(instanse.DBInstanceIdentifier)">
                   {{ instanse.name }}
                 </span>
-
               </span>
               <button @click="() =>
                 setProperty(instanse.status, instanse.DBInstanceIdentifier, instanse.cluster)
@@ -33,17 +31,14 @@
                 {{ instanse.status == 'gray' ? 'start' : 'stop' }}
               </button>
               <Loader v-if="isLoaderForIndicatore" accent :size="25" />
-
             </div>
           </div>
-          <div :class="$style['drop-down__tmp-part-ferst']">
-            <div :class="$style['drop-down__counter']">
-
-              <div :class="$style['drop-down__counter__self']">
-                <div :class="$style['drop-down__counter__left']">
-
-                  <img :src="require('~/assets/images/undo-arrow.svg')"
-                    alt="connected-vector" /><span>TurnService</span>
+          <div class="drop-down__tmp-part-ferst">
+            <div class="drop-down__counter">
+              <div class="drop-down__counter__self">
+                <div class="drop-down__counter__left">
+                  <img :src="require('~/assets/images/undo-arrow.svg')" alt="connected-vector" />
+                  <span>TurnService</span>
                 </div>
                 <span title="Minimum size">Min {{ turnServ[0].MinSize }}</span>
                 <span title="Maximum size">Max {{ turnServ[0].MaxSize }}</span>
@@ -52,48 +47,54 @@
                   <div @click="() => operations('countTurnService', true)">+</div>
                   <div @click="() => operations('countTurnService', false)">-</div>
                 </div>
-
                 <Loader v-if="isLoaderForIndicatore" accent :size="25" />
               </div>
-              <div v-for="(i, index) in turnServInstances" :key="index" :class="$style['drop-down__bd']">
-                <span :class="$style['drop-down__ind']"
-                  :style="selectStatuseForAutoGroups(i.LifecycleState ? i.LifecycleState : '')"></span>
-                <p :class="$style['desc']" @click="() => open(i.InstanceId)">
+              <div v-for="(i, index) in turnServInstances" :key="index" class="drop-down__bd">
+                <span
+                  class="drop-down__ind"
+                  :style="selectStatuseForAutoGroups(i.LifecycleState ? i.LifecycleState : '')"
+                ></span>
+                <p class="desc" @click="() => open(i.InstanceId)">
                   {{ i.InstanceId ? i.InstanceId : 'Turn instance' }}
                 </p>
               </div>
             </div>
-
           </div>
-          <div :class="$style['drop-down__tmp-part']">
-            <div :class="$style['drop-down__counter']">
-
-              <div :class="$style['drop-down__counter__self']">
-                <div :class="$style['drop-down__counter__left']">
+          <div class="drop-down__tmp-part">
+            <div class="drop-down__counter">
+              <div class="drop-down__counter__self">
+                <div class="drop-down__counter__left">
                   <img :src="require('~/assets/images/server.svg')" alt="connected-vector" />
                   <span>WebRTCProxy</span>
                 </div>
                 <span title="Minimum size">Min {{ proxy[0].MinSize }}</span>
                 <span title="Maximum size">Max {{ proxy[0].MaxSize }}</span>
-                <span title="Desired capacity">Desired{{ proxy[0].DesiredCapacity }}</span>
+                <span title="Desired capacity">Desired {{ proxy[0].DesiredCapacity }}</span>
                 <div>
                   <div @click="() => operations('countProxy', true)">+</div>
                   <div @click="() => operations('countProxy', false)">-</div>
                 </div>
                 <Loader v-if="isLoaderForIndicatore" accent :size="25" />
               </div>
-              <div v-for="(i, index) in proxyInstances" :key="index" :class="$style['drop-down__bd']">
-                <span :class="$style['drop-down__ind']"
-                  :style="selectStatuseForAutoGroups(i.LifecycleState ? i.LifecycleState : '')"></span>
-                <p :class="$style['desc']" @click="() => open(i.InstanceId)">
+              <div v-for="(i, index) in proxyInstances" :key="index" class="drop-down__bd">
+                <span
+                  class="drop-down__ind"
+                  :style="selectStatuseForAutoGroups(i.LifecycleState ? i.LifecycleState : '')"
+                ></span>
+                <p class="desc" @click="() => open(i.InstanceId)">
                   {{ i.InstanceId ? i.InstanceId : 'Proxy instanse' }}
                 </p>
               </div>
             </div>
           </div>
         </template>
-        <MyButton v-if="!isConnectedToWebRTC && proxyInstances.length > 0" text="WebRTC Connect"
-          :disabled="isConnection || !LifecycleState" @click="connectToDB" :classAssign="$style['btn-classes']" />
+        <MyButton
+          v-if="!isConnectedToWebRTC && proxyInstances.length > 0"
+          text="WebRTC Connect"
+          :disabled="isConnection || !LifecycleState"
+          @click="connectToDB"
+          class="btn-classes"
+        />
       </div>
     </div>
   </div>
@@ -279,7 +280,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style  scoped lang="scss">
 .indecator {
   height: 50px;
   width: 50px;

@@ -2,7 +2,7 @@
 <template>
   <Draggable
     v-model="items"
-    :class="$style['tabs']"
+    class="tabs"
     item-key="index"
     @start="dragging = true"
     @end="dragging = false"
@@ -56,7 +56,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style  scoped lang="scss">
 .tabs {
   display: flex;
   height: 100%;

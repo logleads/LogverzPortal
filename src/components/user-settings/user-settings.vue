@@ -1,19 +1,19 @@
 <template>
-  <div :class="$style['setting-window']">
-    <h3 :class="$style['heading-padding']">Connectivity:</h3>
-    <div :class="$style['additional-settings']">
+  <div class="setting-window">
+    <h3 class="heading-padding">Connectivity:</h3>
+    <div class="additional-settings">
       <input
         id="withRedirect"
         v-model="useTurnServer"
-        :class="$style['additional-settings__checkbox']"
+        class="additional-settings__checkbox"
         type="checkbox"
       />
-      <p :class="$style['additional-settings__label']">Use Turn/Stun server</p>
-      <span :class="$style['span-margin']">
+      <p class="additional-settings__label">Use Turn/Stun server</p>
+      <span class="span-margin">
         <ToolTip :tip="rtcDescription" />
       </span>
     </div>
-    <div :class="$style['server-color']">
+    <div class="server-color">
       <h4>Servers</h4>
       <ol v-for="server in serverDetails" :key="server.urls">
         <li>{{ server.urls }}</li>
@@ -76,7 +76,7 @@ export default defineComponent({
   },
 });
 </script>
-<style module lang="scss">
+<style  scoped lang="scss">
 .hiden {
   opacity: 0;
 }

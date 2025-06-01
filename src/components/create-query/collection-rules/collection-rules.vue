@@ -1,31 +1,31 @@
 <template>
-  <div :class="$style['collection']">
+  <div class="collection">
     <template v-if="!isFetching">
       <div v-show="!isCustomRules">
-        <CollectionRulesItem :class="$style['collection__item']" @update-query="handleUpdate" />
+        <CollectionRulesItem class="collection__item" @update-query="handleUpdate" />
       </div>
 
-      <div :class="$style['collection__item']">
-        <div :class="$style['collection__item__inputs']">
-          <div :class="$style['checkbox-label']">
-            <label :class="$style['input-item-text']"> Custom rules editor field </label>
+      <div class="collection__item">
+        <div class="collection__item__inputs">
+          <div class="checkbox-label">
+            <label class="input-item-text"> Custom rules editor field </label>
             <input v-model="isCustomRules" type="checkbox" />
           </div>
           <Input v-if="isCustomRules" v-model="customQuery" :disabled="!isCustomRules"
             placeholder="Type custom rules here"
-            :class="[$style['input-border'], { [$style['disabled']]: !isCustomRules }]" />
-          <div v-else>
-            <!-- <div :class="$style['input-item-text']">Generated rules query display field</div> -->
-            <div :class="$style['generated-query']">
+            :class="['input-border', { 'disabled': !isCustomRules }]" />
+          <div>
+            <!-- <div class="input-item-text">Generated rules query display field</div> -->
+            <div class="generated-query">
               <!-- <highlight-code lang="sql">
                 {{ QueryFromState }}
               </highlight-code> -->
-              <pre v-highlightjs="QueryFromState"><code class="sql"></code></pre>
+              <pre v-if="!isCustomRules" v-highlightjs="QueryFromState"><code class="sql"></code></pre>
 
               <div v-if="
                 submitted
-                //  && v$.QueryFromState.required.$invalid
-              " :class="$style['validation-text']">
+                 && v$?.QueryFromState.required.$invalid
+              " class="validation-text">
                 Query string is required
               </div>
             </div>
@@ -43,6 +43,7 @@
 </template>
 
 <script lang="ts">
+import useVuelidate from '@vuelidate/core';
 import { computed, ComputedRef, defineComponent, onMounted, Ref, ref, watch } from 'vue';
 
 import CollectionRulesItem from '~/components/create-query/collection-rules/collection-rules-item.vue';
@@ -54,6 +55,7 @@ import { logicalOperatorType, MainQuery } from '~/types/common';
 import { QueryBuilderRule } from '~/types/models/query-builder-types';
 import { parseQueryObject } from '~/utils/parseQueryObject';
 import { parseToSequelize } from '~/utils/sequelize-query';
+import { required } from '@vuelidate/validators';
 
 export default defineComponent({
   name: 'CollectionRules',
@@ -115,12 +117,13 @@ export default defineComponent({
 
     const QueryFromState: ComputedRef<string> = computed(() => {
       if (DataCollectionModule.queryString) {
-
+        
         return DataCollectionModule.queryString?.replaceAll('._undefined', ' ');
       } else {
         return `SELECT * FROM ${DataCollectionModule.DatasetName ? DataCollectionModule.DatasetName + ' AS tbl' : ''} `;
       }
     });
+    
     const rules: ComputedRef<Array<QueryBuilderRule>> = computed(() => {
       return DataCollectionModule.rules;
     });
@@ -132,16 +135,16 @@ export default defineComponent({
     const CsvHeaderInfo: ComputedRef<string> = computed(() => {
       return DataCollectionModule.csvHeader;
     });
-    // watch(customQuery, (value: string) => {
-    //   if (isCustomRules.value) {
-    //     console.log('customQuery', value);
-    //     // DataCollectionModule.setInputValue({ label: 'QueryString', value });
-    //     DataCollectionModule.setInputValue({
-    //       label: 'QueryString',
-    //       value: value,
-    //     });
-    //   }
-    // });
+    watch(customQuery, (value: string) => {
+      if (isCustomRules.value) {
+        console.log('customQuery', value);
+        // DataCollectionModule.setInputValue({ label: 'QueryString', value });
+        DataCollectionModule.setInputValue({
+          label: 'QueryString',
+          value: value,
+        });
+      }
+    });
     // watch(rules, () => {
     //   query.value = {
     //     logicalOperator: logicalOperatorType.OR,
@@ -157,10 +160,11 @@ export default defineComponent({
         });
       }
     });
-    watch(QueryFromState, () => {
-      // textarea.value.style.height = '1px';
-      // textarea.value.style.height = 25 + textarea.value.scrollHeight + 'px';
-    });
+    // watch(QueryFromState, () => {
+
+    //   // textarea.value.style.height = '1px';
+    //   // textarea.value.style.height = 25 + textarea.value.scrollHeight + 'px';
+    // });
 
     function handleUpdate(queryParam: MainQuery): void {
       query.value = queryParam;
@@ -187,12 +191,12 @@ export default defineComponent({
     function sqlToSequelize(query: MainQuery): string {
       return parseToSequelize(query);
     }
-    // const validationRules = {
-    //   QueryFromState: { required },
-    // };
-    // const v$ = useVuelidate(validationRules, {
-    //   QueryFromState,
-    // });
+    const validationRules = {
+      QueryFromState: { required },
+    };
+    const v$ = useVuelidate(validationRules, {
+      QueryFromState,
+    });
     onMounted(async () => {
       // emit('validate', v$);
       query.value = {
@@ -216,13 +220,13 @@ export default defineComponent({
       textarea,
       query,
       isCustomRules,
-      // v$,
+      v$,
     };
   },
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .collection {
   &__item {
     margin-top: 23px;
@@ -317,7 +321,7 @@ pre {
 }
 
 .input-border {
-  border: 1px solid #45e799;
+  // border: 1px solid #45e799;
   margin-top: 2px;
 }
 </style>

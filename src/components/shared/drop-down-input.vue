@@ -1,7 +1,7 @@
 <template>
   <div
     ref="select"
-    :class="$style['input-drop-down']"
+    class="input-drop-down"
     contenteditable="true"
     @blur="handleBlur"
     @click="toggleShow"
@@ -9,21 +9,21 @@
     <label contenteditable="false">
       <input type="text" disabled :value="selectedValue || ''" />
       <div v-if="!scopeExpanded">
-        <Icon name="arrow-down" :class="$style['input-arrow-down']" :width="9" :height="6" />
+        <Icon name="arrow-down" class="input-arrow-down" :width="9" :height="6" />
       </div>
       <div v-else>
-        <Icon name="arrow-up" :class="$style['input-arrow-down']" :width="9" :height="6" />
+        <Icon name="arrow-up" class="input-arrow-down" :width="9" :height="6" />
       </div>
     </label>
     <div
       v-if="scopeExpanded"
       contenteditable="false"
-      :class="[$style['input-unwrapped'], { [$style['up-direction']]: direction }]"
-    >
+      :class="['input-unwrapped', direction ? 'up-direction' : '']"
+      >
       <div
         v-for="(item, i) in items"
         :key="item"
-        :class="$style['input-unwrapped__item']"
+        class="input-unwrapped__item"
         @click="handleClick($event, item)"
       >
         <template v-if="names">
@@ -117,7 +117,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .input-drop-down {
   max-width: 100%;
   position: relative;

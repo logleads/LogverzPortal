@@ -1,20 +1,20 @@
 <template>
-  <div :class="$style['popup']" @click="handleShowForm($event, false)">
-    <div :class="$style['popup__body']" @click="handleBodyClick($event)">
-      <div :class="$style['table']">
-        <label :class="$style['range-label']"><b> Range</b>:</label>
+  <div class="popup" @click="handleShowForm($event, false)">
+    <div class="popup__body" @click="handleBodyClick($event)">
+      <div class="table">
+        <label class="range-label"><b> Range</b>:</label>
         <TimerFilter @clear="clear" @unix-time-change="timeFilter" />
 
         <Tabs btn-rigth-text="Shared" btn-left-text="My" :state-b-t-n="tableMode" text-before-btn="Scope"
           @change-table-content="changeTableMode" />
         <Tabs btn-rigth-text="All" btn-left-text="Current" text-before-btn="Version" :state-b-t-n="filterContent"
           @change-table-content="applyVersionFilter" />
-        <div :class="$style['tooltip-margin']">
+        <div class="tooltip-margin">
           <ToolTip :tip="DCH_QUERY_HISTORY_local" />
         </div>
       </div>
 
-      <div :class="$style['table-h']">
+      <div class="table-h">
         <Loader v-if="isSettingsFetch" accent />
         <DxDataGrid v-else id="gridSettings" :show-borders="true" :data-source="tableData" :show-column-lines="true"
           :show-row-lines="true" :allow-column-reordering="true" :column-auto-width="true">
@@ -55,11 +55,13 @@
           <DxColumn caption="Source" data-field="S3Folders" />
 
           <!-- Master Detail Template -->
-          <DxMasterDetail :enabled="true">
-            <template #template="{ data }">
+                     <DxMasterDetail :enabled="true" template="masterDetailedSettings" />
+
+          <!-- <DxMasterDetail :enabled="true"> -->
+            <template #masterDetailedSettings="{ data }">
               <MasterDetailedSettings :data="data" />
             </template>
-          </DxMasterDetail>
+          <!-- </DxMasterDetail> -->
         </DxDataGrid>
       </div>
     </div>
@@ -139,7 +141,7 @@ export default defineComponent({
       const filteredData = implementActiveFIlter(value);
       // return filteredData;
       let modifyData = FIxTableNameToDatasetName(filteredData);
-      // tableData.value = modifyData;
+      tableData.value = modifyData;
     });
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -278,7 +280,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .btn {
   background-color: white;
   color: var(--accent-color);

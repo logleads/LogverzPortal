@@ -3,10 +3,10 @@
     <template v-if="usersPoliciesFetching">
       <Loader accent />
     </template>
-    <template v-else>
+    <!-- <template v-else>
       <DxDataGrid
         :show-borders="true"
-        :data-source="usersOfPolicies[data.data.Name]"
+        :data-source="usersOfPolicies[data?.data.Name]"
         :show-column-lines="true"
         :show-row-lines="true"
         :allow-column-reordering="true"
@@ -15,9 +15,9 @@
         <DxHeaderFilter :visible="true" />
         <DxColumn data-field="Name" />
         <DxColumn data-field="Type" />
-        <DxColumn data-field="IAMGroups" />
+        <DxColumn data-field="Arn" />
       </DxDataGrid>
-    </template>
+    </template> -->
 
     <!-- <template v-for="item in Object.keys(data.data)">
       <div
@@ -29,50 +29,54 @@
             <ParseObject :obj="k" :label="i" />
           </template>
           <template v-else>
-            <div v-if="k !== ''" :class="$style['container']">
-              <span :class="$style['container__key']">{{ i }}: </span>
-              <div :class="$style['container__value']">{{ k }}</div>
+            <div v-if="k !== ''" class="container">
+              <span class="container__key">{{ i }}: </span>
+              <div class="container__value">{{ k }}</div>
             </div>
           </template>
         </div>
       </div>
       <div v-if="Array.isArray(data.data[item])" :key="item + Math.random() * 10000">
-        <div :class="$style['container']">
-          <span :class="$style['container__key']">{{ item }}: </span>
+        <div class="container">
+          <span class="container__key">{{ item }}: </span>
           <div
             v-for="(arrItem, index) in data.data[item]"
             :key="arrItem + Math.random() * 10000"
-            :class="$style['container__value']"
+            class="container__value"
           >
             {{ arrItem }}{{ data.data[item].length - 1 !== index ? ',' : '' }}
           </div>
         </div>
       </div>
       <div v-if="data.data[item] === 'null'" :key="item + Math.random() * 10000">
-        <div :class="$style['container']">
-          <span :class="$style['container__key']">{{ item }}: </span>
-          <div :class="$style['container__value']">{{ data.data[item] }}</div>
+        <div class="container">
+          <span class="container__key">{{ item }}: </span>
+          <div class="container__value">{{ data.data[item] }}</div>
         </div>
       </div>
     </template> -->
 
-    <info-msg-span title="VersionId" :value="data.data.LatestVersion.VersionId" />
+    <!-- <info-msg-span title="VersionId" :value="data?.data.LatestVersion.VersionId" />
+    <info-msg-span title="IsDefaultVersion" :value="data?.data.LatestVersion.IsDefaultVersion?.toString()" />
+    <info-msg-span title="CreateDate" :value="data?.data.LatestVersion.IsDefaultVersion?.toString()" /> -->
+    <info-msg-span title="VersionId" :value="data?.data.LatestVersion.VersionId" />
     <info-msg-span
       title="IsDefaultVersion"
-      :value="data.data.LatestVersion.IsDefaultVersion.toString()"
+      :value="data?.data.LatestVersion.IsDefaultVersion?.toString()"
     />
     <info-msg-span
       title="CreateDate"
-      :value="data.data.LatestVersion.IsDefaultVersion.toString()"
+      :value="data?.data.LatestVersion.IsDefaultVersion?.toString()"
     />
     <json-viewer-custom
-      :value="parseGroupPolicy(data.data.LatestVersion.Document)"
+      :value="parseGroupPolicy(data?.data)"
       copyable
       boxed
       sort
       title="Document:"
     />
-  </div>
+
+</div>
 </template>
 
 <script lang="ts">
@@ -81,10 +85,11 @@ import { DxColumn, DxDataGrid, DxHeaderFilter } from 'devextreme-vue/data-grid';
 
 import Loader from '~/components/shared/loader.vue';
 import { AdminModule } from '~/store/modules/admin';
+import JsonViewerCustom from '~/components/shared/json-viewer.vue';
 
 export default defineComponent({
   name: 'MasterDetailedPolicy',
-  components: { Loader, DxColumn, DxDataGrid, DxHeaderFilter },
+  components: { Loader, DxColumn, DxDataGrid, DxHeaderFilter, JsonViewerCustom },
 
   // @Prop({ required: false, type: Object }) readonly data!: Record<string, any>;
   // @Prop({ required: false }) readonly usersOfPolicies!: any;
@@ -93,12 +98,14 @@ export default defineComponent({
       type: Object,
       required: false,
     },
-    usersOfPolicies: {
-      type: Array,
-      required: true,
-    },
+    // usersOfPolicies: {
+    //   type: Array,
+    //   required: true,
+    // },
   },
   setup(props) {
+    console.log('parseGroupPolicy', props.data);
+
     onMounted(async () => {
       AdminModule.getUserOfPolicy(props.data?.data.Name);
     });
@@ -107,8 +114,10 @@ export default defineComponent({
       return AdminModule.usersPoliciesFetching[props.data?.data.Name];
     });
 
-    function parseGroupPolicy(data: string): unknown {
-      return JSON.parse(data.replaceAll('"', '').replaceAll("'", '"'));
+    function parseGroupPolicy(data: any): unknown {
+      console.log('parseGroupPolicy', data);
+      
+      return { Associations: data.Associations, LatestVersion: {  Document: JSON.parse(data.LatestVersion?.Document?.replaceAll('"', '').replaceAll("'", '"')) } };
     }
     return {
       parseGroupPolicy,
@@ -118,7 +127,7 @@ export default defineComponent({
 });
 </script>
 
-<style module lang="scss">
+<style scoped lang="scss">
 .container {
   margin: 15px 0;
 
